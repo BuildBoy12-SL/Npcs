@@ -58,7 +58,7 @@ namespace NPCs.Pathing
         /// <summary>
         /// Gets or sets a nullable kvp to represent an attached elevator.
         /// </summary>
-        public KeyValuePair<Lift.Elevator, Lift>? AttachedElevator { get; set; }
+        public KeyValuePair<Lift, Lift>? AttachedElevator { get; set; }
 
         /// <summary>
         /// Gets a collection of items that can spawn in the room.
@@ -81,7 +81,7 @@ namespace NPCs.Pathing
             Node node = newObject.AddComponent<Node>();
             node.Name = name;
             node.Room = room;
-            Room r = Map.Rooms.Where(rm => rm.Name.RemoveBracketsOnEndOfName().Equals(room, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            Room r = Exiled.API.Features.Room.List.FirstOrDefault(rm => rm.Name.RemoveBracketsOnEndOfName().Equals(room, StringComparison.OrdinalIgnoreCase));
             if (r != null)
             {
                 node.RoomData = new RoomData
@@ -122,7 +122,7 @@ namespace NPCs.Pathing
                 }
             }
 
-            Room r = Map.Rooms.Where(rm => rm.Name.RemoveBracketsOnEndOfName().Equals(room, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            Room r = Exiled.API.Features.Room.List.FirstOrDefault(rm => rm.Name.RemoveBracketsOnEndOfName().Equals(room, StringComparison.OrdinalIgnoreCase));
             if (r != null)
             {
                 newObject.transform.position = r.Position + (Quaternion.Euler(0, r.Transform.localRotation.eulerAngles.y - roomData.Rotation, 0) * roomData.Relative);

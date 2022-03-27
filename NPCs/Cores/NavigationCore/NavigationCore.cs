@@ -59,12 +59,12 @@ namespace NPCs.Cores.NavigationCore
         /// <summary>
         /// Gets the npc's sprinting speed.
         /// </summary>
-        public float SprintSpeed => CharacterClassManager._staticClasses[(int)npcBase.Player.Role].runSpeed;
+        public float SprintSpeed => CharacterClassManager._staticClasses[(int)npcBase.Player.Role.Type].runSpeed;
 
         /// <summary>
         /// Gets the npc's walking speed.
         /// </summary>
-        public float WalkSpeed => CharacterClassManager._staticClasses[(int)npcBase.Player.Role].walkSpeed;
+        public float WalkSpeed => CharacterClassManager._staticClasses[(int)npcBase.Player.Role.Type].walkSpeed;
 
         /// <summary>
         /// Gets a value indicating whether the npc should sprint when they can.

@@ -50,9 +50,9 @@ namespace NPCs.Cores
         /// </summary>
         public MovementDirection Direction { get; set; }
 
-        private float RunSpeed => CharacterClassManager._staticClasses[(int)toFollow.Role].runSpeed;
+        private float RunSpeed => CharacterClassManager._staticClasses[(int)toFollow.Role.Type].runSpeed;
 
-        private float WalkSpeed => CharacterClassManager._staticClasses[(int)toFollow.Role].walkSpeed;
+        private float WalkSpeed => CharacterClassManager._staticClasses[(int)toFollow.Role.Type].walkSpeed;
 
         /// <summary>
         /// Unpauses movement control.

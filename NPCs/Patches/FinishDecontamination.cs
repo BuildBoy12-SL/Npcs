@@ -19,7 +19,7 @@ namespace NPCs.Patches
     /// <summary>
     /// Patches <see cref="DecontaminationController.FinishDecontamination"/> in an attempt to prevent an NRE.
     /// </summary>
-    [HarmonyPatch(typeof(DecontaminationController), nameof(DecontaminationController.FinishDecontamination))]
+    // [HarmonyPatch(typeof(DecontaminationController), nameof(DecontaminationController.FinishDecontamination))]
     internal static class FinishDecontamination
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
