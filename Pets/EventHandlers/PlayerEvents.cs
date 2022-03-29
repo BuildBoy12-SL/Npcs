@@ -7,6 +7,7 @@
 
 namespace Pets.EventHandlers
 {
+    using Exiled.API.Features;
     using Exiled.Events.EventArgs;
     using Exiled.Permissions.Extensions;
 
@@ -18,7 +19,7 @@ namespace Pets.EventHandlers
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnChangingRole(ChangingRoleEventArgs)"/>
         public void OnChangingRole(ChangingRoleEventArgs ev)
         {
-            if (!ev.Player.CheckPermission("pets.pet"))
+            if (!ev.Player.CheckPermission("pets.pet") || !Round.IsStarted)
                 return;
 
             Pet pet = Pet.Create(ev.Player);

@@ -96,11 +96,7 @@ namespace NPCs.Cores
                     continue;
                 }
 
-                if (toFollow.MoveState == PlayerMovementState.Sneaking)
-                    Movement = PlayerMovementState.Sneaking;
-                else
-                    Movement = PlayerMovementState.Sprinting;
-
+                Movement = toFollow.MoveState == PlayerMovementState.Sneaking ? PlayerMovementState.Sneaking : PlayerMovementState.Sprinting;
                 Direction = MovementDirection.Forward;
 
                 float speed = 0f;
