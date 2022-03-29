@@ -5,13 +5,12 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace NPCs.Commands
+namespace Pets.Commands
 {
     using System;
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
-    using NPCs.API;
 
     /// <summary>
     /// Sets the pet's name.
@@ -19,18 +18,18 @@ namespace NPCs.Commands
     public class Name : ICommand
     {
         /// <inheritdoc />
-        public string Command { get; } = "name";
+        public string Command => "name";
 
         /// <inheritdoc />
         public string[] Aliases { get; } = { "n" };
 
         /// <inheritdoc />
-        public string Description { get; } = "Sets the pet's name";
+        public string Description => "Sets the pet's name";
 
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission("npcs.pets.name"))
+            if (!sender.CheckPermission("pets.pet.name"))
             {
                 response = "Insufficient permission.";
                 return false;
@@ -49,10 +48,7 @@ namespace NPCs.Commands
                 return false;
             }
 
-            Pet pet = player.GetPet();
-            if (pet == null)
-                pet = Pet.Create(player);
-
+            Pet pet = Pet.Create(player);
             pet.Name = string.Join(" ", arguments);
             response = $"Set your pet's name to {pet.Name}.";
             return true;

@@ -98,7 +98,7 @@ namespace NPCs
         /// </summary>
         /// <param name="item">The item to get the id of.</param>
         /// <returns>The found id or -1 if none are found to match.</returns>
-        internal static int ToId(this ItemType item)
+        public static int ToId(this ItemType item)
         {
             if (ItemIDs.TryGetValue(item.ToString(), out int id))
                 return id;
@@ -110,7 +110,7 @@ namespace NPCs
         /// </summary>
         /// <param name="id">The id to get the type of.</param>
         /// <returns>The found <see cref="ItemType"/> or <see cref="ItemType.None"/> if none are found to match.</returns>
-        internal static ItemType ItemIdToType(int id)
+        public static ItemType ItemIdToType(int id)
         {
             if (ItemIDsReverse.TryGetValue(id, out string typeStr) && Enum.TryParse(typeStr, out ItemType type))
                 return type;
@@ -122,7 +122,7 @@ namespace NPCs
         /// </summary>
         /// <param name="role">The role to get the id of.</param>
         /// <returns>The found id or -1 if none are found to match.</returns>
-        internal static int ToId(this RoleType role)
+        public static int ToId(this RoleType role)
         {
             if (RoleIDs.TryGetValue(role.ToString(), out int id))
                 return id;
@@ -134,7 +134,7 @@ namespace NPCs
         /// </summary>
         /// <param name="id">The id to get the type of.</param>
         /// <returns>The found <see cref="RoleType"/> or <see cref="RoleType.None"/> if none are found to match.</returns>
-        internal static RoleType RoleIdToType(int id)
+        public static RoleType RoleIdToType(int id)
         {
             if (RoleIDsReverse.TryGetValue(id, out string typeStr) && Enum.TryParse(typeStr, out RoleType type))
                 return type;

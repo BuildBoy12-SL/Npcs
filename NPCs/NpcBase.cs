@@ -26,6 +26,8 @@ namespace NPCs
         protected NpcBase(RoleType roleType, string name, Vector3 scale)
         {
             GameObject = Object.Instantiate(NetworkManager.singleton.playerPrefab);
+            Dictionary.Add(GameObject, this);
+
             ReferenceHub = GameObject.GetComponent<ReferenceHub>();
 
             GameObject.transform.localScale = scale;
@@ -40,8 +42,6 @@ namespace NPCs
 
             Player = new Player(GameObject);
             Player.SessionVariables.Add("IsNPC", true);
-
-            Dictionary.Add(GameObject, this);
         }
 
         /// <summary>
@@ -67,11 +67,6 @@ namespace NPCs
             get => Player.Position;
             set => Player.ReferenceHub.playerMovementSync.OverridePosition(value, 0f, true);
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the npc can receive action.
-        /// </summary>
-        public bool IsActionLocked { get; set; }
 
         /// <summary>
         /// Gets the attached <see cref="UnityEngine.GameObject"/>.

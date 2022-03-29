@@ -5,7 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace NPCs.API
+namespace Pets.API
 {
     using Exiled.API.Features;
 

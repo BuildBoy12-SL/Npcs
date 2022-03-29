@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NPCs", "NPCs\NPCs.csproj", "{99F7364D-E8AF-4D7C-8ABA-73139D8DEF74}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pets", "Pets\Pets.csproj", "{17979271-B928-4456-BE6E-9A3D1C4FC5DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{99F7364D-E8AF-4D7C-8ABA-73139D8DEF74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99F7364D-E8AF-4D7C-8ABA-73139D8DEF74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99F7364D-E8AF-4D7C-8ABA-73139D8DEF74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17979271-B928-4456-BE6E-9A3D1C4FC5DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17979271-B928-4456-BE6E-9A3D1C4FC5DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17979271-B928-4456-BE6E-9A3D1C4FC5DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17979271-B928-4456-BE6E-9A3D1C4FC5DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

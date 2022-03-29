@@ -5,13 +5,12 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace NPCs.Commands
+namespace Pets.Commands
 {
     using System;
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
-    using NPCs.API;
 
     /// <summary>
     /// Sets the pet's held item.
@@ -32,18 +31,18 @@ namespace NPCs.Commands
         };
 
         /// <inheritdoc />
-        public string Command { get; } = "item";
+        public string Command => "item";
 
         /// <inheritdoc />
         public string[] Aliases { get; } = { "i" };
 
         /// <inheritdoc />
-        public string Description { get; } = "Sets the pet's held item";
+        public string Description => "Sets the pet's held item";
 
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission("npcs.pets.item"))
+            if (!sender.CheckPermission("pets.pet.item"))
             {
                 response = "Insufficient permission.";
                 return false;
@@ -56,10 +55,7 @@ namespace NPCs.Commands
                 return false;
             }
 
-            Pet pet = player.GetPet();
-            if (pet == null)
-                pet = Pet.Create(player);
-
+            Pet pet = Pet.Create(player);
             if (arguments.Count == 0)
             {
                 response = $"Your pet is currently holding a {pet.HeldItem}";

@@ -5,13 +5,12 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace NPCs.Commands
+namespace Pets.Commands
 {
     using System;
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
-    using NPCs.API;
 
     /// <summary>
     /// Sets the pet's <see cref="RoleType"/>.
@@ -27,18 +26,18 @@ namespace NPCs.Commands
         };
 
         /// <inheritdoc />
-        public string Command { get; } = "role";
+        public string Command => "role";
 
         /// <inheritdoc />
         public string[] Aliases { get; } = { "r" };
 
         /// <inheritdoc />
-        public string Description { get; } = "Sets the pet's role.";
+        public string Description => "Sets the pet's role.";
 
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission("npcs.pets.role"))
+            if (!sender.CheckPermission("pets.pet.role"))
             {
                 response = "Insufficient permission.";
                 return false;
@@ -51,10 +50,7 @@ namespace NPCs.Commands
                 return false;
             }
 
-            Pet pet = player.GetPet();
-            if (pet == null)
-                pet = Pet.Create(player);
-
+            Pet pet = Pet.Create(player);
             if (arguments.Count == 0)
             {
                 response = $"Your pet is currently a {pet.Role}";

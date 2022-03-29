@@ -23,7 +23,7 @@ namespace NPCs.Patches
     /// <summary>
     /// Patches <see cref="RoundSummary.Start"/> to implement <see cref="Process"/> to ignore npcs when ending the round.
     /// </summary>
-    [HarmonyPatch(typeof(RoundSummary), nameof(RoundSummary.Start))]
+    // [HarmonyPatch(typeof(RoundSummary), nameof(RoundSummary.Start))]
     internal static class RoundEnd
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -52,10 +52,7 @@ namespace NPCs.Patches
                 RoundSummary.SumInfo_ClassList newList = default;
                 foreach (KeyValuePair<GameObject, ReferenceHub> keyValuePair in ReferenceHub.GetAllHubs())
                 {
-                    if (NpcBase.Dictionary.ContainsKey(keyValuePair.Key))
-                        continue;
-
-                    if (keyValuePair.Value == null)
+                    if (keyValuePair.Value == null || NpcBase.Dictionary.ContainsKey(keyValuePair.Key))
                         continue;
 
                     CharacterClassManager component = keyValuePair.Value.characterClassManager;

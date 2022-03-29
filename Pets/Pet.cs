@@ -1,48 +1,43 @@
-// -----------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------
 // <copyright file="Pet.cs" company="Build">
 // Copyright (c) Build. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace NPCs
+namespace Pets
 {
     using System.Collections.Generic;
     using Exiled.API.Features;
-    using NPCs.API;
+    using NPCs;
     using NPCs.Cores;
-    using NPCs.Database;
-    using NPCs.Database.Models;
+    using Pets.API;
 
     /// <summary>
-    /// A class to represent a pet in game.
+    /// Represents an in-game pet.
     /// </summary>
     public class Pet
     {
-        private MovementHandler movementHandler;
+        private readonly MovementHandler movementHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Pet"/> class.
         /// </summary>
         /// <param name="owner">The owner of the pet.</param>
-        private Pet(Player owner)
+        public Pet(Player owner)
         {
             Owner = owner;
-            User ownerUser = UserCache.Get(Owner);
-            Preferences = Data.Get?.PetPreferences(ownerUser);
+            Preferences = PetPreferences.Get(owner);
             if (Preferences == null)
             {
-                string defaultName = Plugin.Instance.Config.Pets.DefaultName.Replace("{Name}", owner.DisplayNickname ?? owner.Nickname);
-                Preferences = new PetPreferences(ownerUser, true, defaultName, RoleType.ClassD.ToId(), -1);
-                Data.Send?.PetPreferences(Preferences);
+                string defaultName = Plugin.Instance.Config.DefaultName.Replace("{Name}", owner.DisplayNickname ?? owner.Nickname);
+                Preferences = new PetPreferences(owner.UserId, true, defaultName, RoleType.ClassD.ToId(), -1);
             }
 
-            Npc = new Npc(Identifiers.RoleIdToType(Preferences.Role), Preferences.Name, Plugin.Instance.Config.Pets.Size);
+            Npc = new Npc(Identifiers.RoleIdToType(Preferences.Role), Preferences.Name, Plugin.Instance.Config.Size);
             movementHandler = new MovementHandler(Npc, Owner);
-            /* Npc.Navigation.FollowTarget = owner; */
-            Npc.Player.IsGodModeEnabled = true;
             if (Preferences.IsShown)
-                Npc.Spawn();
+                IsShown = true;
         }
 
         /// <summary>
@@ -51,14 +46,14 @@ namespace NPCs
         public static List<Pet> Instances { get; } = new List<Pet>();
 
         /// <summary>
-        /// Gets the NPC instance.
-        /// </summary>
-        public Npc Npc { get; private set; }
-
-        /// <summary>
         /// Gets the owner of the pet.
         /// </summary>
-        public Player Owner { get; private set; }
+        public Player Owner { get; }
+
+        /// <summary>
+        /// Gets the npc controlling the pet.
+        /// </summary>
+        public Npc Npc { get; }
 
         /// <summary>
         /// Gets the owner's preferences for the pet.
@@ -66,15 +61,24 @@ namespace NPCs
         public PetPreferences Preferences { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether the pet is currently visible.
+        /// Gets or sets a value indicating whether the pet is currently visible.
         /// </summary>
+        /// <remarks>This also affects the player's pet preferences.</remarks>
         public bool IsShown
         {
             get => Preferences.IsShown;
-            private set
+            set
             {
                 Preferences.IsShown = value;
-                Data.Send?.PetPreferences(Preferences);
+                if (value)
+                {
+                    Npc.Spawn();
+                    movementHandler.Play();
+                    return;
+                }
+
+                movementHandler.Pause();
+                Npc.Despawn();
             }
         }
 
@@ -88,7 +92,6 @@ namespace NPCs
             {
                 Npc.HeldItem = value;
                 Preferences.HeldItem = value.ToId();
-                Data.Send?.PetPreferences(Preferences);
             }
         }
 
@@ -102,7 +105,6 @@ namespace NPCs
             {
                 Npc.Name = value;
                 Preferences.Name = value;
-                Data.Send?.PetPreferences(Preferences);
             }
         }
 
@@ -116,11 +118,8 @@ namespace NPCs
             {
                 Npc.Role = value;
                 Preferences.Role = value.ToId();
-                Data.Send?.PetPreferences(Preferences);
             }
         }
-
-        private static Data Data => Plugin.Instance.Data;
 
         /// <summary>
         /// Creates a pet for the given owner.
@@ -139,45 +138,13 @@ namespace NPCs
         }
 
         /// <summary>
-        /// Destroys all logic required by the pet.
+        /// Destroys the pet and all of its logic.
         /// </summary>
         public void Destroy()
         {
             movementHandler.Kill();
-            movementHandler = null;
-            Owner = null;
-            Preferences = null;
             Npc.Destroy();
-            Npc = null;
             Instances.Remove(this);
-        }
-
-        /// <summary>
-        /// Hides the pet without overriding the preference.
-        /// </summary>
-        public void ForceHide()
-        {
-            Npc.Despawn();
-        }
-
-        /// <summary>
-        /// Hides the pet.
-        /// </summary>
-        public void Hide()
-        {
-            movementHandler.Pause();
-            Npc.Despawn();
-            IsShown = false;
-        }
-
-        /// <summary>
-        /// Shows the pet.
-        /// </summary>
-        public void Show()
-        {
-            Npc.Spawn();
-            movementHandler.Play();
-            IsShown = true;
         }
     }
 }

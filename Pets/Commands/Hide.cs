@@ -5,13 +5,12 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace NPCs.Commands
+namespace Pets.Commands
 {
     using System;
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
-    using NPCs.API;
 
     /// <summary>
     /// Hides the user's pet.
@@ -19,18 +18,18 @@ namespace NPCs.Commands
     public class Hide : ICommand
     {
         /// <inheritdoc />
-        public string Command { get; } = "hide";
+        public string Command => "hide";
 
         /// <inheritdoc />
         public string[] Aliases { get; } = { "h" };
 
         /// <inheritdoc />
-        public string Description { get; } = "Hides the user's pet";
+        public string Description => "Hides the user's pet";
 
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission("npcs.pets"))
+            if (!sender.CheckPermission("pets.pet"))
             {
                 response = "Insufficient permission.";
                 return false;
@@ -43,14 +42,14 @@ namespace NPCs.Commands
                 return false;
             }
 
-            Pet pet = player.GetPet();
+            Pet pet = Pet.Create(player);
             if (pet == null || !pet.IsShown)
             {
                 response = "You do not have a spawned pet!";
                 return false;
             }
 
-            pet.Hide();
+            pet.IsShown = false;
             response = "Despawned your pet.";
             return false;
         }
