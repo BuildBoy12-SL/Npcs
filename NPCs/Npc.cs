@@ -32,11 +32,6 @@ namespace NPCs
             PlayerManager.AddPlayer(GameObject, CustomNetworkManager.slots);
         }
 
-       /* /// <summary>
-        /// Gets the navigation module for this npc.
-        /// </summary>
-        public MovementHandler Navigation { get; private set; }*/
-
         /// <summary>
         /// Gets or sets the NPC's held item.
         /// </summary>
@@ -74,14 +69,6 @@ namespace NPCs
                 Player.ReferenceHub.characterClassManager.CurClass = value;
                 Respawn();
             }
-        }
-
-        /// <inheritdoc/>
-        public override void Destroy()
-        {
-            /*Navigation.Kill();
-            Navigation = null;*/
-            base.Destroy();
         }
 
         /// <summary>

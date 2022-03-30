@@ -22,7 +22,7 @@ namespace Pets.EventHandlers
             if (!ev.Player.CheckPermission("pets.pet") || !Round.IsStarted)
                 return;
 
-            Pet pet = Pet.Create(ev.Player);
+            Pet pet = Pet.GetOrCreate(ev.Player);
             if (ev.NewRole == RoleType.Spectator || ev.NewRole == RoleType.None || ev.NewRole == RoleType.Scp079)
                 pet.Npc.Despawn();
             else if (pet.Preferences.IsShown)

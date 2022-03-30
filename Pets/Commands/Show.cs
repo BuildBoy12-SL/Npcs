@@ -48,7 +48,7 @@ namespace Pets.Commands
                 return false;
             }
 
-            Pet pet = Pet.Create(player);
+            Pet pet = Pet.GetOrCreate(player);
             if (!pet.IsShown)
             {
                 pet.IsShown = true;

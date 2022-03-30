@@ -50,7 +50,7 @@ namespace Pets.Commands
                 return false;
             }
 
-            Pet pet = Pet.Create(player);
+            Pet pet = Pet.GetOrCreate(player);
             if (arguments.Count == 0)
             {
                 response = $"Your pet is currently a {pet.Role}";

@@ -9,6 +9,7 @@ namespace Pets
 {
     using System.Collections.Generic;
     using Exiled.API.Features;
+    using Exiled.API.Features.Items;
     using NPCs;
     using NPCs.Cores;
     using Pets.API;
@@ -90,7 +91,11 @@ namespace Pets
             get => Npc.HeldItem;
             set
             {
-                Npc.HeldItem = value;
+                Item item = Item.Create(value);
+                if (item is Firearm firearm)
+                    firearm.ClearAttachments();
+
+                Npc.ReferenceHub.inventory.NetworkCurItem = new InventorySystem.Items.ItemIdentifier(value, item.Serial);
                 Preferences.HeldItem = value.ToId();
             }
         }
@@ -122,11 +127,11 @@ namespace Pets
         }
 
         /// <summary>
-        /// Creates a pet for the given owner.
+        /// Gets the given owner's pet or creates one if it does not exist.
         /// </summary>
         /// <param name="owner">The owner of the pet.</param>
-        /// <returns>The created pet.</returns>
-        public static Pet Create(Player owner)
+        /// <returns>The gotten or created pet.</returns>
+        public static Pet GetOrCreate(Player owner)
         {
             Pet pet = owner.GetPet();
             if (pet != null)

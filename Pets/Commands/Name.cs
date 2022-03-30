@@ -48,7 +48,7 @@ namespace Pets.Commands
                 return false;
             }
 
-            Pet pet = Pet.Create(player);
+            Pet pet = Pet.GetOrCreate(player);
             pet.Name = string.Join(" ", arguments);
             response = $"Set your pet's name to {pet.Name}.";
             return true;
