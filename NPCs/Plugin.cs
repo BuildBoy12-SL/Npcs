@@ -8,7 +8,6 @@
 namespace NPCs
 {
     using System;
-    using Exiled.API.Enums;
     using Exiled.API.Features;
     using HarmonyLib;
     using NPCs.EventHandlers;

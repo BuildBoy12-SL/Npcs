@@ -16,6 +16,7 @@ namespace Pets
     public class Plugin : Plugin<Config>
     {
         private Harmony harmony;
+        private MapEvents mapEvents;
         private PlayerEvents playerEvents;
         private ServerEvents serverEvents;
 
@@ -37,8 +38,11 @@ namespace Pets
             harmony = new Harmony($"pets.{DateTime.UtcNow.Ticks}");
             harmony.PatchAll();
 
+            mapEvents = new MapEvents();
+            Exiled.Events.Handlers.Map.PlacingBlood += mapEvents.OnPlacingBlood;
             playerEvents = new PlayerEvents();
             Exiled.Events.Handlers.Player.ChangingRole += playerEvents.OnChangingRole;
+            Exiled.Events.Handlers.Player.SpawningRagdoll += playerEvents.OnSpawningRagdoll;
             serverEvents = new ServerEvents();
             Exiled.Events.Handlers.Server.RoundEnded += serverEvents.OnRoundEnded;
             Exiled.Events.Handlers.Server.WaitingForPlayers += serverEvents.OnWaitingForPlayers;
@@ -52,6 +56,11 @@ namespace Pets
             Exiled.Events.Handlers.Server.RoundEnded -= serverEvents.OnRoundEnded;
             Exiled.Events.Handlers.Server.WaitingForPlayers -= serverEvents.OnWaitingForPlayers;
             serverEvents = null;
+            Exiled.Events.Handlers.Player.ChangingRole -= playerEvents.OnChangingRole;
+            Exiled.Events.Handlers.Player.SpawningRagdoll -= playerEvents.OnSpawningRagdoll;
+            playerEvents = null;
+            Exiled.Events.Handlers.Map.PlacingBlood -= mapEvents.OnPlacingBlood;
+            mapEvents = null;
             harmony?.UnpatchAll(harmony.Id);
             harmony = null;
             Instance = null;

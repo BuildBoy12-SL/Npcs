@@ -28,5 +28,18 @@ namespace Pets.EventHandlers
             else if (pet.Preferences.IsShown)
                 pet.Npc.Spawn();
         }
+
+        /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnSpawningRagdoll(SpawningRagdollEventArgs)"/>
+        public void OnSpawningRagdoll(SpawningRagdollEventArgs ev)
+        {
+            foreach (Pet pet in Pet.Instances)
+            {
+                if (ev.Owner == pet.Npc.Player)
+                {
+                    ev.IsAllowed = false;
+                    return;
+                }
+            }
+        }
     }
 }
