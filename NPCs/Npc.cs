@@ -72,6 +72,19 @@ namespace NPCs
         }
 
         /// <summary>
+        /// Gets or sets the NPC's scale.
+        /// </summary>
+        public Vector3 Scale
+        {
+            get => Player.Scale;
+            set
+            {
+                GameObject.transform.localScale = value;
+                Respawn();
+            }
+        }
+
+        /// <summary>
         /// Spawns the NPC.
         /// </summary>
         public void Spawn()

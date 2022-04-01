@@ -36,7 +36,7 @@ namespace Pets
                 Preferences = new PetPreferences(owner.UserId, true, defaultName, RoleType.ClassD.ToId(), -1, Plugin.Instance.Config.Size);
             }
 
-            Npc = new Npc(Identifiers.RoleIdToType(Preferences.Role), Preferences.Name, Plugin.Instance.Config.Size);
+            Npc = new Npc(Identifiers.RoleIdToType(Preferences.Role), Preferences.Name, Preferences.Scale);
             movementHandler = new MovementHandler(Npc, Owner);
             if (Preferences.IsShown)
                 IsShown = true;
@@ -135,7 +135,7 @@ namespace Pets
             get => Npc.Player.Scale;
             set
             {
-                Npc.Player.GameObject.transform.localScale = value;
+                Npc.Scale = value;
                 Preferences.Scale = value;
             }
         }

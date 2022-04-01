@@ -74,9 +74,9 @@ namespace Pets.Commands
 
         private static Vector3 ClampScale(float x, float y, float z)
         {
-            x = Mathf.Clamp(x, 0.3f, 1.2f);
-            y = Mathf.Clamp(y, 0.3f, 1.2f);
-            z = Mathf.Clamp(z, 0.3f, 1.2f);
+            x = Mathf.Clamp(x, 0.3f, 0.6f);
+            y = Mathf.Clamp(y, 0.3f, 0.6f);
+            z = Mathf.Clamp(z, 0.3f, 0.6f);
             return new Vector3(x, y, z);
         }
     }
