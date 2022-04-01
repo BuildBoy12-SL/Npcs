@@ -22,13 +22,13 @@ namespace Pets.Commands
         public PetCommand() => LoadGeneratedCommands();
 
         /// <inheritdoc />
-        public override string Command { get; } = "pet";
+        public override string Command => "pet";
 
         /// <inheritdoc />
         public override string[] Aliases { get; } = Array.Empty<string>();
 
         /// <inheritdoc />
-        public override string Description { get; } = "Handles pet related commands.";
+        public override string Description => "Handles pet related commands.";
 
         /// <inheritdoc/>
         public sealed override void LoadGeneratedCommands()
@@ -37,6 +37,7 @@ namespace Pets.Commands
             RegisterCommand(new Item());
             RegisterCommand(new Name());
             RegisterCommand(new Role());
+            RegisterCommand(new Scale());
             RegisterCommand(new Show());
         }
 

@@ -11,6 +11,7 @@ namespace Pets
     using System.IO;
     using Exiled.API.Features;
     using Exiled.Loader;
+    using Pets.API;
 
     /// <summary>
     /// Represents a user's preferences in their pets.
@@ -34,12 +35,14 @@ namespace Pets
         /// <param name="name"><inheritdoc cref="Name"/></param>
         /// <param name="role"><inheritdoc cref="Role"/></param>
         /// <param name="heldItem"><inheritdoc cref="HeldItem"/></param>
-        public PetPreferences(string userId, bool isShown, string name, int role, int heldItem)
+        /// <param name="scale"><inheritdoc cref="Scale"/></param>
+        public PetPreferences(string userId, bool isShown, string name, int role, int heldItem, SerializableVector3 scale)
         {
             IsShown = isShown;
             Name = name;
             Role = role;
             HeldItem = heldItem;
+            Scale = scale;
             preferences?.Add(userId, this);
         }
 
@@ -62,6 +65,11 @@ namespace Pets
         /// Gets or sets the pet's held item.
         /// </summary>
         public int HeldItem { get; set; }
+
+        /// <summary>
+        /// Gets or sets the pet's scale.
+        /// </summary>
+        public SerializableVector3 Scale { get; set; }
 
         /// <summary>
         /// Gets a players preferences.

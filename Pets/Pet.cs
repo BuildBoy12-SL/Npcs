@@ -13,6 +13,7 @@ namespace Pets
     using NPCs;
     using NPCs.Cores;
     using Pets.API;
+    using UnityEngine;
 
     /// <summary>
     /// Represents an in-game pet.
@@ -32,7 +33,7 @@ namespace Pets
             if (Preferences == null)
             {
                 string defaultName = Plugin.Instance.Config.DefaultName.Replace("{Name}", owner.DisplayNickname ?? owner.Nickname);
-                Preferences = new PetPreferences(owner.UserId, true, defaultName, RoleType.ClassD.ToId(), -1);
+                Preferences = new PetPreferences(owner.UserId, true, defaultName, RoleType.ClassD.ToId(), -1, Plugin.Instance.Config.Size);
             }
 
             Npc = new Npc(Identifiers.RoleIdToType(Preferences.Role), Preferences.Name, Plugin.Instance.Config.Size);
@@ -123,6 +124,19 @@ namespace Pets
             {
                 Npc.Role = value;
                 Preferences.Role = value.ToId();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the scale of the pet.
+        /// </summary>
+        public Vector3 Scale
+        {
+            get => Npc.Player.Scale;
+            set
+            {
+                Npc.Player.GameObject.transform.localScale = value;
+                Preferences.Scale = value;
             }
         }
 
