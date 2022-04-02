@@ -60,7 +60,7 @@ namespace Pets
         /// <summary>
         /// Gets the owner's preferences for the pet.
         /// </summary>
-        public PetPreferences Preferences { get; private set; }
+        public PetPreferences Preferences { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the pet is currently visible.
