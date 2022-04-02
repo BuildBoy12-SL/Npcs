@@ -18,19 +18,13 @@ namespace NPCs
     public class Plugin : Plugin<Config>
     {
         private Harmony harmony;
-
         private PlayerEvents playerEvents;
-
-        /// <summary>
-        /// Gets the only existing instance of the <see cref="Plugin"/> class.
-        /// </summary>
-        public static Plugin Instance { get; private set; }
 
         /// <inheritdoc />
         public override string Author => "Build";
 
         /// <inheritdoc />
-        public override Version RequiredExiledVersion { get; } = new Version(4, 2, 2);
+        public override Version RequiredExiledVersion { get; } = new Version(5, 0, 0);
 
         /// <inheritdoc />
         public override Version Version { get; } = new Version(1, 0, 0);
@@ -38,8 +32,6 @@ namespace NPCs
         /// <inheritdoc />
         public override void OnEnabled()
         {
-            Instance = this;
-
             harmony = new Harmony($"npcs.{DateTime.UtcNow.Ticks}");
             harmony.PatchAll();
 
@@ -57,8 +49,6 @@ namespace NPCs
 
             harmony?.UnpatchAll(harmony.Id);
             harmony = null;
-
-            Instance = null;
 
             base.OnDisabled();
         }
