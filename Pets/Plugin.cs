@@ -42,6 +42,7 @@ namespace Pets
             Exiled.Events.Handlers.Map.PlacingBlood += mapEvents.OnPlacingBlood;
             playerEvents = new PlayerEvents();
             Exiled.Events.Handlers.Player.ChangingRole += playerEvents.OnChangingRole;
+            Exiled.Events.Handlers.Player.Destroying += playerEvents.OnDestroying;
             Exiled.Events.Handlers.Player.SpawningRagdoll += playerEvents.OnSpawningRagdoll;
             serverEvents = new ServerEvents();
             Exiled.Events.Handlers.Server.RoundEnded += serverEvents.OnRoundEnded;
@@ -57,6 +58,7 @@ namespace Pets
             Exiled.Events.Handlers.Server.WaitingForPlayers -= serverEvents.OnWaitingForPlayers;
             serverEvents = null;
             Exiled.Events.Handlers.Player.ChangingRole -= playerEvents.OnChangingRole;
+            Exiled.Events.Handlers.Player.Destroying -= playerEvents.OnDestroying;
             Exiled.Events.Handlers.Player.SpawningRagdoll -= playerEvents.OnSpawningRagdoll;
             playerEvents = null;
             Exiled.Events.Handlers.Map.PlacingBlood -= mapEvents.OnPlacingBlood;

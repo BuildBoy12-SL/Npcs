@@ -10,6 +10,7 @@ namespace Pets.EventHandlers
     using Exiled.API.Features;
     using Exiled.Events.EventArgs;
     using Exiled.Permissions.Extensions;
+    using Pets.API;
 
     /// <summary>
     /// Handles events derived from <see cref="Exiled.Events.Handlers.Player"/>.
@@ -27,6 +28,12 @@ namespace Pets.EventHandlers
                 pet.Npc.Despawn();
             else if (pet.Preferences.IsShown)
                 pet.Npc.Spawn();
+        }
+
+        /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnDestroying(DestroyingEventArgs)"/>
+        public void OnDestroying(DestroyingEventArgs ev)
+        {
+            ev.Player.GetPet()?.Destroy();
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnSpawningRagdoll(SpawningRagdollEventArgs)"/>

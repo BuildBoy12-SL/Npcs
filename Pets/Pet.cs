@@ -26,7 +26,7 @@ namespace Pets
         /// Initializes a new instance of the <see cref="Pet"/> class.
         /// </summary>
         /// <param name="owner">The owner of the pet.</param>
-        public Pet(Player owner)
+        private Pet(Player owner)
         {
             Owner = owner;
             Preferences = PetPreferences.Get(owner);
