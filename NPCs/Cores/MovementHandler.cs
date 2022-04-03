@@ -32,7 +32,6 @@ namespace NPCs.Cores
         {
             this.npc = npc;
             this.toFollow = toFollow;
-            Direction = MovementDirection.Forward;
             coroutineHandle = Timing.RunCoroutine(MovementCoroutine(), Segment.FixedUpdate);
         }
 
