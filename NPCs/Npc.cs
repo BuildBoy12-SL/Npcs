@@ -9,7 +9,6 @@ namespace NPCs
 {
     using System.Collections.Generic;
     using Exiled.API.Features;
-    using Exiled.API.Features.Items;
     using Mirror;
     using UnityEngine;
 

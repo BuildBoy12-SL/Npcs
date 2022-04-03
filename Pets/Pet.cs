@@ -9,7 +9,6 @@ namespace Pets
 {
     using System.Collections.Generic;
     using Exiled.API.Features;
-    using Exiled.API.Features.Items;
     using NPCs;
     using NPCs.Cores;
     using Pets.API;
