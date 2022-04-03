@@ -7,9 +7,13 @@
 
 namespace NPCs.Patches
 {
-#pragma warning disable SA1313
+#pragma warning disable SA1118
+    using System.Collections.Generic;
+    using System.Reflection.Emit;
     using HarmonyLib;
+    using NorthwoodLib.Pools;
     using UnityEngine;
+    using static HarmonyLib.AccessTools;
 
     /// <summary>
     /// Patches <see cref="PlayerMovementSync.OverridePosition"/> to prevent calls to <see cref="PlayerMovementSync.TargetSetRotation"/> when the player is a npc.
@@ -17,22 +21,54 @@ namespace NPCs.Patches
     [HarmonyPatch(typeof(PlayerMovementSync), nameof(PlayerMovementSync.OverridePosition))]
     internal static class OverridePosition
     {
-        private static bool Prefix(PlayerMovementSync __instance, Vector3 pos, float rot, bool forceGround = false)
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            if (__instance == null)
-                return true;
+            List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
 
-            if (!NpcBase.Dictionary.ContainsKey(__instance.gameObject))
-                return true;
+            Label skipRotationLabel = generator.DefineLabel();
 
-            if (forceGround && Physics.Raycast(pos, Vector3.down, out var hitInfo, 100f, __instance.CollidableSurfaces))
+            const int offset = 1;
+            int index = newInstructions.FindIndex(i => i.opcode == OpCodes.Starg_S) + offset;
+
+            newInstructions.InsertRange(index, new[]
             {
-                pos = hitInfo.point + (Vector3.up * 1.3f);
-                pos = new Vector3(pos.x, pos.y - ((1f - __instance._hub.transform.localScale.y) * 1.3f), pos.z);
-            }
+                new CodeInstruction(OpCodes.Ldarg_1),
+                new CodeInstruction(OpCodes.Ldfld, Field(typeof(Vector3), nameof(Vector3.x))),
+                new CodeInstruction(OpCodes.Ldarg_1),
+                new CodeInstruction(OpCodes.Ldfld, Field(typeof(Vector3), nameof(Vector3.y))),
+                new CodeInstruction(OpCodes.Ldc_R4, 1f),
+                new CodeInstruction(OpCodes.Ldarg_0),
+                new CodeInstruction(OpCodes.Ldfld, Field(typeof(PlayerMovementSync), nameof(PlayerMovementSync._hub))),
+                new CodeInstruction(OpCodes.Callvirt, PropertyGetter(typeof(Component), nameof(Component.transform))),
+                new CodeInstruction(OpCodes.Callvirt, PropertyGetter(typeof(Transform), nameof(Transform.localScale))),
+                new CodeInstruction(OpCodes.Ldfld, Field(typeof(Vector3), nameof(Vector3.y))),
+                new CodeInstruction(OpCodes.Sub),
+                new CodeInstruction(OpCodes.Ldc_R4, 1.3f),
+                new CodeInstruction(OpCodes.Mul),
+                new CodeInstruction(OpCodes.Sub),
+                new CodeInstruction(OpCodes.Ldarg_1),
+                new CodeInstruction(OpCodes.Ldfld, Field(typeof(Vector3), nameof(Vector3.z))),
+                new CodeInstruction(OpCodes.Newobj, Constructor(typeof(Vector3), new[] { typeof(float), typeof(float), typeof(float) })),
+                new CodeInstruction(OpCodes.Starg_S, 1),
+            });
 
-            __instance.ForcePosition(pos);
-            return false;
+            index = newInstructions.FindLastIndex(i => i.opcode == OpCodes.Starg_S) + offset;
+            newInstructions.InsertRange(index, new[]
+            {
+                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(NpcBase), nameof(NpcBase.Dictionary))),
+                new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(newInstructions[index]),
+                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(PlayerMovementSync), nameof(PlayerMovementSync.gameObject))),
+                new CodeInstruction(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject, NpcBase>), nameof(Dictionary<GameObject, NpcBase>.ContainsKey))),
+                new CodeInstruction(OpCodes.Brtrue_S, skipRotationLabel),
+            });
+
+            index = newInstructions.FindLastIndex(i => i.opcode == OpCodes.Ldarg_0);
+            newInstructions[index].labels.Add(skipRotationLabel);
+
+            for (int z = 0; z < newInstructions.Count; z++)
+                yield return newInstructions[z];
+
+            ListPool<CodeInstruction>.Shared.Return(newInstructions);
         }
     }
 }

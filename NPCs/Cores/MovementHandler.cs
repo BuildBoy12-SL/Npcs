@@ -77,7 +77,7 @@ namespace NPCs.Cores
                 if (isPaused)
                     continue;
 
-                if (npc.Player == null)
+                if (npc.Player is null)
                     continue;
 
                 Vector3 moveDirection = toFollow.Position - npc.Player.Position;

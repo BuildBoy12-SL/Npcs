@@ -42,9 +42,9 @@ namespace NPCs.Patches
         private static IEnumerator<float> Process(RoundSummary roundSummary)
         {
             float time = Time.unscaledTime;
-            while (roundSummary != null)
+            while (roundSummary is not null)
             {
-                yield return Timing.WaitForSeconds(1f);
+                yield return Timing.WaitForSeconds(2.5f);
 
                 while (RoundSummary.RoundLock || !RoundSummary.RoundInProgress() || Time.unscaledTime - time < 15f || (roundSummary._keepRoundOnOne && PlayerManager.players.Count < 2))
                     yield return Timing.WaitForOneFrame;
@@ -52,7 +52,7 @@ namespace NPCs.Patches
                 RoundSummary.SumInfo_ClassList newList = default;
                 foreach (KeyValuePair<GameObject, ReferenceHub> keyValuePair in ReferenceHub.GetAllHubs())
                 {
-                    if (keyValuePair.Value == null || NpcBase.Dictionary.ContainsKey(keyValuePair.Key))
+                    if (keyValuePair.Value is null || NpcBase.Dictionary.ContainsKey(keyValuePair.Key))
                         continue;
 
                     CharacterClassManager component = keyValuePair.Value.characterClassManager;
@@ -115,14 +115,21 @@ namespace NPCs.Patches
                         roundSummary.RoundEnded = true;
                 }
 
-                EndingRoundEventArgs endingRoundEventArgs = new EndingRoundEventArgs(LeadingTeam.Draw, newList, roundSummary.RoundEnded);
+                EndingRoundEventArgs endingRoundEventArgs = new(LeadingTeam.Draw, newList, roundSummary.RoundEnded);
 
-                if (num1 > 0 && num5 > 0)
-                    endingRoundEventArgs.LeadingTeam = LeadingTeam.FacilityForces;
+                if (num1 > 0)
+                {
+                    if (num5 > 0)
+                        endingRoundEventArgs.LeadingTeam = LeadingTeam.FacilityForces;
+                }
                 else if (num4 > 0)
+                {
                     endingRoundEventArgs.LeadingTeam = LeadingTeam.ChaosInsurgency;
+                }
                 else if (num3 > 0)
+                {
                     endingRoundEventArgs.LeadingTeam = LeadingTeam.Anomalies;
+                }
 
                 Server.OnEndingRound(endingRoundEventArgs);
 
@@ -137,9 +144,9 @@ namespace NPCs.Patches
                     yield return Timing.WaitForSeconds(1.5f);
                     int timeToRoundRestart = Mathf.Clamp(ConfigFile.ServerConfig.GetInt("auto_round_restart_time", 10), 5, 1000);
 
-                    if (roundSummary != null)
+                    if (roundSummary is not null)
                     {
-                        RoundEndedEventArgs roundEndedEventArgs = new RoundEndedEventArgs(endingRoundEventArgs.LeadingTeam, newList, timeToRoundRestart);
+                        RoundEndedEventArgs roundEndedEventArgs = new(endingRoundEventArgs.LeadingTeam, newList, timeToRoundRestart);
 
                         Server.OnRoundEnded(roundEndedEventArgs);
 

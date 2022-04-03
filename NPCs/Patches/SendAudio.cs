@@ -38,7 +38,7 @@ namespace NPCs.Patches
                 new CodeInstruction(OpCodes.Ldloc_S, 5),
                 new CodeInstruction(OpCodes.Callvirt, PropertyGetter(typeof(ReferenceHub), nameof(ReferenceHub.gameObject))),
                 new CodeInstruction(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject, NpcBase>), nameof(Dictionary<GameObject, NpcBase>.ContainsKey))),
-                new CodeInstruction(OpCodes.Brtrue, continueLabel),
+                new CodeInstruction(OpCodes.Brtrue_S, continueLabel),
             });
 
             for (int z = 0; z < newInstructions.Count; z++)
