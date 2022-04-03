@@ -19,7 +19,6 @@ namespace Pets.Commands
     {
         private static readonly ItemType[] BlacklistedItems =
         {
-            ItemType.None,
             ItemType.Ammo9x19,
             ItemType.Ammo12gauge,
             ItemType.Ammo44cal,
