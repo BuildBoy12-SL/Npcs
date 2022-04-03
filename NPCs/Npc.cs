@@ -1,4 +1,4 @@
-// -----------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------
 // <copyright file="Npc.cs" company="Build">
 // Copyright (c) Build. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
@@ -7,14 +7,15 @@
 
 namespace NPCs
 {
+    using System.Collections.Generic;
     using Exiled.API.Features;
     using Mirror;
     using UnityEngine;
 
     /// <summary>
-    /// Manages the actions of dummy players.
+    /// Represents the core of an npc.
     /// </summary>
-    public class Npc : NpcBase
+    public class Npc
     {
         private ItemType heldItem;
         private bool isSpawned;
@@ -22,14 +23,60 @@ namespace NPCs
         /// <summary>
         /// Initializes a new instance of the <see cref="Npc"/> class.
         /// </summary>
-        /// <param name="scale">The size of the npc.</param>
-        /// <param name="roleType">The role the npc should spawn as.</param>
+        /// <param name="roleType">The role of the npc.</param>
         /// <param name="name">The name of the npc.</param>
+        /// <param name="scale">The size of the npc.</param>
         public Npc(RoleType roleType, string name, Vector3 scale)
-            : base(roleType, name, scale)
         {
-            Player.Dictionary.Add(GameObject, Player);
+            GameObject = Object.Instantiate(NetworkManager.singleton.playerPrefab);
+            Dictionary.Add(GameObject, this);
+
+            ReferenceHub = GameObject.GetComponent<ReferenceHub>();
+
+            GameObject.transform.localScale = scale;
+
+            ReferenceHub.queryProcessor.PlayerId = 9999;
+            ReferenceHub.queryProcessor.NetworkPlayerId = 9999;
+            ReferenceHub.queryProcessor._ipAddress = "127.0.0.WAN";
+
+            ReferenceHub.characterClassManager.CurClass = roleType;
+            ReferenceHub.playerStats.StatModules[0].CurValue = 100;
+            ReferenceHub.nicknameSync.Network_myNickSync = name;
+
             PlayerManager.AddPlayer(GameObject, CustomNetworkManager.slots);
+
+            Player = new Player(GameObject);
+            Player.SessionVariables.Add("IsNPC", true);
+            Player.Dictionary.Add(GameObject, Player);
+        }
+
+        /// <summary>
+        /// Gets a <see cref="Dictionary{TKey,TValue}"/> containing all <see cref="Npc"/>'s on the server.
+        /// </summary>
+        public static Dictionary<GameObject, Npc> Dictionary { get; } = new();
+
+        /// <summary>
+        /// Gets the attached <see cref="UnityEngine.GameObject"/>.
+        /// </summary>
+        public GameObject GameObject { get; }
+
+        /// <summary>
+        /// Gets the attached ReferenceHub component.
+        /// </summary>
+        public ReferenceHub ReferenceHub { get; }
+
+        /// <summary>
+        /// Gets the created <see cref="Exiled.API.Features.Player"/> to represent the npc.
+        /// </summary>
+        public Player Player { get; }
+
+        /// <summary>
+        /// Gets or sets the npc's position.
+        /// </summary>
+        public Vector3 Position
+        {
+            get => Player.Position;
+            set => ReferenceHub.playerMovementSync.OverridePosition(value, 0f, true);
         }
 
         /// <summary>
@@ -40,7 +87,7 @@ namespace NPCs
             get => heldItem;
             set
             {
-                Player.ReferenceHub.inventory.NetworkCurItem = new InventorySystem.Items.ItemIdentifier(value, 0);
+                ReferenceHub.inventory.NetworkCurItem = new InventorySystem.Items.ItemIdentifier(value, 0);
                 heldItem = value;
             }
         }
@@ -63,10 +110,10 @@ namespace NPCs
         /// </summary>
         public RoleType Role
         {
-            get => Player.Role;
+            get => Player.Role.Type;
             set
             {
-                Player.ReferenceHub.characterClassManager.CurClass = value;
+                ReferenceHub.characterClassManager.CurClass = value;
                 Respawn();
             }
         }
@@ -106,6 +153,17 @@ namespace NPCs
 
             NetworkServer.UnSpawn(GameObject);
             isSpawned = false;
+        }
+
+        /// <summary>
+        /// Destroys the fake player.
+        /// </summary>
+        public void Destroy()
+        {
+            Dictionary.Remove(GameObject);
+            PlayerManager.RemovePlayer(GameObject, CustomNetworkManager.slots);
+            NetworkServer.UnSpawn(GameObject);
+            Object.Destroy(GameObject);
         }
 
         private void Respawn()

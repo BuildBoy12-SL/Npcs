@@ -52,7 +52,7 @@ namespace NPCs.Patches
                 RoundSummary.SumInfo_ClassList newList = default;
                 foreach (KeyValuePair<GameObject, ReferenceHub> keyValuePair in ReferenceHub.GetAllHubs())
                 {
-                    if (keyValuePair.Value is null || NpcBase.Dictionary.ContainsKey(keyValuePair.Key))
+                    if (keyValuePair.Value is null || Npc.Dictionary.ContainsKey(keyValuePair.Key))
                         continue;
 
                     CharacterClassManager component = keyValuePair.Value.characterClassManager;

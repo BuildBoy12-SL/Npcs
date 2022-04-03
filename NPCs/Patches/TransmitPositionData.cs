@@ -22,7 +22,7 @@ namespace NPCs.Patches
     [HarmonyPatch(typeof(PlayerPositionManager), nameof(PlayerPositionManager.TransmitData))]
     internal static class TransmitPositionData
     {
-        private static List<GameObject> GetPlayers => PlayerManager.players.Where(gameObject => !NpcBase.Dictionary.ContainsKey(gameObject)).ToList();
+        private static List<GameObject> GetPlayers => PlayerManager.players.Where(gameObject => !Npc.Dictionary.ContainsKey(gameObject)).ToList();
 
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {

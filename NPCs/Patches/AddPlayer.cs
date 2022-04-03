@@ -27,8 +27,8 @@ namespace NPCs.Patches
             int index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Stsfld);
             newInstructions.InsertRange(index, new[]
             {
-                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(NpcBase), nameof(NpcBase.Dictionary))),
-                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Dictionary<GameObject, NpcBase>), nameof(Dictionary<GameObject, NpcBase>.Count))),
+                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))),
+                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Dictionary<GameObject, Npc>), nameof(Dictionary<GameObject, Npc>.Count))),
                 new CodeInstruction(OpCodes.Sub),
             });
 

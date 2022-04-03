@@ -33,11 +33,11 @@ namespace NPCs.Patches
             index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Ret) + 1;
             newInstructions.InsertRange(index, new[]
             {
-                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(NpcBase), nameof(NpcBase.Dictionary))).MoveLabelsFrom(newInstructions[index]),
+                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))).MoveLabelsFrom(newInstructions[index]),
                 new CodeInstruction(OpCodes.Ldarg_0),
                 new CodeInstruction(OpCodes.Ldfld, Field(typeof(Scp173), nameof(Scp173.Hub))),
                 new CodeInstruction(OpCodes.Callvirt, PropertyGetter(typeof(ReferenceHub), nameof(ReferenceHub.gameObject))),
-                new CodeInstruction(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject, NpcBase>), nameof(Dictionary<GameObject, NpcBase>.ContainsKey))),
+                new CodeInstruction(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject, Npc>), nameof(Dictionary<GameObject, Npc>.ContainsKey))),
                 new CodeInstruction(OpCodes.Brtrue_S, returnLabel),
             });
 

@@ -33,7 +33,7 @@ namespace NPCs.EventHandlers
 
         private void OnReceivingEffect(ReceivingEffectEventArgs ev)
         {
-            if (NpcBase.Dictionary.ContainsKey(ev.Player.GameObject))
+            if (Npc.Dictionary.ContainsKey(ev.Player.GameObject))
                 ev.IsAllowed = false;
         }
     }
