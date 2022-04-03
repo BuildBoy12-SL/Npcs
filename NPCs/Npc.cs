@@ -17,7 +17,6 @@ namespace NPCs
     /// </summary>
     public class Npc
     {
-        private ItemType heldItem;
         private bool isSpawned;
 
         /// <summary>
@@ -84,12 +83,8 @@ namespace NPCs
         /// </summary>
         public ItemType HeldItem
         {
-            get => heldItem;
-            set
-            {
-                ReferenceHub.inventory.NetworkCurItem = new InventorySystem.Items.ItemIdentifier(value, 0);
-                heldItem = value;
-            }
+            get => ReferenceHub.inventory.CurItem.TypeId;
+            set => ReferenceHub.inventory.NetworkCurItem = new InventorySystem.Items.ItemIdentifier(value, 0);
         }
 
         /// <summary>
