@@ -9,6 +9,7 @@ namespace Pets
 {
     using System.Collections.Generic;
     using Exiled.API.Features;
+    using Exiled.API.Features.Items;
     using NPCs;
     using NPCs.Cores;
     using Pets.API;
@@ -35,11 +36,8 @@ namespace Pets
                 Preferences = new PetPreferences(owner.UserId, true, defaultName, RoleType.ClassD.ToId(), -1, Plugin.Instance.Config.Size);
             }
 
-            Npc = new Npc(Identifiers.RoleIdToType(Preferences.Role), Preferences.Name, Preferences.Scale)
-            {
-                HeldItem = Identifiers.ItemIdToType(Preferences.HeldItem),
-            };
-
+            Npc = new Npc(Identifiers.RoleIdToType(Preferences.Role), Preferences.Name, Preferences.Scale);
+            Npc.HeldItem = Identifiers.ItemIdToType(Preferences.HeldItem);
             movementHandler = new MovementHandler(Npc, Owner);
             if (Preferences.IsShown)
                 IsShown = true;
@@ -95,7 +93,7 @@ namespace Pets
             get => Npc.HeldItem;
             set
             {
-                Npc.HeldItem = HeldItem;
+                Npc.HeldItem = value;
                 Preferences.HeldItem = value.ToId();
             }
         }

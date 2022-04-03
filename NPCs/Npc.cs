@@ -9,6 +9,7 @@ namespace NPCs
 {
     using System.Collections.Generic;
     using Exiled.API.Features;
+    using Exiled.API.Features.Items;
     using Mirror;
     using UnityEngine;
 
@@ -70,7 +71,7 @@ namespace NPCs
         public Player Player { get; }
 
         /// <summary>
-        /// Gets or sets the npc's position.
+        /// Gets or sets the NPC's position.
         /// </summary>
         public Vector3 Position
         {
@@ -88,7 +89,7 @@ namespace NPCs
         }
 
         /// <summary>
-        /// Gets or sets the npc's name.
+        /// Gets or sets the NPC's name.
         /// </summary>
         public string Name
         {
