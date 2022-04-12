@@ -7,7 +7,6 @@
 
 namespace Pets.EventHandlers
 {
-    using System.Linq;
     using Exiled.Events.EventArgs;
 
     /// <summary>
@@ -21,9 +20,6 @@ namespace Pets.EventHandlers
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnWaitingForPlayers()"/>
         public void OnWaitingForPlayers()
         {
-            foreach (Pet pet in Pet.Instances.ToList())
-                pet.Destroy();
-
             PetPreferences.Load();
         }
     }

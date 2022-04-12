@@ -75,7 +75,7 @@ namespace NPCs
         public Vector3 Position
         {
             get => Player.Position;
-            set => ReferenceHub.playerMovementSync.OverridePosition(value, 0f, true);
+            set => ReferenceHub.playerMovementSync.OverridePosition(value, forceGround: true);
         }
 
         /// <summary>

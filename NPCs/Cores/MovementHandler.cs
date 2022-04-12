@@ -83,7 +83,7 @@ namespace NPCs.Cores
 
                 Quaternion rot = Quaternion.LookRotation(moveDirection.normalized);
                 Vector2 rotation = new Vector2(rot.eulerAngles.x, rot.eulerAngles.y);
-                npc.Player.Rotations = rotation;
+                npc.Player.Rotation = rotation;
                 npc.Player.CameraTransform.rotation = rot;
 
                 if (moveDirection.magnitude < 3)
