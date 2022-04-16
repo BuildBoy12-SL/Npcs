@@ -9,7 +9,9 @@ namespace NPCs.Patches.Compatibility
 {
 #pragma warning disable SA1118
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Reflection.Emit;
+    using Exiled.Loader;
     using HarmonyLib;
     using NorthwoodLib.Pools;
     using UnityEngine;
@@ -40,6 +42,21 @@ namespace NPCs.Patches.Compatibility
                 yield return newInstructions[z];
 
             ListPool<CodeInstruction>.Shared.Return(newInstructions);
+        }
+
+        /// <summary>
+        /// Attempts to patch the required methods.
+        /// </summary>
+        /// <param name="harmony">The harmony instance.</param>
+        internal static void Patch(Harmony harmony)
+        {
+            Assembly assembly = Loader.GetPlugin("DiscordIntegration")?.Assembly;
+            if (assembly is null)
+                return;
+
+            MethodInfo updateActivity = assembly.GetType("DiscordIntegration.API.Configs.Bot+<UpdateActivity>d__28")?.GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (updateActivity is not null)
+                harmony.Patch(updateActivity, transpiler: new HarmonyMethod(typeof(DiscordIntegration).GetMethod(nameof(ActivityCount))));
         }
     }
 }

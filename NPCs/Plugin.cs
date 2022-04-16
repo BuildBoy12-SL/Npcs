@@ -59,9 +59,8 @@ namespace NPCs
 
         private void PatchCompatability()
         {
-            MethodInfo updateActivity = Loader.GetPlugin("DiscordIntegration")?.Assembly.GetType("DiscordIntegration.API.Configs.Bot+<UpdateActivity>d__28")?.GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
-            if (updateActivity != null)
-                harmony.Patch(updateActivity, transpiler: new HarmonyMethod(typeof(DiscordIntegration).GetMethod(nameof(DiscordIntegration.ActivityCount))));
+            DiscordIntegration.Patch(harmony);
+            EndConditions.Patch(harmony);
         }
     }
 }
