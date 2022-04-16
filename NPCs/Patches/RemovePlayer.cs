@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="AddPlayer.cs" company="Build">
+// <copyright file="RemovePlayer.cs" company="Build">
 // Copyright (c) Build. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
@@ -16,10 +16,10 @@ namespace NPCs.Patches
     using static HarmonyLib.AccessTools;
 
     /// <summary>
-    /// Patches <see cref="PlayerManager.AddPlayer"/> to reduce the total player count from the amount of spawned npcs.
+    /// Patches <see cref="PlayerManager.RemovePlayer"/> to reduce the total player count from the amount of spawned npcs.
     /// </summary>
-    [HarmonyPatch(typeof(PlayerManager), nameof(PlayerManager.AddPlayer))]
-    internal static class AddPlayer
+    [HarmonyPatch(typeof(PlayerManager), nameof(PlayerManager.RemovePlayer))]
+    internal static class RemovePlayer
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
