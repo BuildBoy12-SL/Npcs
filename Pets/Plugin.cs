@@ -41,7 +41,6 @@ namespace Pets
             Exiled.Events.Handlers.Player.ChangingRole += playerEvents.OnChangingRole;
             Exiled.Events.Handlers.Player.Destroying += playerEvents.OnDestroying;
             Exiled.Events.Handlers.Player.Shot += playerEvents.OnShot;
-            Exiled.Events.Handlers.Player.SpawningRagdoll += playerEvents.OnSpawningRagdoll;
             serverEvents = new ServerEvents();
             Exiled.Events.Handlers.Server.RoundEnded += serverEvents.OnRoundEnded;
             Exiled.Events.Handlers.Server.WaitingForPlayers += serverEvents.OnWaitingForPlayers;
@@ -58,7 +57,6 @@ namespace Pets
             Exiled.Events.Handlers.Player.ChangingRole -= playerEvents.OnChangingRole;
             Exiled.Events.Handlers.Player.Destroying -= playerEvents.OnDestroying;
             Exiled.Events.Handlers.Player.Shot -= playerEvents.OnShot;
-            Exiled.Events.Handlers.Player.SpawningRagdoll -= playerEvents.OnSpawningRagdoll;
             playerEvents = null;
             harmony?.UnpatchAll(harmony.Id);
             harmony = null;

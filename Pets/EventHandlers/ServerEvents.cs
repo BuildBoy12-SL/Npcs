@@ -18,9 +18,6 @@ namespace Pets.EventHandlers
         public void OnRoundEnded(RoundEndedEventArgs ev) => PetPreferences.Save();
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnWaitingForPlayers()"/>
-        public void OnWaitingForPlayers()
-        {
-            PetPreferences.Load();
-        }
+        public void OnWaitingForPlayers() => PetPreferences.Load();
     }
 }

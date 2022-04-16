@@ -36,13 +36,6 @@ namespace Pets.EventHandlers
             ev.Player.GetPet()?.Destroy();
         }
 
-        /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnSpawningRagdoll(SpawningRagdollEventArgs)"/>
-        public void OnSpawningRagdoll(SpawningRagdollEventArgs ev)
-        {
-            if (ev.Owner.IsPet(out _))
-                ev.IsAllowed = false;
-        }
-
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnShot(ShotEventArgs)"/>
         public void OnShot(ShotEventArgs ev)
         {
