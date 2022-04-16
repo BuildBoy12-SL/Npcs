@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="Scp173KillPlayer.cs" company="Build">
+// <copyright file="Scp939ReceivedAttack.cs" company="Build">
 // Copyright (c) Build. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
@@ -17,22 +17,22 @@ namespace NPCs.Patches
     using static HarmonyLib.AccessTools;
 
     /// <summary>
-    /// Patches <see cref="Scp173.ServerKillPlayer"/> to prevent the snapping of npcs.
+    /// Patches <see cref="Scp939.ServerReceivedAttackMsg"/> to prevent the snapping of npcs.
     /// </summary>
-    [HarmonyPatch(typeof(Scp173), nameof(Scp173.ServerKillPlayer))]
-    internal static class Scp173KillPlayer
+    [HarmonyPatch(typeof(Scp939), nameof(Scp939.ServerReceivedAttackMsg))]
+    internal static class Scp939ReceivedAttack
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
 
             Label returnLabel = generator.DefineLabel();
-
-            newInstructions.InsertRange(0, new[]
+            const int offset = 1;
+            int index = newInstructions.FindIndex(i => i.opcode == OpCodes.Stloc_0) + offset;
+            newInstructions.InsertRange(index, new[]
             {
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))),
-                new CodeInstruction(OpCodes.Ldarg_1),
-                new CodeInstruction(OpCodes.Callvirt, PropertyGetter(typeof(ReferenceHub), nameof(ReferenceHub.gameObject))),
+                new CodeInstruction(OpCodes.Ldloc_0),
                 new CodeInstruction(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject, Npc>), nameof(Dictionary<GameObject, Npc>.ContainsKey))),
                 new CodeInstruction(OpCodes.Brtrue_S, returnLabel),
             });

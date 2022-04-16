@@ -37,12 +37,6 @@ namespace Pets.Commands
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission("pets.pet.role"))
-            {
-                response = "Insufficient permission.";
-                return false;
-            }
-
             Player player = Player.Get(sender);
             if (player == null)
             {
@@ -60,6 +54,12 @@ namespace Pets.Commands
             if (!Enum.TryParse(arguments.At(0), true, out RoleType roleType) || BlacklistedRoles.Contains(roleType))
             {
                 response = "Please specify a valid role.";
+                return false;
+            }
+
+            if (!sender.CheckPermission("npcs.pets.role." + roleType.ToString().ToLower()))
+            {
+                response = "Insufficient permission.";
                 return false;
             }
 

@@ -39,14 +39,15 @@ namespace Pets.EventHandlers
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnSpawningRagdoll(SpawningRagdollEventArgs)"/>
         public void OnSpawningRagdoll(SpawningRagdollEventArgs ev)
         {
-            foreach (Pet pet in Pet.Instances)
-            {
-                if (ev.Owner == pet.Npc.Player)
-                {
-                    ev.IsAllowed = false;
-                    return;
-                }
-            }
+            if (ev.Owner.IsPet(out _))
+                ev.IsAllowed = false;
+        }
+
+        /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnShot(ShotEventArgs)"/>
+        public void OnShot(ShotEventArgs ev)
+        {
+            if (ev.Target.IsPet(out _))
+                ev.CanHurt = false;
         }
     }
 }

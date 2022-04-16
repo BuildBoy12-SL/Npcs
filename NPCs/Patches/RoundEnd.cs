@@ -8,6 +8,7 @@
 namespace NPCs.Patches
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection.Emit;
     using Exiled.API.Enums;
     using Exiled.Events.EventArgs;
@@ -23,7 +24,7 @@ namespace NPCs.Patches
     /// <summary>
     /// Patches <see cref="RoundSummary.Start"/> to implement <see cref="Process"/> to ignore npcs when ending the round.
     /// </summary>
-    // [HarmonyPatch(typeof(RoundSummary), nameof(RoundSummary.Start))]
+    [HarmonyPatch(typeof(RoundSummary), nameof(RoundSummary.Start))]
     internal static class RoundEnd
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -46,7 +47,7 @@ namespace NPCs.Patches
             {
                 yield return Timing.WaitForSeconds(2.5f);
 
-                while (RoundSummary.RoundLock || !RoundSummary.RoundInProgress() || Time.unscaledTime - time < 15f || (roundSummary._keepRoundOnOne && PlayerManager.players.Count < 2))
+                while (RoundSummary.RoundLock || !RoundSummary.RoundInProgress() || Time.unscaledTime - time < 15f || (roundSummary._keepRoundOnOne && PlayerManager.players.Count(gameObject => !Npc.Dictionary.ContainsKey(gameObject)) < 2))
                     yield return Timing.WaitForOneFrame;
 
                 RoundSummary.SumInfo_ClassList newList = default;
@@ -98,7 +99,9 @@ namespace NPCs.Patches
                 float num6 = (roundSummary.classlistStart.class_ds == 0) ? 0f : (num4 / roundSummary.classlistStart.class_ds);
                 float num7 = (roundSummary.classlistStart.scientists == 0) ? 1f : (num5 / roundSummary.classlistStart.scientists);
 
-                if (newList.class_ds == 0 && num1 == 0)
+                RoundSummary.SurvivingSCPs = newList.scps_except_zombies;
+
+                if (newList.class_ds <= 0 && num1 <= 0)
                 {
                     roundSummary.RoundEnded = true;
                 }
@@ -118,18 +121,11 @@ namespace NPCs.Patches
                 EndingRoundEventArgs endingRoundEventArgs = new(LeadingTeam.Draw, newList, roundSummary.RoundEnded);
 
                 if (num1 > 0)
-                {
-                    if (num5 > 0)
-                        endingRoundEventArgs.LeadingTeam = LeadingTeam.FacilityForces;
-                }
-                else if (num4 > 0)
-                {
-                    endingRoundEventArgs.LeadingTeam = LeadingTeam.ChaosInsurgency;
-                }
+                    endingRoundEventArgs.LeadingTeam = RoundSummary.EscapedScientists >= RoundSummary.EscapedClassD ? LeadingTeam.FacilityForces : LeadingTeam.Draw;
                 else if (num3 > 0)
-                {
-                    endingRoundEventArgs.LeadingTeam = LeadingTeam.Anomalies;
-                }
+                    endingRoundEventArgs.LeadingTeam = RoundSummary.EscapedClassD > RoundSummary.SurvivingSCPs ? LeadingTeam.ChaosInsurgency : (RoundSummary.SurvivingSCPs > RoundSummary.EscapedScientists ? LeadingTeam.Anomalies : LeadingTeam.Draw);
+                else if (num2 > 0)
+                    endingRoundEventArgs.LeadingTeam = RoundSummary.EscapedClassD >= RoundSummary.EscapedScientists ? LeadingTeam.ChaosInsurgency : LeadingTeam.Draw;
 
                 Server.OnEndingRound(endingRoundEventArgs);
 
@@ -138,7 +134,8 @@ namespace NPCs.Patches
                 if (roundSummary.RoundEnded)
                 {
                     FriendlyFireConfig.PauseDetector = true;
-                    string str = "Round finished! Anomalies: " + num3 + " | Chaos: " + num2 + " | Facility Forces: " + num1 + " | D escaped percentage: " + num6 + " | S escaped percentage: : " + num7;
+                    string str = "Round finished! Anomalies: " + num3 + " | Chaos: " + num2 + " | Facility Forces: " +
+                                 num1 + " | D escaped percentage: " + num6 + " | S escaped percentage: : " + num7;
                     Console.AddLog(str, Color.gray, false);
                     ServerLogs.AddLog(ServerLogs.Modules.Logger, str, ServerLogs.ServerLogType.GameEvent);
                     yield return Timing.WaitForSeconds(1.5f);
@@ -146,7 +143,8 @@ namespace NPCs.Patches
 
                     if (roundSummary is not null)
                     {
-                        RoundEndedEventArgs roundEndedEventArgs = new(endingRoundEventArgs.LeadingTeam, newList, timeToRoundRestart);
+                        RoundEndedEventArgs roundEndedEventArgs =
+                            new(endingRoundEventArgs.LeadingTeam, newList, timeToRoundRestart);
 
                         Server.OnRoundEnded(roundEndedEventArgs);
 
