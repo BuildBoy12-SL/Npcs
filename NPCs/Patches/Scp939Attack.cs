@@ -17,7 +17,7 @@ namespace NPCs.Patches
     using static HarmonyLib.AccessTools;
 
     /// <summary>
-    /// Patches <see cref="Scp939.ServerAttack"/> to prevent the snapping of npcs.
+    /// Patches <see cref="Scp939.ServerAttack"/> to prevent the attacking of npcs.
     /// </summary>
     [HarmonyPatch(typeof(Scp939), nameof(Scp939.ServerAttack))]
     internal static class Scp939Attack
