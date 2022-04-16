@@ -8,9 +8,12 @@
 namespace NPCs
 {
     using System;
+    using System.Reflection;
     using Exiled.API.Features;
+    using Exiled.Loader;
     using HarmonyLib;
     using NPCs.EventHandlers;
+    using NPCs.Patches.Compatibility;
 
     /// <summary>
     /// The main plugin class.
@@ -34,6 +37,7 @@ namespace NPCs
         {
             harmony = new Harmony($"npcs.{DateTime.UtcNow.Ticks}");
             harmony.PatchAll();
+            PatchCompatability();
 
             playerEvents = new PlayerEvents();
             playerEvents.Subscribe();
@@ -51,6 +55,13 @@ namespace NPCs
             harmony = null;
 
             base.OnDisabled();
+        }
+
+        private void PatchCompatability()
+        {
+            MethodInfo updateActivity = Loader.GetPlugin("DiscordIntegration")?.Assembly.GetType("DiscordIntegration.API.Configs.Bot+<UpdateActivity>d__28")?.GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (updateActivity != null)
+                harmony.Patch(updateActivity, transpiler: new HarmonyMethod(typeof(DiscordIntegration).GetMethod(nameof(DiscordIntegration.ActivityCount))));
         }
     }
 }
