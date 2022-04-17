@@ -114,50 +114,30 @@ namespace NPCs.Cores
                         break;
                 }
 
-                bool wall = false;
+                Vector3 newPosition = npc.Position;
                 switch (Direction)
                 {
                     case MovementDirection.Forward:
-                        var pos = npc.Position + (npc.Player.CameraTransform.forward / 10 * speed);
-
-                        if (!Physics.Linecast(npc.Position, pos, npc.Player.ReferenceHub.playerMovementSync.CollidableSurfaces))
-                            npc.Position = pos;
-                        else
-                            wall = true;
+                        newPosition = npc.Position + (npc.Player.CameraTransform.forward / 10 * speed);
                         break;
-
                     case MovementDirection.Backwards:
-                        pos = npc.Position - (npc.Player.CameraTransform.forward / 10 * speed);
-
-                        if (!Physics.Linecast(npc.Position, pos, npc.Player.ReferenceHub.playerMovementSync.CollidableSurfaces))
-                            npc.Position = pos;
-                        else
-                            wall = true;
+                        newPosition = npc.Position - (npc.Player.CameraTransform.forward / 10 * speed);
                         break;
-
                     case MovementDirection.Right:
-                        pos = npc.Position + (Quaternion.AngleAxis(90, Vector3.up) * npc.Player.CameraTransform.forward / 10 * speed);
-
-                        if (!Physics.Linecast(npc.Position, pos, npc.Player.ReferenceHub.playerMovementSync.CollidableSurfaces))
-                            npc.Position = pos;
-                        else
-                            wall = true;
+                        newPosition = npc.Position + (Quaternion.AngleAxis(90, Vector3.up) * npc.Player.CameraTransform.forward / 10 * speed);
                         break;
-
                     case MovementDirection.Left:
-                        pos = npc.Position - (Quaternion.AngleAxis(90, Vector3.up) * npc.Player.CameraTransform.forward / 10 * speed);
-
-                        if (!Physics.Linecast(npc.Position, pos, npc.Player.ReferenceHub.playerMovementSync.CollidableSurfaces))
-                            npc.Position = pos;
-                        else
-                            wall = true;
+                        newPosition = npc.Position - (Quaternion.AngleAxis(90, Vector3.up) * npc.Player.CameraTransform.forward / 10 * speed);
                         break;
                 }
 
-                if (wall)
+                if (!Physics.Linecast(npc.Position, newPosition, npc.Player.ReferenceHub.playerMovementSync.CollidableSurfaces))
                 {
-                    Direction = MovementDirection.None;
+                    npc.Position = newPosition;
+                    continue;
                 }
+
+                Direction = MovementDirection.None;
             }
         }
     }
