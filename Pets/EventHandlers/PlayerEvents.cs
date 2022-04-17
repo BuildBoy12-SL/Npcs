@@ -36,6 +36,13 @@ namespace Pets.EventHandlers
             ev.Player.GetPet()?.Destroy();
         }
 
+        /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnEnteringPocketDimension(EnteringPocketDimensionEventArgs)"/>
+        public void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
+        {
+            if (ev.Player.IsPet(out _))
+                ev.IsAllowed = false;
+        }
+
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnShot(ShotEventArgs)"/>
         public void OnShot(ShotEventArgs ev)
         {
