@@ -118,16 +118,16 @@ namespace NPCs.Cores
                 switch (Direction)
                 {
                     case MovementDirection.Forward:
-                        newPosition = npc.Position + (npc.Player.CameraTransform.forward / 10 * speed);
+                        newPosition += npc.Player.CameraTransform.forward / 10 * speed;
                         break;
                     case MovementDirection.Backwards:
-                        newPosition = npc.Position - (npc.Player.CameraTransform.forward / 10 * speed);
+                        newPosition -= npc.Player.CameraTransform.forward / 10 * speed;
                         break;
                     case MovementDirection.Right:
-                        newPosition = npc.Position + (Quaternion.AngleAxis(90, Vector3.up) * npc.Player.CameraTransform.forward / 10 * speed);
+                        newPosition += Quaternion.AngleAxis(90, Vector3.up) * npc.Player.CameraTransform.forward / 10 * speed;
                         break;
                     case MovementDirection.Left:
-                        newPosition = npc.Position - (Quaternion.AngleAxis(90, Vector3.up) * npc.Player.CameraTransform.forward / 10 * speed);
+                        newPosition -= Quaternion.AngleAxis(90, Vector3.up) * npc.Player.CameraTransform.forward / 10 * speed;
                         break;
                 }
 
