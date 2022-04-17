@@ -22,10 +22,7 @@ namespace NPCs.Patches.Compatibility
     /// </summary>
     internal class DiscordIntegration : ICompatibilityClass
     {
-        /// <summary>
-        /// Attempts to patch the required methods.
-        /// </summary>
-        /// <param name="harmony">The harmony instance.</param>
+        /// <inheritdoc/>
         public void Patch(Harmony harmony)
         {
             Assembly assembly = Loader.GetPlugin("DiscordIntegration")?.Assembly;
@@ -40,8 +37,6 @@ namespace NPCs.Patches.Compatibility
         /// <summary>
         /// Patches DiscordIntegration to subtract the npc count from the player count in the bot's status.
         /// </summary>
-        /// <param name="instructions">The original methods instructions.</param>
-        /// <returns>The new instructions.</returns>
         private static IEnumerable<CodeInstruction> ActivityCount(IEnumerable<CodeInstruction> instructions)
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);

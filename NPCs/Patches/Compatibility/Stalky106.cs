@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="EndConditions.cs" company="Build">
+// <copyright file="Stalky106.cs" company="Build">
 // Copyright (c) Build. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
@@ -19,36 +19,34 @@ namespace NPCs.Patches.Compatibility
     using static HarmonyLib.AccessTools;
 
     /// <summary>
-    /// Contains the Harmony patches for the EndConditions plugin.
+    /// Contains the Harmony patches for the Stalky106 plugin.
     /// </summary>
-    internal class EndConditions : ICompatibilityClass
+    internal class Stalky106 : ICompatibilityClass
     {
         /// <inheritdoc/>
         public void Patch(Harmony harmony)
         {
-            Assembly assembly = Loader.GetPlugin("EndConditions")?.Assembly;
+            Assembly assembly = Loader.GetPlugin("Stalky106")?.Assembly;
             if (assembly is null)
                 return;
 
-            MethodInfo getRoles = assembly.GetType("EndConditions.Methods+<GetRoles>d__2")?.GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
-            if (getRoles is not null)
-                harmony.Patch(getRoles, transpiler: new HarmonyMethod(typeof(EndConditions).GetMethod(nameof(GetRoles), BindingFlags.NonPublic | BindingFlags.Static)));
+            MethodInfo updateActivity = assembly.GetType("Stalky106.Methods+<StalkCoroutine>d__14")?.GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (updateActivity is not null)
+                harmony.Patch(updateActivity, transpiler: new HarmonyMethod(typeof(Stalky106).GetMethod(nameof(Stalk), BindingFlags.NonPublic | BindingFlags.Static)));
         }
 
-        /// <summary>
-        /// Patches EndConditions to skip the inclusion of NPC roles.
-        /// </summary>
-        private static IEnumerable<CodeInstruction> GetRoles(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        private static IEnumerable<CodeInstruction> Stalk(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
 
             Label continueLabel = generator.DefineLabel();
 
-            int index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Ldloc_3);
+            const int offset = 1;
+            int index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Stloc_S) + offset;
             newInstructions.InsertRange(index, new[]
             {
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))),
-                new CodeInstruction(OpCodes.Ldloc_3),
+                new CodeInstruction(OpCodes.Ldloc_S, 4),
                 new CodeInstruction(OpCodes.Callvirt, PropertyGetter(typeof(Player), nameof(Player.GameObject))),
                 new CodeInstruction(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject, Npc>), nameof(Dictionary<GameObject, Npc>.ContainsKey))),
                 new CodeInstruction(OpCodes.Brtrue_S, continueLabel),
