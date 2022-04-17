@@ -16,7 +16,7 @@ namespace NPCs
     /// </summary>
     public static class Identifiers
     {
-        private static readonly Dictionary<string, int> ItemIDs = new Dictionary<string, int>()
+        private static readonly Dictionary<string, int> ItemIDs = new()
         {
             { "None", -1 },
             { "KeycardJanitor", 0 },
@@ -61,11 +61,19 @@ namespace NPCs
             { "GunRevolver", 39 },
             { "GunAK", 40 },
             { "GunShotgun", 41 },
+            { "SCP330", 42 },
+            { "MutantHands", 43 },
+            { "SCP2176", 44 },
+            { "SCP244a", 45 },
+            { "SCP244b", 46 },
+            { "Coal", 47 },
+            { "ParticleDisruptor", 48 },
+            { "SCP1853", 49 },
         };
 
         private static readonly Dictionary<int, string> ItemIDsReverse = ItemIDs.ToDictionary(pair => pair.Value, pair => pair.Key);
 
-        private static readonly Dictionary<string, int> RoleIDs = new Dictionary<string, int>()
+        private static readonly Dictionary<string, int> RoleIDs = new()
         {
             { "None", -1 },
             { "Scp173", 0 },
