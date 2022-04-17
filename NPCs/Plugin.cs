@@ -59,8 +59,11 @@ namespace NPCs
 
         private void PatchCompatability()
         {
-            DiscordIntegration.Patch(harmony);
-            EndConditions.Patch(harmony);
+            foreach (Type type in Assembly.GetTypes())
+            {
+                if (type.GetInterfaces().Contains(typeof(ICompatibilityClass)))
+                    ((ICompatibilityClass)Activator.CreateInstance(type)).Patch(harmony);
+            }
         }
     }
 }

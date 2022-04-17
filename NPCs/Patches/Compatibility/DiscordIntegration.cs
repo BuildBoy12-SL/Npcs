@@ -20,14 +20,29 @@ namespace NPCs.Patches.Compatibility
     /// <summary>
     /// Contains the Harmony patches for the Discord Integration plugin.
     /// </summary>
-    internal static class DiscordIntegration
+    internal class DiscordIntegration : ICompatibilityClass
     {
+        /// <summary>
+        /// Attempts to patch the required methods.
+        /// </summary>
+        /// <param name="harmony">The harmony instance.</param>
+        public void Patch(Harmony harmony)
+        {
+            Assembly assembly = Loader.GetPlugin("DiscordIntegration")?.Assembly;
+            if (assembly is null)
+                return;
+
+            MethodInfo updateActivity = assembly.GetType("DiscordIntegration.API.Configs.Bot+<UpdateActivity>d__28")?.GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (updateActivity is not null)
+                harmony.Patch(updateActivity, transpiler: new HarmonyMethod(typeof(DiscordIntegration).GetMethod(nameof(ActivityCount), BindingFlags.NonPublic | BindingFlags.Static)));
+        }
+
         /// <summary>
         /// Patches DiscordIntegration to subtract the npc count from the player count in the bot's status.
         /// </summary>
         /// <param name="instructions">The original methods instructions.</param>
         /// <returns>The new instructions.</returns>
-        public static IEnumerable<CodeInstruction> ActivityCount(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> ActivityCount(IEnumerable<CodeInstruction> instructions)
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
             int index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Box);
@@ -42,21 +57,6 @@ namespace NPCs.Patches.Compatibility
                 yield return newInstructions[z];
 
             ListPool<CodeInstruction>.Shared.Return(newInstructions);
-        }
-
-        /// <summary>
-        /// Attempts to patch the required methods.
-        /// </summary>
-        /// <param name="harmony">The harmony instance.</param>
-        internal static void Patch(Harmony harmony)
-        {
-            Assembly assembly = Loader.GetPlugin("DiscordIntegration")?.Assembly;
-            if (assembly is null)
-                return;
-
-            MethodInfo updateActivity = assembly.GetType("DiscordIntegration.API.Configs.Bot+<UpdateActivity>d__28")?.GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
-            if (updateActivity is not null)
-                harmony.Patch(updateActivity, transpiler: new HarmonyMethod(typeof(DiscordIntegration).GetMethod(nameof(ActivityCount))));
         }
     }
 }

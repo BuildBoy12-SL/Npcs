@@ -21,15 +21,30 @@ namespace NPCs.Patches.Compatibility
     /// <summary>
     /// Contains the Harmony patches for the EndConditions plugin.
     /// </summary>
-    internal static class EndConditions
+    internal class EndConditions : ICompatibilityClass
     {
+        /// <summary>
+        /// Attempts to patch the required methods.
+        /// </summary>
+        /// <param name="harmony">The harmony instance.</param>
+        public void Patch(Harmony harmony)
+        {
+            Assembly assembly = Loader.GetPlugin("EndConditions")?.Assembly;
+            if (assembly is null)
+                return;
+
+            MethodInfo getRoles = assembly.GetType("EndConditions.Methods+<GetRoles>d__2")?.GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (getRoles is not null)
+                harmony.Patch(getRoles, transpiler: new HarmonyMethod(typeof(EndConditions).GetMethod(nameof(GetRoles), BindingFlags.NonPublic | BindingFlags.Static)));
+        }
+
         /// <summary>
         /// Patches EndConditions to skip the inclusion of NPC roles.
         /// </summary>
         /// <param name="instructions">The original methods instructions.</param>
         /// <param name="generator">An instance of the <see cref="ILGenerator"/> class.</param>
         /// <returns>The new instructions.</returns>
-        public static IEnumerable<CodeInstruction> GetRoles(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        private static IEnumerable<CodeInstruction> GetRoles(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
 
@@ -52,21 +67,6 @@ namespace NPCs.Patches.Compatibility
                 yield return newInstructions[z];
 
             ListPool<CodeInstruction>.Shared.Return(newInstructions);
-        }
-
-        /// <summary>
-        /// Attempts to patch the required methods.
-        /// </summary>
-        /// <param name="harmony">The harmony instance.</param>
-        internal static void Patch(Harmony harmony)
-        {
-            Assembly assembly = Loader.GetPlugin("EndConditions")?.Assembly;
-            if (assembly is null)
-                return;
-
-            MethodInfo getRoles = assembly.GetType("EndConditions.Methods+<GetRoles>d__2")?.GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
-            if (getRoles is not null)
-                harmony.Patch(getRoles, transpiler: new HarmonyMethod(typeof(EndConditions).GetMethod(nameof(GetRoles))));
         }
     }
 }
