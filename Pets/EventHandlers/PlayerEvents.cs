@@ -20,7 +20,7 @@ namespace Pets.EventHandlers
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnChangingRole(ChangingRoleEventArgs)"/>
         public void OnChangingRole(ChangingRoleEventArgs ev)
         {
-            if (!ev.Player.CheckPermission("pets.pet") || !Round.IsStarted)
+            if (!Round.IsStarted || !ev.Player.CheckPermission("pets.pet"))
                 return;
 
             Pet pet = Pet.GetOrCreate(ev.Player);
@@ -41,13 +41,6 @@ namespace Pets.EventHandlers
         {
             if (ev.Player.IsPet(out _))
                 ev.IsAllowed = false;
-        }
-
-        /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnShot(ShotEventArgs)"/>
-        public void OnShot(ShotEventArgs ev)
-        {
-            if (ev.Target.IsPet(out _))
-                ev.CanHurt = false;
         }
     }
 }
