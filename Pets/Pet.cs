@@ -37,6 +37,7 @@ namespace Pets
 
             Npc = new Npc(Identifiers.RoleIdToType(Preferences.Role), Preferences.Name, Preferences.Scale);
             Npc.HeldItem = Identifiers.ItemIdToType(Preferences.HeldItem);
+            Npc.Player.IsGodModeEnabled = true;
             movementHandler = new MovementHandler(Npc, Owner);
             if (Preferences.IsShown)
                 IsShown = true;
