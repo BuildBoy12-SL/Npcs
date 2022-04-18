@@ -46,7 +46,7 @@ namespace Pets
         /// <summary>
         /// Gets all existing instances of pets.
         /// </summary>
-        public static List<Pet> Instances { get; } = new List<Pet>();
+        public static List<Pet> Instances { get; } = new();
 
         /// <summary>
         /// Gets the owner of the pet.

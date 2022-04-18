@@ -24,7 +24,7 @@ namespace Pets.EventHandlers
                 return;
 
             Pet pet = Pet.GetOrCreate(ev.Player);
-            if (ev.NewRole == RoleType.Spectator || ev.NewRole == RoleType.None || ev.NewRole == RoleType.Scp079)
+            if (ev.NewRole is RoleType.Spectator or RoleType.None or RoleType.Scp079)
                 pet.Npc.Despawn();
             else if (pet.Preferences.IsShown)
                 pet.Npc.Spawn();
