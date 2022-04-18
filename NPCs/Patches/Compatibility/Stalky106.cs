@@ -35,14 +35,15 @@ namespace NPCs.Patches.Compatibility
                 harmony.Patch(updateActivity, transpiler: new HarmonyMethod(typeof(Stalky106).GetMethod(nameof(Stalk), BindingFlags.NonPublic | BindingFlags.Static)));
         }
 
-        private static IEnumerable<CodeInstruction> Stalk(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        private static IEnumerable<CodeInstruction> Stalk(IEnumerable<CodeInstruction> instructions)
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
 
-            Label continueLabel = generator.DefineLabel();
+            int index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Br);
+            Label continueLabel = (Label)newInstructions[index].operand;
 
             const int offset = 1;
-            int index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Stloc_S) + offset;
+            index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Stloc_S) + offset;
             newInstructions.InsertRange(index, new[]
             {
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))),
@@ -51,9 +52,6 @@ namespace NPCs.Patches.Compatibility
                 new CodeInstruction(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject, Npc>), nameof(Dictionary<GameObject, Npc>.ContainsKey))),
                 new CodeInstruction(OpCodes.Brtrue_S, continueLabel),
             });
-
-            index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Br);
-            newInstructions[index].labels.Add(continueLabel);
 
             for (int z = 0; z < newInstructions.Count; z++)
                 yield return newInstructions[z];

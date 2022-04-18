@@ -38,13 +38,14 @@ namespace NPCs.Patches.Compatibility
         /// <summary>
         /// Patches EndConditions to skip the inclusion of NPC roles.
         /// </summary>
-        private static IEnumerable<CodeInstruction> GetRoles(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        private static IEnumerable<CodeInstruction> GetRoles(IEnumerable<CodeInstruction> instructions)
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
 
-            Label continueLabel = generator.DefineLabel();
+            int index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Br);
+            Label continueLabel = (Label)newInstructions[index].operand;
 
-            int index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Ldloc_3);
+            index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Ldloc_3);
             newInstructions.InsertRange(index, new[]
             {
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))),
@@ -53,9 +54,6 @@ namespace NPCs.Patches.Compatibility
                 new CodeInstruction(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject, Npc>), nameof(Dictionary<GameObject, Npc>.ContainsKey))),
                 new CodeInstruction(OpCodes.Brtrue_S, continueLabel),
             });
-
-            index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Br);
-            newInstructions[index].labels.Add(continueLabel);
 
             for (int z = 0; z < newInstructions.Count; z++)
                 yield return newInstructions[z];
