@@ -8,9 +8,7 @@
 namespace NPCs
 {
     using System;
-    using System.Reflection;
     using Exiled.API.Features;
-    using Exiled.Loader;
     using HarmonyLib;
     using NPCs.EventHandlers;
     using NPCs.Patches.Compatibility;
