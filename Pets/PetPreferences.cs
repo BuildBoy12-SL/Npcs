@@ -85,7 +85,7 @@ namespace Pets
         /// <returns>The found preferences, or <see langword="null"/> if none are found.</returns>
         public static PetPreferences Get(string userId)
         {
-            if (preferences == null)
+            if (preferences is null)
                 return null;
 
             preferences.TryGetValue(userId, out PetPreferences petPreferences);

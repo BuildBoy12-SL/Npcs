@@ -48,7 +48,7 @@ namespace Pets.Commands
             stringBuilder.AppendLine("Please enter a valid subcommand! Available:");
             foreach (ICommand command in AllCommands)
             {
-                stringBuilder.AppendLine(command.Aliases != null && command.Aliases.Length > 0
+                stringBuilder.AppendLine(command.Aliases is { Length: > 0 }
                     ? $"{command.Command} | Aliases: {string.Join(", ", command.Aliases)}"
                     : command.Command);
             }

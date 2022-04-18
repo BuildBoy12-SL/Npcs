@@ -145,7 +145,7 @@ namespace Pets
         public static Pet GetOrCreate(Player owner)
         {
             Pet pet = owner.GetPet();
-            if (pet != null)
+            if (pet is not null)
                 return pet;
 
             pet = new Pet(owner);

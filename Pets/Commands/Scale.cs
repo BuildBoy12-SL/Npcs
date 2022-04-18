@@ -35,7 +35,7 @@ namespace Pets.Commands
             }
 
             Player player = Player.Get(sender);
-            if (player == null)
+            if (player is null)
             {
                 response = "Console has no need for menial things such as pets.";
                 return false;

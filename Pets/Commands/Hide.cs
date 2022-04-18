@@ -36,14 +36,14 @@ namespace Pets.Commands
             }
 
             Player player = Player.Get(sender);
-            if (player == null)
+            if (player is null)
             {
                 response = "Console has no need for menial things such as pets.";
                 return false;
             }
 
             Pet pet = Pet.GetOrCreate(player);
-            if (pet == null || !pet.IsShown)
+            if (pet is null || !pet.IsShown)
             {
                 response = "You do not have a spawned pet!";
                 return false;
