@@ -42,5 +42,15 @@ namespace Pets.EventHandlers
             if (ev.Player.IsPet(out _))
                 ev.IsAllowed = false;
         }
+
+        /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnTriggeringTesla(TriggeringTeslaEventArgs)"/>
+        public void OnTriggeringTesla(TriggeringTeslaEventArgs ev)
+        {
+            if (ev.Player.IsPet(out _))
+            {
+                ev.IsTriggerable = false;
+                ev.IsInIdleRange = false;
+            }
+        }
     }
 }
