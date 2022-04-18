@@ -24,9 +24,9 @@ namespace Pets
         public string DefaultName { get; set; } = "{Name}'s Pet";
 
         /// <summary>
-        /// Gets or sets the size of all pets.
+        /// Gets or sets the default size of a pet.
         /// </summary>
-        public Vector3 Size { get; set; } = new Vector3(0.4f, 0.4f, 0.4f);
+        public Vector3 DefaultSize { get; set; } = new Vector3(0.4f, 0.4f, 0.4f);
 
         /// <summary>
         /// Gets or sets the path to the folder that will store the preferences.

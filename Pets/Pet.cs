@@ -29,10 +29,10 @@ namespace Pets
         {
             Owner = owner;
             Preferences = PetPreferences.Get(owner);
-            if (Preferences == null)
+            if (Preferences is null)
             {
                 string defaultName = Plugin.Instance.Config.DefaultName.Replace("{Name}", owner.DisplayNickname ?? owner.Nickname);
-                Preferences = new PetPreferences(owner.UserId, true, defaultName, RoleType.ClassD.ToId(), -1, Plugin.Instance.Config.Size);
+                Preferences = new PetPreferences(owner.UserId, true, defaultName, RoleType.ClassD.ToId(), -1, Plugin.Instance.Config.DefaultSize);
             }
 
             Npc = new Npc(Identifiers.RoleIdToType(Preferences.Role), Preferences.Name, Preferences.Scale);
