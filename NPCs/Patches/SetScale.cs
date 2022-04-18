@@ -32,7 +32,6 @@ namespace NPCs.Patches
 
             const int offset = 1;
             index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Stloc_1) + offset;
-
             newInstructions.InsertRange(index, new[]
             {
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))),

@@ -27,33 +27,31 @@ namespace NPCs.Patches
 
             Label skipRotationLabel = generator.DefineLabel();
 
-            int index = newInstructions.FindIndex(i => i.OperandIs(PropertyGetter(typeof(Vector3), nameof(Vector3.up))));
-            newInstructions.RemoveAt(index);
+            int index = newInstructions.FindIndex(instruction => instruction.OperandIs(PropertyGetter(typeof(Vector3), nameof(Vector3.up))));
+            newInstructions.RemoveRange(index, 2);
             newInstructions.InsertRange(index, new[]
             {
                 new CodeInstruction(OpCodes.Ldc_R4, 0f),
                 new CodeInstruction(OpCodes.Ldarg_0),
-                new CodeInstruction(OpCodes.Ldfld, Field(typeof(PlayerMovementSync), nameof(PlayerMovementSync._hub))),
                 new CodeInstruction(OpCodes.Callvirt, PropertyGetter(typeof(Component), nameof(Component.transform))),
                 new CodeInstruction(OpCodes.Callvirt, PropertyGetter(typeof(Transform), nameof(Transform.localScale))),
                 new CodeInstruction(OpCodes.Ldfld, Field(typeof(Vector3), nameof(Vector3.y))),
                 new CodeInstruction(OpCodes.Ldc_R4, 0f),
                 new CodeInstruction(OpCodes.Newobj, Constructor(typeof(Vector3), new[] { typeof(float), typeof(float), typeof(float) })),
+                new CodeInstruction(OpCodes.Ldc_R4, 1.3f),
             });
 
-            const int offset = 1;
-            index = newInstructions.FindIndex(i => i.opcode == OpCodes.Starg_S) + offset;
-
+            index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Ldarga_S);
             newInstructions.InsertRange(index, new[]
             {
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))),
                 new CodeInstruction(OpCodes.Ldarg_0),
-                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(PlayerMovementSync), nameof(PlayerMovementSync.gameObject))),
+                new CodeInstruction(OpCodes.Callvirt, PropertyGetter(typeof(ReferenceHub), nameof(ReferenceHub.gameObject))),
                 new CodeInstruction(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject, Npc>), nameof(Dictionary<GameObject, Npc>.ContainsKey))),
                 new CodeInstruction(OpCodes.Brtrue_S, skipRotationLabel),
             });
 
-            index = newInstructions.FindLastIndex(i => i.opcode == OpCodes.Ldarg_0);
+            index = newInstructions.FindLastIndex(instruction => instruction.opcode == OpCodes.Ldarg_0);
             newInstructions[index].labels.Add(skipRotationLabel);
 
             for (int z = 0; z < newInstructions.Count; z++)
