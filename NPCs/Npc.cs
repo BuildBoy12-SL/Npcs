@@ -121,11 +121,7 @@ namespace NPCs
         public Vector3 Scale
         {
             get => Player.Scale;
-            set
-            {
-                GameObject.transform.localScale = value;
-                Respawn();
-            }
+            set => Player.Scale = value;
         }
 
         /// <summary>
