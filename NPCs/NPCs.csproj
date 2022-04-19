@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <Reference Include="Assembly-CSharp-firstpass" HintPath="$(EXILED_References)\Assembly-CSharp-firstpass.dll" Private="false" />
-    <Reference Include="Mirror" HintPath="$(EXILED_References)\Mirror-Publicized.dll" Private="false" />
+    <Reference Include="Mirror" HintPath="$(EXILED_References)\Mirror.dll" Private="false" />
     <Reference Include="UnityEngine.CoreModule" HintPath="$(EXILED_References)\UnityEngine.CoreModule.dll" Private="false" />
     <Reference Include="UnityEngine.PhysicsModule" HintPath="$(EXILED_References)\UnityEngine.PhysicsModule.dll" Private="false" />
   </ItemGroup>

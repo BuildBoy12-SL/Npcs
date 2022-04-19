@@ -9,10 +9,10 @@ namespace NPCs.Patches
 {
 #pragma warning disable SA1118
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Reflection.Emit;
     using HarmonyLib;
     using InventorySystem.Items.Firearms;
-    using Mirror;
     using NorthwoodLib.Pools;
     using UnityEngine;
     using static HarmonyLib.AccessTools;
@@ -27,11 +27,9 @@ namespace NPCs.Patches
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
 
-            int index = newInstructions.FindIndex(instruction => instruction.OperandIs(Method(typeof(NetworkConnection), nameof(NetworkConnection.Send)))) + 1;
             Label continueLabel = generator.DefineLabel();
-            newInstructions[index].labels.Add(continueLabel);
 
-            index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Ldloc_S);
+            int index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Ldloc_S);
             newInstructions.InsertRange(index, new[]
             {
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))).MoveLabelsFrom(newInstructions[index]),
@@ -40,6 +38,10 @@ namespace NPCs.Patches
                 new CodeInstruction(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject, Npc>), nameof(Dictionary<GameObject, Npc>.ContainsKey))),
                 new CodeInstruction(OpCodes.Brtrue_S, continueLabel),
             });
+
+            const int offset = 1;
+            index = newInstructions.FindIndex(instruction => instruction.operand is MethodInfo methodInfo && methodInfo.Name == "Send") + offset;
+            newInstructions[index].labels.Add(continueLabel);
 
             for (int z = 0; z < newInstructions.Count; z++)
                 yield return newInstructions[z];
