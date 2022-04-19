@@ -16,7 +16,7 @@ namespace NPCs.Patches
     using static HarmonyLib.AccessTools;
 
     /// <summary>
-    /// Patches <see cref="PlayerMovementSync.OverridePosition"/> to prevent calls to <see cref="PlayerMovementSync.ForceRotation"/> when the player is a npc.
+    /// Patches <see cref="PlayerMovementSync.OverridePosition"/> to scale the position by the player's scale.
     /// </summary>
     [HarmonyPatch(typeof(PlayerMovementSync), nameof(PlayerMovementSync.OverridePosition))]
     internal static class OverridePosition
