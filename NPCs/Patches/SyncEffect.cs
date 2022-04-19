@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="StartEffectsController.cs" company="Build">
+// <copyright file="SyncEffect.cs" company="Build">
 // Copyright (c) Build. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
@@ -16,10 +16,10 @@ namespace NPCs.Patches
     using static HarmonyLib.AccessTools;
 
     /// <summary>
-    /// Patches <see cref="PlayerEffectsController.ServerSyncEffect"/> to prevent the sending of messages to npcs.
+    /// Patches <see cref="PlayerEffectsController.ServerSyncEffect"/> to stop the syncing of effects to a client that does not exist.
     /// </summary>
-    [HarmonyPatch(typeof(PlayerEffectsController), nameof(PlayerEffectsController.Start))]
-    internal static class StartEffectsController
+    [HarmonyPatch(typeof(PlayerEffectsController), nameof(PlayerEffectsController.ServerSyncEffect))]
+    internal static class SyncEffect
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
