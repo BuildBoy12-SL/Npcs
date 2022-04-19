@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------
-// <copyright file="MovementHandler.cs" company="Build">
+// <copyright file="MovementCore.cs" company="Build">
 // Copyright (c) Build. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
@@ -16,7 +16,7 @@ namespace NPCs.Cores
     /// <summary>
     /// Handles the movements of a fake player.
     /// </summary>
-    public class MovementHandler
+    public class MovementCore
     {
         private readonly Npc npc;
         private readonly Player toFollow;
@@ -24,11 +24,11 @@ namespace NPCs.Cores
         private bool isPaused = true;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MovementHandler"/> class.
+        /// Initializes a new instance of the <see cref="MovementCore"/> class.
         /// </summary>
         /// <param name="npc">The npc to control.</param>
         /// <param name="toFollow">The player to follow.</param>
-        public MovementHandler(Npc npc, Player toFollow)
+        public MovementCore(Npc npc, Player toFollow)
         {
             this.npc = npc;
             this.toFollow = toFollow;

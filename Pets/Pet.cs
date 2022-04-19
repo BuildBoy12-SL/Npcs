@@ -19,7 +19,7 @@ namespace Pets
     /// </summary>
     public class Pet
     {
-        private readonly MovementHandler movementHandler;
+        private readonly MovementCore movementCore;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Pet"/> class.
@@ -38,7 +38,7 @@ namespace Pets
             Npc = new Npc(Identifiers.RoleIdToType(Preferences.Role), Preferences.Name, Preferences.Scale);
             Npc.HeldItem = Identifiers.ItemIdToType(Preferences.HeldItem);
             Npc.Player.IsGodModeEnabled = true;
-            movementHandler = new MovementHandler(Npc, Owner);
+            movementCore = new MovementCore(Npc, Owner);
             if (Preferences.IsShown)
                 IsShown = true;
         }
@@ -76,11 +76,11 @@ namespace Pets
                 if (value)
                 {
                     Npc.Spawn();
-                    movementHandler.Play();
+                    movementCore.Play();
                     return;
                 }
 
-                movementHandler.Pause();
+                movementCore.Pause();
                 Npc.Despawn();
             }
         }
@@ -158,7 +158,7 @@ namespace Pets
         /// </summary>
         public void Destroy()
         {
-            movementHandler.Kill();
+            movementCore.Kill();
             Npc.Destroy();
             Instances.Remove(this);
         }
