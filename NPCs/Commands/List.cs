@@ -8,10 +8,8 @@
 namespace NPCs.Commands
 {
     using System;
-    using System.Text;
     using CommandSystem;
     using Exiled.Permissions.Extensions;
-    using NorthwoodLib.Pools;
 
     /// <inheritdoc />
     public class List : ICommand
@@ -34,11 +32,7 @@ namespace NPCs.Commands
                 return false;
             }
 
-            StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
-            foreach (Npc npc in Npc.List)
-                stringBuilder.AppendLine(npc.ToString());
-
-            response = StringBuilderPool.Shared.ToStringReturn(stringBuilder).TrimEnd();
+            response = Environment.NewLine + string.Join(Environment.NewLine, Npc.List);
             return true;
         }
     }
