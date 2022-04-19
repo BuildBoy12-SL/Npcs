@@ -31,16 +31,13 @@ namespace NPCs
             Dictionary.Add(GameObject, this);
 
             ReferenceHub = GameObject.GetComponent<ReferenceHub>();
-
-            GameObject.transform.localScale = scale;
-
-            ReferenceHub.queryProcessor.PlayerId = 9999;
-            ReferenceHub.queryProcessor.NetworkPlayerId = 9999;
-            ReferenceHub.queryProcessor._ipAddress = "127.0.0.WAN";
-
             ReferenceHub.characterClassManager.CurClass = roleType;
             ReferenceHub.playerStats.StatModules[0].CurValue = 100;
             ReferenceHub.nicknameSync.Network_myNickSync = name;
+            ReferenceHub.queryProcessor.NetworkPlayerId = 9999;
+            ReferenceHub.queryProcessor._ipAddress = "127.0.0.WAN";
+
+            GameObject.transform.localScale = scale;
 
             PlayerManager.AddPlayer(GameObject, CustomNetworkManager.slots);
 
@@ -53,6 +50,11 @@ namespace NPCs
         /// Gets a <see cref="Dictionary{TKey,TValue}"/> containing all <see cref="Npc"/>'s on the server.
         /// </summary>
         public static Dictionary<GameObject, Npc> Dictionary { get; } = new();
+
+        /// <summary>
+        /// Gets a list of all <see cref="Npc"/>s on the server.
+        /// </summary>
+        public static IEnumerable<Npc> List => Dictionary.Values;
 
         /// <summary>
         /// Gets the attached <see cref="UnityEngine.GameObject"/>.
@@ -160,6 +162,9 @@ namespace NPCs
             NetworkServer.UnSpawn(GameObject);
             Object.Destroy(GameObject);
         }
+
+        /// <inheritdoc />
+        public override string ToString() => Player.ToString();
 
         private void Respawn()
         {
