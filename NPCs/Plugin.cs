@@ -10,7 +10,6 @@ namespace NPCs
     using System;
     using Exiled.API.Features;
     using HarmonyLib;
-    using NPCs.EventHandlers;
     using NPCs.Patches.Compatibility;
 
     /// <summary>
@@ -19,7 +18,6 @@ namespace NPCs
     public class Plugin : Plugin<Config>
     {
         private Harmony harmony;
-        private PlayerEvents playerEvents;
 
         /// <inheritdoc />
         public override string Author => "Build";
@@ -37,18 +35,12 @@ namespace NPCs
             harmony.PatchAll();
             PatchCompatability();
 
-            playerEvents = new PlayerEvents();
-            playerEvents.Subscribe();
-
             base.OnEnabled();
         }
 
         /// <inheritdoc />
         public override void OnDisabled()
         {
-            playerEvents?.Unsubscribe();
-            playerEvents = null;
-
             harmony?.UnpatchAll(harmony.Id);
             harmony = null;
 
