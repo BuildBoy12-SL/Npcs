@@ -57,7 +57,7 @@ namespace Pets.Commands
                 return false;
             }
 
-            if (!sender.CheckPermission("npcs.pets.role." + roleType.ToString().ToLower()))
+            if (!sender.CheckPermission("pets.pet.role." + roleType.ToString().ToLower()))
             {
                 response = "Insufficient permission.";
                 return false;
