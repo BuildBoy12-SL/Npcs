@@ -12,7 +12,6 @@ namespace NPCs.Patches
     using System.Reflection.Emit;
     using HarmonyLib;
     using NorthwoodLib.Pools;
-    using NPCs.API;
     using UnityEngine;
     using static HarmonyLib.AccessTools;
 
@@ -22,11 +21,9 @@ namespace NPCs.Patches
     [HarmonyPatch(typeof(PlayerMovementSync), nameof(PlayerMovementSync.OverridePosition))]
     internal static class OverridePosition
     {
-        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
-
-            Label skipRotationLabel = generator.DefineLabel();
 
             int index = newInstructions.FindIndex(instruction => instruction.OperandIs(PropertyGetter(typeof(Vector3), nameof(Vector3.up))));
             newInstructions.RemoveRange(index, 2);
@@ -41,18 +38,6 @@ namespace NPCs.Patches
                 new CodeInstruction(OpCodes.Newobj, Constructor(typeof(Vector3), new[] { typeof(float), typeof(float), typeof(float) })),
                 new CodeInstruction(OpCodes.Ldc_R4, 1.3f),
             });
-
-            index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Ldarga_S);
-            newInstructions.InsertRange(index, new[]
-            {
-                new CodeInstruction(OpCodes.Ldarg_0),
-                new CodeInstruction(OpCodes.Callvirt, PropertyGetter(typeof(PlayerMovementSync), nameof(PlayerMovementSync.gameObject))),
-                new CodeInstruction(OpCodes.Call, Method(typeof(Extensions), nameof(Extensions.IsNpc), new[] { typeof(GameObject) })),
-                new CodeInstruction(OpCodes.Brtrue_S, skipRotationLabel),
-            });
-
-            index = newInstructions.FindLastIndex(instruction => instruction.opcode == OpCodes.Ldarg_0);
-            newInstructions[index].labels.Add(skipRotationLabel);
 
             for (int z = 0; z < newInstructions.Count; z++)
                 yield return newInstructions[z];
