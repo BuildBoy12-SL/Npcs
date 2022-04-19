@@ -77,7 +77,7 @@ namespace NPCs
         public Vector3 Position
         {
             get => Player.Position;
-            set => ReferenceHub.playerMovementSync.OverridePosition(value, forceGround: true);
+            set => ReferenceHub.playerMovementSync.OverridePosition(value, null, true);
         }
 
         /// <summary>
@@ -159,8 +159,7 @@ namespace NPCs
         {
             Dictionary.Remove(GameObject);
             PlayerManager.RemovePlayer(GameObject, CustomNetworkManager.slots);
-            NetworkServer.UnSpawn(GameObject);
-            Object.Destroy(GameObject);
+            NetworkServer.Destroy(GameObject);
         }
 
         /// <inheritdoc />
