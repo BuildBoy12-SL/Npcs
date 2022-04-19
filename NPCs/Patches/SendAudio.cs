@@ -9,10 +9,10 @@ namespace NPCs.Patches
 {
 #pragma warning disable SA1118
     using System.Collections.Generic;
-    using System.Reflection;
     using System.Reflection.Emit;
     using HarmonyLib;
     using InventorySystem.Items.Firearms;
+    using Mirror;
     using NorthwoodLib.Pools;
     using UnityEngine;
     using static HarmonyLib.AccessTools;
@@ -27,7 +27,7 @@ namespace NPCs.Patches
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
 
-            int index = newInstructions.FindIndex(instruction => instruction.operand is MethodInfo methodInfo && methodInfo.Name == "Send") + 1;
+            int index = newInstructions.FindIndex(instruction => instruction.OperandIs(Method(typeof(NetworkConnection), nameof(NetworkConnection.Send)))) + 1;
             Label continueLabel = generator.DefineLabel();
             newInstructions[index].labels.Add(continueLabel);
 
