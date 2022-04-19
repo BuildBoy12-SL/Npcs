@@ -31,7 +31,7 @@ namespace NPCs.Patches
             Label skipConnectionLabel = generator.DefineLabel();
             newInstructions[index].labels.Add(skipConnectionLabel);
 
-            index -= 16;
+            index -= 9;
 
             newInstructions.InsertRange(index, new[]
             {

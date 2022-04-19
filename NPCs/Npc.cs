@@ -34,7 +34,6 @@ namespace NPCs
             ReferenceHub.characterClassManager.CurClass = roleType;
             ReferenceHub.playerStats.StatModules[0].CurValue = 100;
             ReferenceHub.nicknameSync.Network_myNickSync = name;
-            ReferenceHub.queryProcessor.NetworkPlayerId = 9999;
             ReferenceHub.queryProcessor._ipAddress = "127.0.0.WAN";
 
             GameObject.transform.localScale = scale;
