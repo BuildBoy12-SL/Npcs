@@ -14,7 +14,7 @@ namespace NPCs.Patches
     using HarmonyLib;
     using InventorySystem.Items.Firearms;
     using NorthwoodLib.Pools;
-    using UnityEngine;
+    using NPCs.API;
     using static HarmonyLib.AccessTools;
 
     /// <summary>
@@ -32,10 +32,8 @@ namespace NPCs.Patches
             int index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Ldloc_S);
             newInstructions.InsertRange(index, new[]
             {
-                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))).MoveLabelsFrom(newInstructions[index]),
-                new CodeInstruction(OpCodes.Ldloc_S, 5),
-                new CodeInstruction(OpCodes.Callvirt, PropertyGetter(typeof(ReferenceHub), nameof(ReferenceHub.gameObject))),
-                new CodeInstruction(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject, Npc>), nameof(Dictionary<GameObject, Npc>.ContainsKey))),
+                new CodeInstruction(OpCodes.Ldloc_S, 5).MoveLabelsFrom(newInstructions[index]),
+                new CodeInstruction(OpCodes.Call, Method(typeof(Extensions), nameof(Extensions.IsNpc), new[] { typeof(ReferenceHub) })),
                 new CodeInstruction(OpCodes.Brtrue_S, continueLabel),
             });
 

@@ -13,6 +13,7 @@ namespace NPCs.Patches
     using System.Reflection.Emit;
     using HarmonyLib;
     using NorthwoodLib.Pools;
+    using NPCs.API;
     using UnityEngine;
     using static HarmonyLib.AccessTools;
 
@@ -22,7 +23,7 @@ namespace NPCs.Patches
     [HarmonyPatch(typeof(PlayerPositionManager), nameof(PlayerPositionManager.TransmitData))]
     internal static class TransmitPositionData
     {
-        private static List<GameObject> GetPlayers => PlayerManager.players.Where(gameObject => !Npc.Dictionary.ContainsKey(gameObject)).ToList();
+        private static List<GameObject> GetPlayers => PlayerManager.players.Where(gameObject => !gameObject.IsNpc()).ToList();
 
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {

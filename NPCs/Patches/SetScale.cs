@@ -13,7 +13,7 @@ namespace NPCs.Patches
     using Exiled.API.Features;
     using HarmonyLib;
     using NorthwoodLib.Pools;
-    using UnityEngine;
+    using NPCs.API;
     using static HarmonyLib.AccessTools;
 
     /// <summary>
@@ -33,10 +33,8 @@ namespace NPCs.Patches
             index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Stloc_1) + offset;
             newInstructions.InsertRange(index, new[]
             {
-                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))),
                 new CodeInstruction(OpCodes.Ldloc_1),
-                new CodeInstruction(OpCodes.Callvirt, PropertyGetter(typeof(Player), nameof(Player.GameObject))),
-                new CodeInstruction(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject, Npc>), nameof(Dictionary<GameObject, Npc>.ContainsKey))),
+                new CodeInstruction(OpCodes.Call, Method(typeof(Extensions), nameof(Extensions.IsNpc), new[] { typeof(Player) })),
                 new CodeInstruction(OpCodes.Brtrue_S, continueLabel),
             });
 
