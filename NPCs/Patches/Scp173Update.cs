@@ -27,17 +27,16 @@ namespace NPCs.Patches
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
 
             Label returnLabel = generator.DefineLabel();
-            int index = newInstructions.FindLastIndex(instruction => instruction.opcode == OpCodes.Ret);
-            newInstructions[index].labels.Add(returnLabel);
 
-            index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Ret) + 1;
-            newInstructions.InsertRange(index, new[]
+            newInstructions.InsertRange(0, new[]
             {
-                new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(newInstructions[index]),
+                new CodeInstruction(OpCodes.Ldarg_0),
                 new CodeInstruction(OpCodes.Ldfld, Field(typeof(Scp173), nameof(Scp173.Hub))),
                 new CodeInstruction(OpCodes.Call, Method(typeof(Extensions), nameof(Extensions.IsNpc), new[] { typeof(ReferenceHub) })),
                 new CodeInstruction(OpCodes.Brtrue_S, returnLabel),
             });
+
+            newInstructions[newInstructions.Count - 1].labels.Add(returnLabel);
 
             for (int z = 0; z < newInstructions.Count; z++)
                 yield return newInstructions[z];
