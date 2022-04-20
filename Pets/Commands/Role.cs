@@ -17,14 +17,6 @@ namespace Pets.Commands
     /// </summary>
     public class Role : ICommand
     {
-        private static readonly RoleType[] BlacklistedRoles =
-        {
-            RoleType.None,
-            RoleType.Spectator,
-            RoleType.Scp079,
-            RoleType.Scp096,
-        };
-
         /// <inheritdoc />
         public string Command => "role";
 
@@ -51,7 +43,7 @@ namespace Pets.Commands
                 return true;
             }
 
-            if (!Enum.TryParse(arguments.At(0), true, out RoleType roleType) || BlacklistedRoles.Contains(roleType))
+            if (!Enum.TryParse(arguments.At(0), true, out RoleType roleType) || Plugin.Instance.Config.BlacklistedRoles.Contains(roleType))
             {
                 response = "Please specify a valid role.";
                 return false;
