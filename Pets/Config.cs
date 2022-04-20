@@ -5,11 +5,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.ComponentModel;
-
 namespace Pets
 {
+    using System.Collections.Generic;
+    using System.ComponentModel;
     using System.IO;
     using Exiled.API.Features;
     using Exiled.API.Interfaces;
