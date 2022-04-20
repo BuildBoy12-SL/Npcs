@@ -8,6 +8,7 @@
 namespace NPCs
 {
     using System.Collections.Generic;
+    using Exiled.API.Enums;
     using Exiled.API.Features;
     using Mirror;
     using UnityEngine;
@@ -35,6 +36,8 @@ namespace NPCs
             ReferenceHub.playerStats.StatModules[0].CurValue = 100;
             ReferenceHub.nicknameSync.Network_myNickSync = name;
             ReferenceHub.queryProcessor._ipAddress = "127.0.0.WAN";
+
+            ReferenceHub.characterClassManager.IsVerified = true;
 
             GameObject.transform.localScale = scale;
 
@@ -109,7 +112,7 @@ namespace NPCs
             get => Player.Role.Type;
             set
             {
-                ReferenceHub.characterClassManager.CurClass = value;
+                Player.SetRole(value, SpawnReason.ForceClass, true);
                 Respawn();
             }
         }

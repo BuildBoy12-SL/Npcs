@@ -32,7 +32,7 @@ namespace NPCs.Commands
                 return false;
             }
 
-            response = Environment.NewLine + string.Join(Environment.NewLine, Npc.List);
+            response = $"Count: {Npc.Dictionary.Count}\n{string.Join(Environment.NewLine, Npc.List)}";
             return true;
         }
     }
