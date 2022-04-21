@@ -5,7 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace NPCs.Patches.Compatibility
+namespace NPCs.Patches.Manual
 {
 #pragma warning disable SA1118
     using System.Collections.Generic;

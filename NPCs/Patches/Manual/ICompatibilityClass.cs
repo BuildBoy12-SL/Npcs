@@ -5,7 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace NPCs.Patches.Compatibility
+namespace NPCs.Patches.Manual
 {
     using HarmonyLib;
 
