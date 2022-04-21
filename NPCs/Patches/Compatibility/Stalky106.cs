@@ -15,7 +15,7 @@ namespace NPCs.Patches.Compatibility
     using Exiled.Loader;
     using HarmonyLib;
     using NorthwoodLib.Pools;
-    using UnityEngine;
+    using NPCs.API;
     using static HarmonyLib.AccessTools;
 
     /// <summary>
@@ -46,10 +46,8 @@ namespace NPCs.Patches.Compatibility
             index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Stloc_S) + offset;
             newInstructions.InsertRange(index, new[]
             {
-                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))),
                 new CodeInstruction(OpCodes.Ldloc_S, 4),
-                new CodeInstruction(OpCodes.Callvirt, PropertyGetter(typeof(Player), nameof(Player.GameObject))),
-                new CodeInstruction(OpCodes.Callvirt, Method(typeof(Dictionary<GameObject, Npc>), nameof(Dictionary<GameObject, Npc>.ContainsKey))),
+                new CodeInstruction(OpCodes.Call, Method(typeof(Extensions), nameof(Extensions.IsNpc), new[] { typeof(Player) })),
                 new CodeInstruction(OpCodes.Brtrue_S, continueLabel),
             });
 
