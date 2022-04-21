@@ -9,7 +9,6 @@ namespace NPCs.Patches.Manual
 {
 #pragma warning disable SA1118
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
     using System.Reflection.Emit;
     using Exiled.Loader;
@@ -24,8 +23,6 @@ namespace NPCs.Patches.Manual
     /// </summary>
     internal class RoundEnd : IManualPatch
     {
-        private static int PlayerCount => PlayerManager.players.Count(gameObject => !gameObject.IsNpc());
-
         /// <inheritdoc/>
         public void Patch(Harmony harmony)
         {
@@ -45,7 +42,7 @@ namespace NPCs.Patches.Manual
             int index = newInstructions.FindLastIndex(instruction => instruction.opcode == OpCodes.Br);
             Label continueLabel = (Label)newInstructions[index].operand;
 
-            const int offset = -1;
+            int offset = -1;
             index = newInstructions.FindIndex(instruction => instruction.OperandIs(PropertyGetter(typeof(KeyValuePair<GameObject, ReferenceHub>), nameof(KeyValuePair<GameObject, ReferenceHub>.Value)))) + offset;
             newInstructions.InsertRange(index, new[]
             {
@@ -55,9 +52,14 @@ namespace NPCs.Patches.Manual
                 new CodeInstruction(OpCodes.Brtrue_S, continueLabel),
             });
 
-            index = newInstructions.FindIndex(instruction => instruction.OperandIs(Field(typeof(PlayerManager), nameof(PlayerManager.players))));
-            newInstructions.RemoveRange(index, 2);
-            newInstructions.Insert(index, new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(RoundEnd), nameof(PlayerCount))));
+            offset = 2;
+            index = newInstructions.FindIndex(instruction => instruction.OperandIs(Field(typeof(PlayerManager), nameof(PlayerManager.players)))) + offset;
+            newInstructions.InsertRange(index, new[]
+            {
+                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))),
+                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Dictionary<GameObject, Npc>), nameof(Dictionary<GameObject, Npc>.Count))),
+                new CodeInstruction(OpCodes.Sub),
+            });
 
             for (int z = 0; z < newInstructions.Count; z++)
                 yield return newInstructions[z];
