@@ -24,7 +24,7 @@ namespace NPCs.Patches.Manual
     /// </summary>
     internal class RoundEnd : IManualPatch
     {
-        private static List<GameObject> GetPlayers => PlayerManager.players.Where(gameObject => !gameObject.IsNpc()).ToList();
+        private static int PlayerCount => PlayerManager.players.Count(gameObject => !gameObject.IsNpc());
 
         /// <inheritdoc/>
         public void Patch(Harmony harmony)
@@ -56,8 +56,8 @@ namespace NPCs.Patches.Manual
             });
 
             index = newInstructions.FindIndex(instruction => instruction.OperandIs(Field(typeof(PlayerManager), nameof(PlayerManager.players))));
-            newInstructions.RemoveAt(index);
-            newInstructions.Insert(index, new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(RoundEnd), nameof(GetPlayers))));
+            newInstructions.RemoveRange(index, 2);
+            newInstructions.Insert(index, new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(RoundEnd), nameof(PlayerCount))));
 
             for (int z = 0; z < newInstructions.Count; z++)
                 yield return newInstructions[z];
