@@ -21,7 +21,7 @@ namespace NPCs.Patches.Manual
     /// <summary>
     /// Contains the Harmony patches for the Stalky106 plugin.
     /// </summary>
-    internal class Stalky106 : ICompatibilityClass
+    internal class Stalky106 : IManualPatch
     {
         /// <inheritdoc/>
         public void Patch(Harmony harmony)

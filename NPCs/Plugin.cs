@@ -57,8 +57,8 @@ namespace NPCs
         {
             foreach (Type type in Assembly.GetTypes())
             {
-                if (type.GetInterfaces().Contains(typeof(ICompatibilityClass)))
-                    ((ICompatibilityClass)Activator.CreateInstance(type)).Patch(harmony);
+                if (type.GetInterfaces().Contains(typeof(IManualPatch)))
+                    ((IManualPatch)Activator.CreateInstance(type)).Patch(harmony);
             }
         }
     }

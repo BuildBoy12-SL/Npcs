@@ -21,7 +21,7 @@ namespace NPCs.Patches.Manual
     /// <summary>
     /// Contains the Harmony patches for the EndConditions plugin.
     /// </summary>
-    internal class EndConditions : ICompatibilityClass
+    internal class EndConditions : IManualPatch
     {
         /// <inheritdoc/>
         public void Patch(Harmony harmony)

@@ -20,7 +20,7 @@ namespace NPCs.Patches.Manual
     /// <summary>
     /// Contains the Harmony patches for the Discord Integration plugin.
     /// </summary>
-    internal class DiscordIntegration : ICompatibilityClass
+    internal class DiscordIntegration : IManualPatch
     {
         /// <inheritdoc/>
         public void Patch(Harmony harmony)
