@@ -31,7 +31,7 @@ namespace NPCs.Patches
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
-            int index = newInstructions.FindIndex(x => x.opcode == OpCodes.Ldc_I4_1) - 3;
+            int index = newInstructions.FindIndex(instruction => instruction.opcode == OpCodes.Ldc_I4_1) - 3;
             newInstructions.RemoveAt(index);
             newInstructions.Insert(index, new CodeInstruction(OpCodes.Call, Method(typeof(RoundEnd), nameof(Process))));
 
@@ -54,7 +54,7 @@ namespace NPCs.Patches
                 RoundSummary.SumInfo_ClassList newList = default;
                 foreach (KeyValuePair<GameObject, ReferenceHub> keyValuePair in ReferenceHub.GetAllHubs())
                 {
-                    if (keyValuePair.Value is null || keyValuePair.Key.IsNpc())
+                    if (keyValuePair.Key.IsNpc() || keyValuePair.Value is null)
                         continue;
 
                     CharacterClassManager component = keyValuePair.Value.characterClassManager;
