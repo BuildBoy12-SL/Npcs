@@ -9,6 +9,7 @@ namespace NPCs.Patches.Manual
 {
 #pragma warning disable SA1118
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using System.Reflection.Emit;
     using Exiled.Loader;
@@ -23,6 +24,8 @@ namespace NPCs.Patches.Manual
     /// </summary>
     internal class RoundEnd : IManualPatch
     {
+        private static List<GameObject> GetPlayers => PlayerManager.players.Where(gameObject => !gameObject.IsNpc()).ToList();
+
         /// <inheritdoc/>
         public void Patch(Harmony harmony)
         {
@@ -51,6 +54,10 @@ namespace NPCs.Patches.Manual
                 new CodeInstruction(OpCodes.Call, Method(typeof(Extensions), nameof(Extensions.IsNpc), new[] { typeof(GameObject) })),
                 new CodeInstruction(OpCodes.Brtrue_S, continueLabel),
             });
+
+            index = newInstructions.FindIndex(instruction => instruction.OperandIs(Field(typeof(PlayerManager), nameof(PlayerManager.players))));
+            newInstructions.RemoveAt(index);
+            newInstructions.Insert(index, new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(RoundEnd), nameof(GetPlayers))));
 
             for (int z = 0; z < newInstructions.Count; z++)
                 yield return newInstructions[z];
