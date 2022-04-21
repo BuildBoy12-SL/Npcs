@@ -23,10 +23,10 @@ namespace NPCs
         public override string Author => "Build";
 
         /// <inheritdoc />
-        public override string Name => "Npcs";
+        public override string Name => "NPCs";
 
         /// <inheritdoc />
-        public override string Prefix => "Npcs";
+        public override string Prefix => "npcs";
 
         /// <inheritdoc />
         public override Version RequiredExiledVersion { get; } = new(5, 0, 0);
