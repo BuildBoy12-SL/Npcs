@@ -10,7 +10,7 @@ namespace NPCs
     using System;
     using Exiled.API.Features;
     using HarmonyLib;
-    using NPCs.Patches.Compatibility;
+    using NPCs.Patches.Manual;
 
     /// <summary>
     /// The main plugin class.
