@@ -32,6 +32,14 @@ namespace NPCs.Patches
                 new CodeInstruction(OpCodes.Sub),
             });
 
+            index = newInstructions.FindLastIndex(instruction => instruction.opcode == OpCodes.Brtrue_S);
+            newInstructions.InsertRange(index, new[]
+            {
+                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))),
+                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Dictionary<GameObject, Npc>), nameof(Dictionary<GameObject, Npc>.Count))),
+                new CodeInstruction(OpCodes.Sub),
+            });
+
             for (int z = 0; z < newInstructions.Count; z++)
                 yield return newInstructions[z];
 
