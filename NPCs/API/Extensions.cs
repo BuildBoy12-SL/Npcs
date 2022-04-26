@@ -16,14 +16,14 @@ namespace NPCs.API
     public static class Extensions
     {
         /// <summary>
-        /// Checks a player if they are an npc.
+        /// Checks if a <see cref="Player"/> is an npc.
         /// </summary>
         /// <param name="player">The player to check.</param>
         /// <returns>A value indicating the player is an NPC.</returns>
         public static bool IsNpc(this Player player) => player.GameObject.IsNpc();
 
         /// <summary>
-        /// Checks a player if they are an npc.
+        /// Checks if a <see cref="ReferenceHub"/> is an npc.
         /// </summary>
         /// <param name="referenceHub">The player to check.</param>
         /// <returns>A value indicating the player is an NPC.</returns>
