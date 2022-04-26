@@ -38,7 +38,8 @@ namespace Pets
             Npc = new Npc(Identifiers.RoleIdToType(Preferences.Role), Preferences.Name, Preferences.Scale);
             Npc.HeldItem = Identifiers.ItemIdToType(Preferences.HeldItem);
             Npc.Player.IsGodModeEnabled = true;
-            movementCore = new MovementCore(Npc, Owner);
+            movementCore = new MovementCore(Npc);
+            movementCore.FollowTarget = owner.GameObject;
             if (Preferences.IsShown)
                 IsShown = true;
         }
@@ -76,11 +77,11 @@ namespace Pets
                 if (value)
                 {
                     Npc.Spawn();
-                    movementCore.Play();
+                    movementCore.IsPaused = false;
                     return;
                 }
 
-                movementCore.Pause();
+                movementCore.IsPaused = true;
                 Npc.Despawn();
             }
         }
