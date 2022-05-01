@@ -7,6 +7,7 @@
 
 namespace NPCs.Patches
 {
+#pragma warning disable SA1313
     using System.Linq;
     using Exiled.API.Features;
     using HarmonyLib;
