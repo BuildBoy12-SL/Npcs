@@ -10,7 +10,7 @@ namespace Pets
     using System.Collections.Generic;
     using Exiled.API.Features;
     using NPCs;
-    using NPCs.Cores;
+    using NPCs.Cores.Navigation;
     using Pets.API;
     using UnityEngine;
 

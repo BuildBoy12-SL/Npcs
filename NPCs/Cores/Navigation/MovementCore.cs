@@ -5,7 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace NPCs.Cores
+namespace NPCs.Cores.Navigation
 {
     using System.Collections.Generic;
     using MEC;
@@ -111,7 +111,7 @@ namespace NPCs.Cores
                     break;
             }
 
-            if (npc.Position != newPosition && !Physics.Linecast(npc.Position, newPosition, npc.Player.ReferenceHub.playerMovementSync.CollidableSurfaces))
+            if (npc.Position != newPosition && !Physics.Linecast(npc.Position, newPosition, FallDamage.StaticGroundMask))
                 npc.Position = newPosition;
         }
 
