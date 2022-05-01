@@ -17,19 +17,6 @@ namespace Pets.EventHandlers
     /// </summary>
     public class PlayerEvents
     {
-        /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnChangingRole(ChangingRoleEventArgs)"/>
-        public void OnChangingRole(ChangingRoleEventArgs ev)
-        {
-            if (!Round.IsStarted || !ev.Player.CheckPermission("pets.pet"))
-                return;
-
-            Pet pet = Pet.GetOrCreate(ev.Player);
-            if (ev.NewRole is RoleType.Spectator or RoleType.None or RoleType.Scp079)
-                pet.Npc.Despawn();
-            else if (pet.Preferences.IsShown)
-                pet.Npc.Spawn();
-        }
-
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnDestroying(DestroyingEventArgs)"/>
         public void OnDestroying(DestroyingEventArgs ev)
         {
@@ -41,6 +28,19 @@ namespace Pets.EventHandlers
         {
             if (ev.Player.IsPet(out _))
                 ev.IsAllowed = false;
+        }
+
+        /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnSpawned(ReferenceHub)"/>
+        public void OnSpawned(SpawnedEventArgs ev)
+        {
+            if (!Round.IsStarted || !ev.Player.CheckPermission("pets.pet"))
+                return;
+
+            Pet pet = Pet.GetOrCreate(ev.Player);
+            if (ev.Player.IsDead || ev.Player.Role == RoleType.Scp079)
+                pet.Npc.Despawn();
+            else if (pet.Preferences.IsShown)
+                pet.Npc.Spawn();
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnTriggeringTesla(TriggeringTeslaEventArgs)"/>

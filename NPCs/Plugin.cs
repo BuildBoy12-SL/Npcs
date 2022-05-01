@@ -29,7 +29,7 @@ namespace NPCs
         public override string Prefix => "npcs";
 
         /// <inheritdoc />
-        public override Version RequiredExiledVersion { get; } = new(5, 1, 3);
+        public override Version RequiredExiledVersion { get; } = new(5, 2, 1);
 
         /// <inheritdoc />
         public override Version Version { get; } = new(1, 0, 0);
