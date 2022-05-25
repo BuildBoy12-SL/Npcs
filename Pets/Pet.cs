@@ -35,11 +35,20 @@ namespace Pets
                 Preferences = new PetPreferences(owner.UserId, true, defaultName, RoleType.ClassD.ToId(), -1, Plugin.Instance.Config.DefaultSize);
             }
 
-            Npc = new Npc(Identifiers.RoleIdToType(Preferences.Role), Preferences.Name, Preferences.Scale);
-            Npc.HeldItem = Identifiers.ItemIdToType(Preferences.HeldItem);
-            Npc.Player.IsGodModeEnabled = true;
-            movementCore = new MovementCore(Npc);
-            movementCore.FollowTarget = owner.GameObject;
+            Npc = new Npc(Identifiers.RoleIdToType(Preferences.Role), Preferences.Name, Preferences.Scale)
+            {
+                 HeldItem = Identifiers.ItemIdToType(Preferences.HeldItem),
+                 Player =
+                 {
+                     IsGodModeEnabled = true,
+                 },
+            };
+
+            movementCore = new MovementCore(Npc)
+            {
+                FollowTarget = owner.GameObject,
+            };
+
             if (Preferences.IsShown)
                 IsShown = true;
         }
