@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AssemblyName>NPCs</AssemblyName>
     <TargetFramework>net472</TargetFramework>
 	<LangVersion>9</LangVersion>
-    <AssemblyName>NPCs</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Authors>Build</Authors>
     <Version>1.0.0</Version>
@@ -13,11 +13,9 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="EXILED" Version="5.2.1" />
+    <PackageReference Include="EXILED" Version="5.2.2" />
     <PackageReference Include="Lib.Harmony" Version="2.0.4" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
-    <PackageReference Include="YamlDotNet" Version="9.1.0" />
   </ItemGroup>
 
   <ItemGroup>

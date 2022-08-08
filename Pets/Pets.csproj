@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>Pets</AssemblyName>
-    <LangVersion>9</LangVersion>
     <TargetFramework>net472</TargetFramework>
+    <LangVersion>9</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Authors>Build</Authors>
     <Version>1.0.0</Version>
@@ -17,17 +17,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EXILED" Version="5.2.1" />
-    <PackageReference Include="Lib.Harmony" Version="2.0.4" />
+    <PackageReference Include="EXILED" Version="5.2.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
     <PackageReference Include="YamlDotNet" Version="9.1.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Assembly-CSharp-firstpass" HintPath="$(EXILED_REFERENCES)\Assembly-CSharp-firstpass.dll" Private="false" />
     <Reference Include="Mirror" HintPath="$(EXILED_REFERENCES)\Mirror.dll" Private="false" />
     <Reference Include="UnityEngine.CoreModule" HintPath="$(EXILED_REFERENCES)\UnityEngine.CoreModule.dll" Private="false" />
-    <Reference Include="UnityEngine.PhysicsModule" HintPath="$(EXILED_REFERENCES)\UnityEngine.PhysicsModule.dll" Private="false" />
   </ItemGroup>
 
 </Project>
