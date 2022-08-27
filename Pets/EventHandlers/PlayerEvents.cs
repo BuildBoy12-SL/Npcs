@@ -30,16 +30,21 @@ namespace Pets.EventHandlers
                 ev.IsAllowed = false;
         }
 
+        /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnChangingRole(ChangingRoleEventArgs)"/>
+        public void OnChangingRole(ChangingRoleEventArgs ev)
+        {
+            if (ev.NewRole is RoleType.Spectator or RoleType.Scp079 && ev.Player.GetPet() is Pet pet)
+                pet.Npc.Despawn();
+        }
+
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnSpawned(ReferenceHub)"/>
         public void OnSpawned(SpawnedEventArgs ev)
         {
-            if (!Round.IsStarted || !ev.Player.CheckPermission("pets.pet"))
+            if (!Round.IsStarted || !ev.Player.CheckPermission("pets.pet") || ev.Player.Role.Type == RoleType.Tutorial)
                 return;
 
             Pet pet = Pet.GetOrCreate(ev.Player);
-            if (ev.Player.IsDead || ev.Player.Role == RoleType.Scp079)
-                pet.Npc.Despawn();
-            else if (pet.Preferences.IsShown)
+            if (pet.Preferences.IsShown)
                 pet.Npc.Spawn();
         }
 

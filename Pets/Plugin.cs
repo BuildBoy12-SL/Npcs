@@ -40,6 +40,7 @@ namespace Pets
             playerEvents = new PlayerEvents();
             Exiled.Events.Handlers.Player.Destroying += playerEvents.OnDestroying;
             Exiled.Events.Handlers.Player.EnteringPocketDimension += playerEvents.OnEnteringPocketDimension;
+            Exiled.Events.Handlers.Player.ChangingRole += playerEvents.OnChangingRole;
             Exiled.Events.Handlers.Player.Spawned += playerEvents.OnSpawned;
             Exiled.Events.Handlers.Player.TriggeringTesla += playerEvents.OnTriggeringTesla;
             serverEvents = new ServerEvents();
@@ -57,6 +58,7 @@ namespace Pets
             serverEvents = null;
             Exiled.Events.Handlers.Player.Destroying -= playerEvents.OnDestroying;
             Exiled.Events.Handlers.Player.EnteringPocketDimension -= playerEvents.OnEnteringPocketDimension;
+            Exiled.Events.Handlers.Player.ChangingRole -= playerEvents.OnChangingRole;
             Exiled.Events.Handlers.Player.Spawned -= playerEvents.OnSpawned;
             Exiled.Events.Handlers.Player.TriggeringTesla -= playerEvents.OnTriggeringTesla;
             playerEvents = null;
