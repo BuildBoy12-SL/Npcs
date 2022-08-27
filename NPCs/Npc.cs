@@ -37,11 +37,12 @@ namespace NPCs
             ReferenceHub.nicknameSync.Network_myNickSync = name;
             ReferenceHub.queryProcessor._ipAddress = "127.0.0.WAN";
 
+            ReferenceHub.characterClassManager.Start();
+            ReferenceHub.playerMovementSync.Start();
+
             ReferenceHub.characterClassManager.IsVerified = true;
 
             GameObject.transform.localScale = scale;
-
-            PlayerManager.AddPlayer(GameObject, CustomNetworkManager.slots);
 
             Player = new Player(GameObject);
             Player.SessionVariables.Add("IsNPC", true);
