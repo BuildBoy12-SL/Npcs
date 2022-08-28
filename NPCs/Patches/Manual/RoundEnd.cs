@@ -42,7 +42,7 @@ namespace NPCs.Patches.Manual
             int index = newInstructions.FindLastIndex(instruction => instruction.opcode == OpCodes.Br);
             Label continueLabel = (Label)newInstructions[index].operand;
 
-            int offset = -1;
+            const int offset = -1;
             index = newInstructions.FindIndex(instruction => instruction.OperandIs(PropertyGetter(typeof(KeyValuePair<GameObject, ReferenceHub>), nameof(KeyValuePair<GameObject, ReferenceHub>.Value)))) + offset;
             newInstructions.InsertRange(index, new[]
             {
@@ -50,15 +50,6 @@ namespace NPCs.Patches.Manual
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(KeyValuePair<GameObject, ReferenceHub>), nameof(KeyValuePair<GameObject, ReferenceHub>.Key))),
                 new CodeInstruction(OpCodes.Call, Method(typeof(Extensions), nameof(Extensions.IsNpc), new[] { typeof(GameObject) })),
                 new CodeInstruction(OpCodes.Brtrue_S, continueLabel),
-            });
-
-            offset = 2;
-            index = newInstructions.FindIndex(instruction => instruction.OperandIs(Field(typeof(PlayerManager), nameof(PlayerManager.players)))) + offset;
-            newInstructions.InsertRange(index, new[]
-            {
-                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Npc), nameof(Npc.Dictionary))),
-                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Dictionary<GameObject, Npc>), nameof(Dictionary<GameObject, Npc>.Count))),
-                new CodeInstruction(OpCodes.Sub),
             });
 
             for (int z = 0; z < newInstructions.Count; z++)
