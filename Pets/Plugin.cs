@@ -56,13 +56,15 @@ namespace Pets
             Exiled.Events.Handlers.Server.RoundEnded -= serverEvents.OnRoundEnded;
             Exiled.Events.Handlers.Server.WaitingForPlayers -= serverEvents.OnWaitingForPlayers;
             serverEvents = null;
+
             Exiled.Events.Handlers.Player.Destroying -= playerEvents.OnDestroying;
             Exiled.Events.Handlers.Player.EnteringPocketDimension -= playerEvents.OnEnteringPocketDimension;
             Exiled.Events.Handlers.Player.ChangingRole -= playerEvents.OnChangingRole;
             Exiled.Events.Handlers.Player.Spawned -= playerEvents.OnSpawned;
             Exiled.Events.Handlers.Player.TriggeringTesla -= playerEvents.OnTriggeringTesla;
             playerEvents = null;
-            harmony?.UnpatchAll(harmony.Id);
+
+            harmony.UnpatchAll(harmony.Id);
             harmony = null;
             Instance = null;
             base.OnDisabled();

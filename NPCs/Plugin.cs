@@ -39,7 +39,7 @@ namespace NPCs
         {
             harmony = new Harmony($"npcs.{DateTime.UtcNow.Ticks}");
             harmony.PatchAll();
-            PatchCompatability();
+            RunManualPatches();
 
             base.OnEnabled();
         }
@@ -53,7 +53,7 @@ namespace NPCs
             base.OnDisabled();
         }
 
-        private void PatchCompatability()
+        private void RunManualPatches()
         {
             foreach (Type type in Assembly.GetTypes())
             {
