@@ -29,6 +29,7 @@ namespace Pets
             Role = RoleType.ClassD,
             IsShown = true,
             Name = "Pet",
+            Scale = new Vector3(0.6f, 0.6f, 0.6f),
         };
 
         /// <summary>

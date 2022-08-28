@@ -11,6 +11,7 @@ namespace Pets.Commands
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
+    using Pets.API;
 
     /// <summary>
     /// Shows the user's pet.
@@ -48,16 +49,16 @@ namespace Pets.Commands
                 return false;
             }
 
-            Pet pet = Pet.GetOrCreate(player);
-            if (!pet.IsShown)
+            Pet pet = player.GetPet();
+            if (pet is not null)
             {
-                pet.IsShown = true;
-                response = "Spawned your pet.";
-                return true;
+                response = "Your pet has already been spawned!";
+                return false;
             }
 
-            response = "Your pet has already been spawned!";
-            return false;
+            pet = Pet.GetOrCreate(player);
+            response = $"Spawned your pet named {pet.Name}.";
+            return true;
         }
     }
 }

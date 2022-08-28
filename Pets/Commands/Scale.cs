@@ -48,6 +48,12 @@ namespace Pets.Commands
                 return true;
             }
 
+            if (arguments.Count < 3)
+            {
+                response = "Usage: pet scale <x> <y> <z>";
+                return false;
+            }
+
             if (!float.TryParse(arguments.At(0), out float x))
             {
                 response = $"Invalid value for x size: {arguments.At(1)}";

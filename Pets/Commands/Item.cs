@@ -11,6 +11,7 @@ namespace Pets.Commands
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
+    using Pets.API;
 
     /// <summary>
     /// Sets the pet's held item.
@@ -54,7 +55,13 @@ namespace Pets.Commands
                 return false;
             }
 
-            Pet pet = Pet.GetOrCreate(player);
+            Pet pet = player.GetPet();
+            if (pet is null)
+            {
+                response = "Your pet is not spawned in.";
+                return false;
+            }
+
             if (arguments.Count == 0)
             {
                 response = $"Your pet is currently holding a {pet.HeldItem}";

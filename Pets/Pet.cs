@@ -22,7 +22,12 @@ namespace Pets
     {
         private readonly MovementCore movementCore;
 
-        private Pet(Player owner, PetPreferences petPreferences)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Pet"/> class.
+        /// </summary>
+        /// <param name="owner">The owner of the pet.</param>
+        /// <param name="petPreferences">The preferences of the owner.</param>
+        public Pet(Player owner, PetPreferences petPreferences)
             : base(petPreferences.Role, petPreferences.Name, petPreferences.Scale)
         {
             Owner = owner;

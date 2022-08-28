@@ -11,6 +11,7 @@ namespace Pets.Commands
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
+    using Pets.API;
 
     /// <summary>
     /// Hides the user's pet.
@@ -42,14 +43,14 @@ namespace Pets.Commands
                 return false;
             }
 
-            Pet pet = Pet.GetOrCreate(player);
+            Pet pet = player.GetPet();
             if (pet is null || !pet.IsShown)
             {
                 response = "You do not have a spawned pet!";
                 return false;
             }
 
-            pet.IsShown = false;
+            pet.Destroy();
             response = "Despawned your pet.";
             return false;
         }
