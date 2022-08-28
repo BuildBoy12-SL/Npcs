@@ -31,6 +31,7 @@ namespace NPCs
             ReferenceHub.nicknameSync.Network_myNickSync = "NPC";
             ReferenceHub.queryProcessor._ipAddress = "127.0.0.WAN";
             ReferenceHub.characterClassManager.IsVerified = true;
+            ReferenceHub.playerMovementSync.NetworkGrounded = true;
             StartReferenceHub();
 
             GameObject.transform.localScale = Vector3.one;
@@ -54,6 +55,7 @@ namespace NPCs
             ReferenceHub.nicknameSync.Network_myNickSync = name;
             ReferenceHub.queryProcessor._ipAddress = "127.0.0.WAN";
             ReferenceHub.characterClassManager.IsVerified = true;
+            ReferenceHub.playerMovementSync.NetworkGrounded = true;
             StartReferenceHub();
 
             GameObject.transform.localScale = scale;
