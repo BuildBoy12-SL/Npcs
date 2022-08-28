@@ -16,80 +16,61 @@ namespace NPCs
     /// <summary>
     /// Represents the core of an npc.
     /// </summary>
-    public class Npc
+    public class Npc : Player
     {
         private bool isSpawned;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Npc"/> class.
-        /// </summary>
-        /// <param name="roleType">The role of the npc.</param>
-        /// <param name="name">The name of the npc.</param>
-        /// <param name="scale">The size of the npc.</param>
-        public Npc(RoleType roleType, string name, Vector3 scale)
+        private Npc(ReferenceHub referenceHub)
+            : base(referenceHub)
         {
-            GameObject = Object.Instantiate(NetworkManager.singleton.playerPrefab);
-            Dictionary.Add(GameObject, this);
+            ReferenceHub.characterClassManager.CurClass = RoleType.Tutorial;
+            ReferenceHub.playerStats.StatModules[0].CurValue = 100;
+            ReferenceHub.nicknameSync.Network_myNickSync = "NPC";
+            ReferenceHub.queryProcessor._ipAddress = "127.0.0.WAN";
+            ReferenceHub.characterClassManager.IsVerified = true;
+            StartReferenceHub();
 
-            ReferenceHub = GameObject.GetComponent<ReferenceHub>();
+            GameObject.transform.localScale = Vector3.one;
+
+            SessionVariables.Add("IsNPC", true);
+            Dictionary.Add(GameObject, this);
+            Player.Dictionary.Add(GameObject, this);
+        }
+
+        private Npc(ReferenceHub referenceHub, RoleType roleType, string name, Vector3 scale)
+            : base(referenceHub)
+        {
             ReferenceHub.characterClassManager.CurClass = roleType;
             ReferenceHub.playerStats.StatModules[0].CurValue = 100;
             ReferenceHub.nicknameSync.Network_myNickSync = name;
             ReferenceHub.queryProcessor._ipAddress = "127.0.0.WAN";
-
-            ReferenceHub.characterClassManager.Start();
-            ReferenceHub.playerMovementSync.Start();
-
             ReferenceHub.characterClassManager.IsVerified = true;
+            StartReferenceHub();
 
             GameObject.transform.localScale = scale;
 
-            Player = new Player(GameObject);
-            Player.SessionVariables.Add("IsNPC", true);
-            Player.Dictionary.Add(GameObject, Player);
+            SessionVariables.Add("IsNPC", true);
+            Dictionary.Add(GameObject, this);
+            Player.Dictionary.Add(GameObject, this);
         }
 
         /// <summary>
         /// Gets a <see cref="Dictionary{TKey,TValue}"/> containing all <see cref="Npc"/>'s on the server.
         /// </summary>
-        public static Dictionary<GameObject, Npc> Dictionary { get; } = new();
+        public static new Dictionary<GameObject, Npc> Dictionary { get; } = new();
 
         /// <summary>
         /// Gets a list of all <see cref="Npc"/>s on the server.
         /// </summary>
-        public static IEnumerable<Npc> List => Dictionary.Values;
-
-        /// <summary>
-        /// Gets the attached <see cref="UnityEngine.GameObject"/>.
-        /// </summary>
-        public GameObject GameObject { get; }
-
-        /// <summary>
-        /// Gets the attached ReferenceHub component.
-        /// </summary>
-        public ReferenceHub ReferenceHub { get; }
-
-        /// <summary>
-        /// Gets the created <see cref="Exiled.API.Features.Player"/> to represent the npc.
-        /// </summary>
-        public Player Player { get; }
+        public static new IEnumerable<Npc> List => Dictionary.Values;
 
         /// <summary>
         /// Gets or sets the NPC's position.
         /// </summary>
-        public Vector3 Position
+        public new Vector3 Position
         {
-            get => Player.Position;
+            get => base.Position;
             set => ReferenceHub.playerMovementSync.OverridePosition(value, null, true);
-        }
-
-        /// <summary>
-        /// Gets or sets the NPC's held item.
-        /// </summary>
-        public ItemType HeldItem
-        {
-            get => ReferenceHub.inventory.CurItem.TypeId;
-            set => ReferenceHub.inventory.NetworkCurItem = new InventorySystem.Items.ItemIdentifier(value, 0);
         }
 
         /// <summary>
@@ -108,23 +89,39 @@ namespace NPCs
         /// <summary>
         /// Gets or sets the NPC's role.
         /// </summary>
-        public RoleType Role
+        public new RoleType Role
         {
-            get => Player.Role.Type;
+            get => base.Role.Type;
             set
             {
-                Player.SetRole(value, SpawnReason.ForceClass, true);
+                SetRole(value, SpawnReason.ForceClass, true);
                 Respawn();
             }
         }
 
         /// <summary>
-        /// Gets or sets the NPC's scale.
+        /// Creates a <see cref="Npc"/>.
         /// </summary>
-        public Vector3 Scale
+        /// <returns>The created <see cref="Npc"/> instance.</returns>
+        public static Npc Create()
         {
-            get => Player.Scale;
-            set => Player.Scale = value;
+            GameObject gameObject = Object.Instantiate(NetworkManager.singleton.playerPrefab);
+            ReferenceHub referenceHub = gameObject.GetComponent<ReferenceHub>();
+            return new Npc(referenceHub);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Npc"/> with the specified name, role, and scale.
+        /// </summary>
+        /// <param name="roleType">The role of the npc.</param>
+        /// <param name="name">The name of the npc.</param>
+        /// <param name="scale">The scale of the npc.</param>
+        /// <returns>The created <see cref="Npc"/> instance.</returns>
+        public static Npc Create(RoleType roleType, string name, Vector3 scale)
+        {
+            GameObject gameObject = Object.Instantiate(NetworkManager.singleton.playerPrefab);
+            ReferenceHub referenceHub = gameObject.GetComponent<ReferenceHub>();
+            return new Npc(referenceHub, roleType, name, scale);
         }
 
         /// <summary>
@@ -161,13 +158,20 @@ namespace NPCs
             NetworkServer.Destroy(GameObject);
         }
 
-        /// <inheritdoc />
-        public override string ToString() => Player.ToString();
-
         private void Respawn()
         {
             Despawn();
             Spawn();
+        }
+
+        private void StartReferenceHub()
+        {
+            ReferenceHub.characterClassManager.Start();
+            ReferenceHub.playerStats.Start();
+            ReferenceHub.nicknameSync.Start();
+            ReferenceHub.playerMovementSync.Start();
+            ReferenceHub.inventory.Start();
+            ReferenceHub.serverRoles.Start();
         }
     }
 }

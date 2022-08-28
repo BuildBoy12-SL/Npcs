@@ -42,9 +42,9 @@ namespace Pets.Commands
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission("pets.pet.item"))
+            if (!sender.CheckPermission("pets.item"))
             {
-                response = "Insufficient permission.";
+                response = "Insufficient permission. Required permission: pets.item";
                 return false;
             }
 
@@ -68,7 +68,7 @@ namespace Pets.Commands
                 return false;
             }
 
-            pet.HeldItem = itemType;
+            pet.Npc.CurrentItem = Exiled.API.Features.Items.Item.Create(itemType);
             response = $"Set the pet's held item to a(n) {itemType}";
             return true;
         }

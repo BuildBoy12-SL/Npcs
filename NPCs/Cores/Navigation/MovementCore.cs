@@ -42,8 +42,8 @@ namespace NPCs.Cores.Navigation
         /// </summary>
         public PlayerMovementState Movement
         {
-            get => npc.Player.ReferenceHub.animationController.MoveState;
-            set => npc.Player.ReferenceHub.animationController.MoveState = value;
+            get => npc.ReferenceHub.animationController.MoveState;
+            set => npc.ReferenceHub.animationController.MoveState = value;
         }
 
         /// <summary>
@@ -67,10 +67,10 @@ namespace NPCs.Cores.Navigation
 
         private void Follow()
         {
-            Vector3 moveDirection = FollowTarget.transform.position - npc.Player.Position;
+            Vector3 moveDirection = FollowTarget.transform.position - npc.Position;
 
             Quaternion rot = Quaternion.LookRotation(moveDirection.normalized);
-            npc.Player.Rotation = new Vector2(rot.eulerAngles.x, rot.eulerAngles.y);
+            npc.Rotation = new Vector2(rot.eulerAngles.x, rot.eulerAngles.y);
 
             if (moveDirection.magnitude < 3)
                 return;
@@ -98,16 +98,16 @@ namespace NPCs.Cores.Navigation
             switch (Direction)
             {
                 case MovementDirection.Forward:
-                    newPosition += npc.Player.CameraTransform.forward / 10 * speed;
+                    newPosition += npc.CameraTransform.forward / 10 * speed;
                     break;
                 case MovementDirection.Backwards:
-                    newPosition -= npc.Player.CameraTransform.forward / 10 * speed;
+                    newPosition -= npc.CameraTransform.forward / 10 * speed;
                     break;
                 case MovementDirection.Right:
-                    newPosition += Quaternion.AngleAxis(90, Vector3.up) * npc.Player.CameraTransform.forward / 10 * speed;
+                    newPosition += Quaternion.AngleAxis(90, Vector3.up) * npc.CameraTransform.forward / 10 * speed;
                     break;
                 case MovementDirection.Left:
-                    newPosition -= Quaternion.AngleAxis(90, Vector3.up) * npc.Player.CameraTransform.forward / 10 * speed;
+                    newPosition -= Quaternion.AngleAxis(90, Vector3.up) * npc.CameraTransform.forward / 10 * speed;
                     break;
             }
 

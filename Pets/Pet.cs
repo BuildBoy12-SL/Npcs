@@ -9,6 +9,7 @@ namespace Pets
 {
     using System.Collections.Generic;
     using Exiled.API.Features;
+    using Exiled.API.Features.Items;
     using NPCs;
     using NPCs.Cores.Navigation;
     using Pets.API;
@@ -32,17 +33,12 @@ namespace Pets
             if (Preferences is null)
             {
                 string defaultName = Plugin.Instance.Config.DefaultName.Replace("{Name}", owner.DisplayNickname ?? owner.Nickname);
-                Preferences = new PetPreferences(owner.UserId, true, defaultName, RoleType.ClassD.ToId(), -1, Plugin.Instance.Config.DefaultSize);
+                Preferences = new PetPreferences(owner.UserId, true, defaultName, RoleType.ClassD, ItemType.None, Plugin.Instance.Config.DefaultSize);
             }
 
-            Npc = new Npc(Identifiers.RoleIdToType(Preferences.Role), Preferences.Name, Preferences.Scale)
-            {
-                 HeldItem = Identifiers.ItemIdToType(Preferences.HeldItem),
-                 Player =
-                 {
-                     IsGodModeEnabled = true,
-                 },
-            };
+            Npc = Npc.Create(Preferences.Role, Preferences.Name, Preferences.Scale);
+            Npc.CurrentItem = Item.Create(Preferences.HeldItem);
+            Npc.IsGodModeEnabled = true;
 
             movementCore = new MovementCore(Npc)
             {
@@ -100,11 +96,11 @@ namespace Pets
         /// </summary>
         public ItemType HeldItem
         {
-            get => Npc.HeldItem;
+            get => Npc.CurrentItem.Type;
             set
             {
-                Npc.HeldItem = value;
-                Preferences.HeldItem = value.ToId();
+                Npc.CurrentItem = Item.Create(value);
+                Preferences.HeldItem = value;
             }
         }
 
@@ -130,7 +126,7 @@ namespace Pets
             set
             {
                 Npc.Role = value;
-                Preferences.Role = value.ToId();
+                Preferences.Role = value;
             }
         }
 
@@ -139,7 +135,7 @@ namespace Pets
         /// </summary>
         public Vector3 Scale
         {
-            get => Npc.Player.Scale;
+            get => Npc.Scale;
             set
             {
                 Npc.Scale = value;

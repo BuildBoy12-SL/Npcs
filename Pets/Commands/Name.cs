@@ -29,9 +29,9 @@ namespace Pets.Commands
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission("pets.pet.name"))
+            if (!sender.CheckPermission("pets.name"))
             {
-                response = "Insufficient permission.";
+                response = "Insufficient permission. Required permission: pets.name";
                 return false;
             }
 

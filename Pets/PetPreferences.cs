@@ -36,7 +36,7 @@ namespace Pets
         /// <param name="role"><inheritdoc cref="Role"/></param>
         /// <param name="heldItem"><inheritdoc cref="HeldItem"/></param>
         /// <param name="scale"><inheritdoc cref="Scale"/></param>
-        public PetPreferences(string userId, bool isShown, string name, int role, int heldItem, Vector3 scale)
+        public PetPreferences(string userId, bool isShown, string name, RoleType role, ItemType heldItem, Vector3 scale)
         {
             IsShown = isShown;
             Name = name;
@@ -59,12 +59,12 @@ namespace Pets
         /// <summary>
         /// Gets or sets the pet's role.
         /// </summary>
-        public int Role { get; set; }
+        public RoleType Role { get; set; }
 
         /// <summary>
         /// Gets or sets the pet's held item.
         /// </summary>
-        public int HeldItem { get; set; }
+        public ItemType HeldItem { get; set; }
 
         /// <summary>
         /// Gets or sets the pet's scale.

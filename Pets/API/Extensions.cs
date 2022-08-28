@@ -40,7 +40,7 @@ namespace Pets.API
         {
             foreach (Pet p in Pet.Instances)
             {
-                if (p.Npc.Player == player)
+                if (p.Npc == player)
                 {
                     pet = p;
                     return true;

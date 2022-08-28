@@ -38,16 +38,16 @@ namespace NPCs.Commands
             if (arguments.Count < 1 || !Enum.TryParse(arguments.At(0), true, out RoleType roleType))
                 roleType = RoleType.ClassD;
 
-            string name = "Default";
+            string name = "NPC";
             if (arguments.Count > 1)
                 name = string.Join(" ", arguments.Skip(1));
 
-            Npc npc = new Npc(roleType, name, Vector3.one);
+            Npc npc = Npc.Create(roleType, name, Vector3.one);
             npc.Spawn();
             Timing.CallDelayed(0.1f, () =>
             {
                 npc.Position = player.Position;
-                npc.Player.Rotation = player.Rotation;
+                npc.Rotation = player.Rotation;
             });
 
             response = "Done.";

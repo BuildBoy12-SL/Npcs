@@ -31,7 +31,7 @@ namespace Pets.Commands
         {
             if (!sender.CheckPermission("pets.pet"))
             {
-                response = "Insufficient permission.";
+                response = "Insufficient permission. Required permission: pets.pet";
                 return false;
             }
 

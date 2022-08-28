@@ -49,9 +49,10 @@ namespace Pets.Commands
                 return false;
             }
 
-            if (!sender.CheckPermission("pets.pet.role." + roleType.ToString().ToLower()))
+            string requiredPermission = "pets.role." + roleType.ToString().ToLower();
+            if (!sender.CheckPermission(requiredPermission))
             {
-                response = "Insufficient permission.";
+                response = $"Insufficient permission. Required permission: {requiredPermission}";
                 return false;
             }
 
