@@ -154,7 +154,6 @@ namespace NPCs
         public void Destroy()
         {
             Dictionary.Remove(GameObject);
-            PlayerManager.RemovePlayer(GameObject, CustomNetworkManager.slots);
             NetworkServer.Destroy(GameObject);
         }
 

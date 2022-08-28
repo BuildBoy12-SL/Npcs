@@ -11,6 +11,7 @@ namespace NPCs.Commands
     using System.Linq;
     using CommandSystem;
     using Exiled.API.Features;
+    using Exiled.Permissions.Extensions;
     using MEC;
     using UnityEngine;
 
@@ -21,15 +22,21 @@ namespace NPCs.Commands
         public string Command => "spawn";
 
         /// <inheritdoc />
-        public string[] Aliases { get; } = Array.Empty<string>();
+        public string[] Aliases { get; } = { "s" };
 
         /// <inheritdoc />
-        public string Description => "Spawns a npc.";
+        public string Description => "Spawns an NPC.";
 
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (Player.Get(sender) is not Player player)
+            if (!sender.CheckPermission("npc.spawn"))
+            {
+                response = "You do not have permission to run this command.";
+                return false;
+            }
+
+            if (Player.Get(sender) is not Player player || player == Server.Host)
             {
                 response = "This command must be executed at the game level.";
                 return false;
