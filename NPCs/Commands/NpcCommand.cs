@@ -34,6 +34,7 @@ namespace NPCs.Commands
         /// <inheritdoc />
         public sealed override void LoadGeneratedCommands()
         {
+            RegisterCommand(new Destroy());
             RegisterCommand(new List());
             RegisterCommand(new Spawn());
         }
