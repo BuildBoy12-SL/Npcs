@@ -28,7 +28,7 @@ namespace Pets
         public override string Author => "Build";
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new(5, 2, 1);
+        public override Version RequiredExiledVersion { get; } = new(5, 3, 0);
 
         /// <inheritdoc/>
         public override void OnEnabled()
