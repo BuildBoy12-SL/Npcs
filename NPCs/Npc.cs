@@ -20,8 +20,11 @@ namespace NPCs
     {
         private bool isSpawned;
 
-        private Npc(ReferenceHub referenceHub)
-            : base(referenceHub)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Npc"/> class.
+        /// </summary>
+        public Npc()
+            : base(CreateHub())
         {
             ReferenceHub.characterClassManager.CurClass = RoleType.Tutorial;
             ReferenceHub.playerStats.StatModules[0].CurValue = 100;
@@ -37,8 +40,14 @@ namespace NPCs
             Player.Dictionary.Add(GameObject, this);
         }
 
-        private Npc(ReferenceHub referenceHub, RoleType roleType, string name, Vector3 scale)
-            : base(referenceHub)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Npc"/> class.
+        /// </summary>
+        /// <param name="roleType">The <see cref="Player.Role"/> of the <see cref="Npc"/>.</param>
+        /// <param name="name">The name of the <see cref="Npc"/>.</param>
+        /// <param name="scale">The <see cref="Player.Scale"/> of the <see cref="Npc"/>.</param>
+        public Npc(RoleType roleType, string name, Vector3 scale)
+            : base(CreateHub())
         {
             ReferenceHub.characterClassManager.CurClass = roleType;
             ReferenceHub.playerStats.StatModules[0].CurValue = 100;
@@ -100,31 +109,6 @@ namespace NPCs
         }
 
         /// <summary>
-        /// Creates a <see cref="Npc"/>.
-        /// </summary>
-        /// <returns>The created <see cref="Npc"/> instance.</returns>
-        public static Npc Create()
-        {
-            GameObject gameObject = Object.Instantiate(NetworkManager.singleton.playerPrefab);
-            ReferenceHub referenceHub = gameObject.GetComponent<ReferenceHub>();
-            return new Npc(referenceHub);
-        }
-
-        /// <summary>
-        /// Creates a <see cref="Npc"/> with the specified name, role, and scale.
-        /// </summary>
-        /// <param name="roleType">The role of the npc.</param>
-        /// <param name="name">The name of the npc.</param>
-        /// <param name="scale">The scale of the npc.</param>
-        /// <returns>The created <see cref="Npc"/> instance.</returns>
-        public static Npc Create(RoleType roleType, string name, Vector3 scale)
-        {
-            GameObject gameObject = Object.Instantiate(NetworkManager.singleton.playerPrefab);
-            ReferenceHub referenceHub = gameObject.GetComponent<ReferenceHub>();
-            return new Npc(referenceHub, roleType, name, scale);
-        }
-
-        /// <summary>
         /// Spawns the NPC.
         /// </summary>
         public void Spawn()
@@ -151,10 +135,16 @@ namespace NPCs
         /// <summary>
         /// Destroys the fake player.
         /// </summary>
-        public void Destroy()
+        public virtual void Destroy()
         {
             Dictionary.Remove(GameObject);
             NetworkServer.Destroy(GameObject);
+        }
+
+        private static ReferenceHub CreateHub()
+        {
+            GameObject gameObject = Object.Instantiate(NetworkManager.singleton.playerPrefab);
+            return gameObject.GetComponent<ReferenceHub>();
         }
 
         private void Respawn()

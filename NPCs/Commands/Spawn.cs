@@ -49,7 +49,7 @@ namespace NPCs.Commands
             if (arguments.Count > 1)
                 name = string.Join(" ", arguments.Skip(1));
 
-            Npc npc = Npc.Create(roleType, name, Vector3.one);
+            Npc npc = new(roleType, name, Vector3.one);
             npc.Spawn();
             Timing.CallDelayed(0.1f, () =>
             {

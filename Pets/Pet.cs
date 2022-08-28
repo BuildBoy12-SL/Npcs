@@ -18,34 +18,25 @@ namespace Pets
     /// <summary>
     /// Represents an in-game pet.
     /// </summary>
-    public class Pet
+    public class Pet : Npc
     {
         private readonly MovementCore movementCore;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Pet"/> class.
-        /// </summary>
-        /// <param name="owner">The owner of the pet.</param>
-        private Pet(Player owner)
+        private Pet(Player owner, PetPreferences petPreferences)
+            : base(petPreferences.Role, petPreferences.Name, petPreferences.Scale)
         {
             Owner = owner;
-            Preferences = PetPreferences.Get(owner);
-            if (Preferences is null)
-            {
-                string defaultName = Plugin.Instance.Config.DefaultName.Replace("{Name}", owner.DisplayNickname ?? owner.Nickname);
-                Preferences = new PetPreferences(owner.UserId, true, defaultName, RoleType.ClassD, ItemType.None, Plugin.Instance.Config.DefaultSize);
-            }
+            PetPreferences = petPreferences;
+            IsGodModeEnabled = true;
+            if (PetPreferences.HeldItem != ItemType.None)
+                CurrentItem = Item.Create(PetPreferences.HeldItem);
 
-            Npc = Npc.Create(Preferences.Role, Preferences.Name, Preferences.Scale);
-            Npc.CurrentItem = Item.Create(Preferences.HeldItem);
-            Npc.IsGodModeEnabled = true;
-
-            movementCore = new MovementCore(Npc)
+            movementCore = new MovementCore(this)
             {
                 FollowTarget = owner.GameObject,
             };
 
-            if (Preferences.IsShown)
+            if (PetPreferences.IsShown)
                 IsShown = true;
         }
 
@@ -60,14 +51,9 @@ namespace Pets
         public Player Owner { get; }
 
         /// <summary>
-        /// Gets the npc controlling the pet.
-        /// </summary>
-        public Npc Npc { get; }
-
-        /// <summary>
         /// Gets the owner's preferences for the pet.
         /// </summary>
-        public PetPreferences Preferences { get; }
+        public PetPreferences PetPreferences { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the pet is currently visible.
@@ -75,19 +61,19 @@ namespace Pets
         /// <remarks>This also affects the player's pet preferences.</remarks>
         public bool IsShown
         {
-            get => Preferences.IsShown;
+            get => PetPreferences.IsShown;
             set
             {
-                Preferences.IsShown = value;
+                PetPreferences.IsShown = value;
                 if (value)
                 {
-                    Npc.Spawn();
+                    Spawn();
                     movementCore.IsPaused = false;
                     return;
                 }
 
                 movementCore.IsPaused = true;
-                Npc.Despawn();
+                Despawn();
             }
         }
 
@@ -96,50 +82,50 @@ namespace Pets
         /// </summary>
         public ItemType HeldItem
         {
-            get => Npc.CurrentItem.Type;
+            get => CurrentItem.Type;
             set
             {
-                Npc.CurrentItem = Item.Create(value);
-                Preferences.HeldItem = value;
+                CurrentItem = Item.Create(value);
+                PetPreferences.HeldItem = value;
             }
         }
 
         /// <summary>
         /// Gets or sets the display name of the pet.
         /// </summary>
-        public string Name
+        public new string Name
         {
-            get => Npc.Name;
+            get => base.Name;
             set
             {
-                Npc.Name = value;
-                Preferences.Name = value;
+                base.Name = value;
+                PetPreferences.Name = value;
             }
         }
 
         /// <summary>
         /// Gets or sets the display role of the pet.
         /// </summary>
-        public RoleType Role
+        public new RoleType Role
         {
-            get => Npc.Role;
+            get => base.Role;
             set
             {
-                Npc.Role = value;
-                Preferences.Role = value;
+                base.Role = value;
+                PetPreferences.Role = value;
             }
         }
 
         /// <summary>
         /// Gets or sets the scale of the pet.
         /// </summary>
-        public Vector3 Scale
+        public new Vector3 Scale
         {
-            get => Npc.Scale;
+            get => base.Scale;
             set
             {
-                Npc.Scale = value;
-                Preferences.Scale = value;
+                base.Scale = value;
+                PetPreferences.Scale = value;
             }
         }
 
@@ -154,7 +140,8 @@ namespace Pets
             if (pet is not null)
                 return pet;
 
-            pet = new Pet(owner);
+            PetPreferences preferences = PetPreferences.Get(owner) ?? PetPreferences.Default;
+            pet = new Pet(owner, preferences);
             Instances.Add(pet);
             return pet;
         }
@@ -162,11 +149,11 @@ namespace Pets
         /// <summary>
         /// Destroys the pet and all of its logic.
         /// </summary>
-        public void Destroy()
+        public override void Destroy()
         {
             movementCore.Kill();
-            Npc.Destroy();
             Instances.Remove(this);
+            base.Destroy();
         }
     }
 }

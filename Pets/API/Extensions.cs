@@ -29,26 +29,5 @@ namespace Pets.API
 
             return null;
         }
-
-        /// <summary>
-        /// Returns a value indicating whether the player is a pet.
-        /// </summary>
-        /// <param name="player">The player to check.</param>
-        /// <param name="pet">The pet instance or null if the player is not a pet.</param>
-        /// <returns>Whether the checked player is a pet.</returns>
-        public static bool IsPet(this Player player, out Pet pet)
-        {
-            foreach (Pet p in Pet.Instances)
-            {
-                if (p.Npc == player)
-                {
-                    pet = p;
-                    return true;
-                }
-            }
-
-            pet = null;
-            return false;
-        }
     }
 }

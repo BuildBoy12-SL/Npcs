@@ -27,7 +27,6 @@ namespace Pets.Commands
             ItemType.ArmorCombat,
             ItemType.ArmorHeavy,
             ItemType.ArmorLight,
-            ItemType.Flashlight,
         };
 
         /// <inheritdoc />
@@ -68,7 +67,7 @@ namespace Pets.Commands
                 return false;
             }
 
-            pet.Npc.CurrentItem = Exiled.API.Features.Items.Item.Create(itemType);
+            pet.CurrentItem = itemType == ItemType.None ? null : Exiled.API.Features.Items.Item.Create(itemType);
             response = $"Set the pet's held item to a(n) {itemType}";
             return true;
         }

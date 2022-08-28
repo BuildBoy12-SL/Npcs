@@ -26,7 +26,7 @@ namespace Pets.EventHandlers
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnEnteringPocketDimension(EnteringPocketDimensionEventArgs)"/>
         public void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
         {
-            if (ev.Player.IsPet(out _))
+            if (ev.Player is Pet)
                 ev.IsAllowed = false;
         }
 
@@ -34,7 +34,7 @@ namespace Pets.EventHandlers
         public void OnChangingRole(ChangingRoleEventArgs ev)
         {
             if (ev.NewRole is RoleType.Spectator or RoleType.Scp079 && ev.Player.GetPet() is Pet pet)
-                pet.Npc.Despawn();
+                pet.Destroy();
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnSpawned(ReferenceHub)"/>
@@ -44,14 +44,14 @@ namespace Pets.EventHandlers
                 return;
 
             Pet pet = Pet.GetOrCreate(ev.Player);
-            if (pet.Preferences.IsShown)
-                pet.Npc.Spawn();
+            if (pet.PetPreferences.IsShown)
+                pet.Spawn();
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnTriggeringTesla(TriggeringTeslaEventArgs)"/>
         public void OnTriggeringTesla(TriggeringTeslaEventArgs ev)
         {
-            if (ev.Player.IsPet(out _))
+            if (ev.Player is Pet)
             {
                 ev.IsTriggerable = false;
                 ev.IsInIdleRange = false;
