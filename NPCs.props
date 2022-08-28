@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup Condition="$(BaseProperties) == '' OR $(BaseProperties) == 'true'">
+    <Authors>Build</Authors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(BuildProperties) == '' OR $(BuildProperties) == 'true'">
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <PlatformTarget>x64</PlatformTarget>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <OutputPath>$(MSBuildThisFileDirectory)\bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Version Condition="$(Version) == ''">1.0.0</Version>
+
+    <ExiledVersion>5.3.0</ExiledVersion>
+    <StyleCopVersion>1.1.118</StyleCopVersion>
+
+    <Copyright>Copyright © $(Authors) 2022 - $([System.DateTime]::Now.ToString("yyyy"))</Copyright>
+    <RepositoryType>Git</RepositoryType>
+    <RepositoryUrl>https://github.com/BuildBoy12/NPCs</RepositoryUrl>
+    <PackageLicenseExpression>CC-BY-SA-3.0</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DebugType>Portable</DebugType>
+  </PropertyGroup>
+
+  <!-- Disable warning about disabled generation of xml files on debug build -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);SA0001</NoWarn>
+  </PropertyGroup>
+
+</Project>

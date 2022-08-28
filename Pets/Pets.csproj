@@ -1,24 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>Library</OutputType>
     <AssemblyName>Pets</AssemblyName>
-    <TargetFramework>net472</TargetFramework>
-    <LangVersion>9</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Authors>Build</Authors>
-    <Version>1.0.0</Version>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<Configurations>Debug;Release;Programs</Configurations>
+    <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
-	
+
+  <Import Project="../NPCs.props" />
+
   <ItemGroup>
     <ProjectReference Include="..\NPCs\NPCs.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EXILED" Version="5.3.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
+    <PackageReference Include="EXILED" Version="$(ExiledVersion)" />
+    <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopVersion)" />
     <PackageReference Include="YamlDotNet" Version="9.1.4" />
   </ItemGroup>
 
