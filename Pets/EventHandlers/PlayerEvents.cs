@@ -10,6 +10,7 @@ namespace Pets.EventHandlers
     using Exiled.API.Features;
     using Exiled.Events.EventArgs;
     using Exiled.Permissions.Extensions;
+    using MEC;
     using Pets.API;
 
     /// <summary>
@@ -43,19 +44,22 @@ namespace Pets.EventHandlers
             if (!Round.IsStarted || !ev.Player.CheckPermission("pets.pet") || ev.Player.Role.Type == RoleType.Tutorial)
                 return;
 
-            Pet pet = Pet.GetOrCreate(ev.Player);
-            if (pet.PetPreferences.IsShown)
-                pet.Spawn();
+            Timing.CallDelayed(1f, () =>
+            {
+                Pet pet = Pet.GetOrCreate(ev.Player);
+                if (pet.PetPreferences.IsShown)
+                    pet.Spawn();
+            });
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnTriggeringTesla(TriggeringTeslaEventArgs)"/>
         public void OnTriggeringTesla(TriggeringTeslaEventArgs ev)
         {
-            if (ev.Player is Pet)
-            {
-                ev.IsTriggerable = false;
-                ev.IsInIdleRange = false;
-            }
+            if (ev.Player is not Pet)
+                return;
+
+            ev.IsTriggerable = false;
+            ev.IsInIdleRange = false;
         }
     }
 }

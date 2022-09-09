@@ -8,11 +8,11 @@
 namespace Pets
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Exiled.API.Features;
     using Exiled.API.Features.Items;
     using NPCs;
     using NPCs.Cores.Navigation;
-    using Pets.API;
     using UnityEngine;
 
     /// <summary>
@@ -40,9 +40,6 @@ namespace Pets
             {
                 FollowTarget = owner.GameObject,
             };
-
-            if (PetPreferences.IsShown)
-                IsShown = true;
         }
 
         /// <summary>
@@ -139,14 +136,24 @@ namespace Pets
         /// </summary>
         /// <param name="owner">The owner of the pet.</param>
         /// <returns>The gotten or created pet.</returns>
-        public static Pet GetOrCreate(Player owner)
-        {
-            Pet pet = owner.GetPet();
-            if (pet is not null)
-                return pet;
+        public static Pet GetOrCreate(Player owner) => Get(owner) ?? Create(owner);
 
+        /// <summary>
+        /// Returns a value indicating whether the player has an active pet.
+        /// </summary>
+        /// <param name="owner">The player to check.</param>
+        /// <returns>The pet, or null if none is found.</returns>
+        public static Pet Get(Player owner) => Instances.FirstOrDefault(pet => pet.Owner == owner);
+
+        /// <summary>
+        /// Creates a pet for a player.
+        /// </summary>
+        /// <param name="owner">The owner of the pet.</param>
+        /// <returns>The created pet.</returns>
+        public static Pet Create(Player owner)
+        {
             PetPreferences preferences = PetPreferences.Get(owner) ?? PetPreferences.Default;
-            pet = new Pet(owner, preferences);
+            Pet pet = new Pet(owner, preferences);
             Instances.Add(pet);
             return pet;
         }

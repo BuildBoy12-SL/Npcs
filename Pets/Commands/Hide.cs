@@ -50,7 +50,7 @@ namespace Pets.Commands
                 return false;
             }
 
-            pet.Destroy();
+            pet.IsShown = false;
             response = "Despawned your pet.";
             return false;
         }

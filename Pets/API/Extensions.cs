@@ -14,20 +14,7 @@ namespace Pets.API
     /// </summary>
     public static class Extensions
     {
-        /// <summary>
-        /// Returns a value indicating whether the player has an active pet.
-        /// </summary>
-        /// <param name="player">The player to check.</param>
-        /// <returns>The pet or null if none is found.</returns>
-        public static Pet GetPet(this Player player)
-        {
-            foreach (Pet pet in Pet.Instances)
-            {
-                if (pet.Owner == player)
-                    return pet;
-            }
-
-            return null;
-        }
+        /// <inheritdoc cref="Pet.Get(Player)"/>
+        public static Pet GetPet(this Player owner) => Pet.Get(owner);
     }
 }
