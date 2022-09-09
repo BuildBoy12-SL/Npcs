@@ -54,7 +54,7 @@ namespace NPCs.Cores.Navigation
         /// <summary>
         /// Gets or sets a value indicating whether the movement controller is paused.
         /// </summary>
-        public bool IsPaused { get; set; } = true;
+        public bool IsPaused { get; set; }
 
         private float WalkSpeed => CharacterClassManager._staticClasses[(int)npc.Role].walkSpeed;
 
