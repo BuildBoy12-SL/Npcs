@@ -38,7 +38,7 @@ namespace Pets
             IsShown = true;
             Name = "Pet";
             Scale = new Vector3(0.6f, 0.6f, 0.6f);
-            preferences.Add(userId, this);
+            preferences?.Add(userId, this);
         }
 
         /// <summary>
