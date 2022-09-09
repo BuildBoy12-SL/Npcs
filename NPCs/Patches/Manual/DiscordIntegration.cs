@@ -47,9 +47,7 @@ namespace NPCs.Patches.Manual
         /// </summary>
         private static IEnumerable<CodeInstruction> ActivityCount(IEnumerable<CodeInstruction> instructions)
         {
-            List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
-
-            foreach (var codeInstruction in newInstructions)
+            foreach (var codeInstruction in instructions)
             {
                 yield return codeInstruction;
                 if (!codeInstruction.OperandIs(PropertyGetter(typeof(Dictionary<GameObject, Player>), nameof(Dictionary<GameObject, Player>.Count))))
@@ -58,8 +56,6 @@ namespace NPCs.Patches.Manual
                 foreach (var subtractInstruction in SubtractCountInstructions)
                     yield return subtractInstruction;
             }
-
-            ListPool<CodeInstruction>.Shared.Return(newInstructions);
         }
     }
 }
