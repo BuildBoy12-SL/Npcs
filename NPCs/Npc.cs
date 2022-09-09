@@ -18,8 +18,6 @@ namespace NPCs
     /// </summary>
     public class Npc : Player
     {
-        private bool isSpawned;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Npc"/> class.
         /// </summary>
@@ -76,6 +74,11 @@ namespace NPCs
         public static new IEnumerable<Npc> List => Dictionary.Values;
 
         /// <summary>
+        /// Gets a value indicating whether the npc is spawned.
+        /// </summary>
+        public bool IsSpawned { get; private set; }
+
+        /// <summary>
         /// Gets or sets the NPC's position.
         /// </summary>
         public new Vector3 Position
@@ -115,11 +118,11 @@ namespace NPCs
         /// </summary>
         public void Spawn()
         {
-            if (isSpawned)
+            if (IsSpawned)
                 return;
 
             NetworkServer.Spawn(GameObject);
-            isSpawned = true;
+            IsSpawned = true;
         }
 
         /// <summary>
@@ -127,11 +130,11 @@ namespace NPCs
         /// </summary>
         public void Despawn()
         {
-            if (!isSpawned)
+            if (!IsSpawned)
                 return;
 
             NetworkServer.UnSpawn(GameObject);
-            isSpawned = false;
+            IsSpawned = false;
         }
 
         /// <summary>

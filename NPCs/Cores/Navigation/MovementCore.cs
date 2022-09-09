@@ -67,6 +67,9 @@ namespace NPCs.Cores.Navigation
 
         private void Follow()
         {
+            if (!npc.IsSpawned)
+                return;
+
             Vector3 moveDirection = FollowTarget.transform.position - npc.Position;
 
             Quaternion rot = Quaternion.LookRotation(moveDirection.normalized);
