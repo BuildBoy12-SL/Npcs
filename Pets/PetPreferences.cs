@@ -21,16 +21,25 @@ namespace Pets
         private static Dictionary<string, PetPreferences> preferences;
 
         /// <summary>
-        /// Gets the default preferences for a user.
+        /// Initializes a new instance of the <see cref="PetPreferences"/> class.
         /// </summary>
-        public static PetPreferences Default { get; } = new()
+        public PetPreferences()
         {
-            HeldItem = ItemType.None,
-            Role = RoleType.ClassD,
-            IsShown = true,
-            Name = "Pet",
-            Scale = new Vector3(0.6f, 0.6f, 0.6f),
-        };
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PetPreferences"/> class.
+        /// </summary>
+        /// <param name="userId">The owner of the preferences.</param>
+        public PetPreferences(string userId)
+        {
+            HeldItem = ItemType.None;
+            Role = RoleType.ClassD;
+            IsShown = true;
+            Name = "Pet";
+            Scale = new Vector3(0.6f, 0.6f, 0.6f);
+            preferences.Add(userId, this);
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the pet is visible.

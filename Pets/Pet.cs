@@ -152,7 +152,7 @@ namespace Pets
         /// <returns>The created pet.</returns>
         public static Pet Create(Player owner)
         {
-            PetPreferences preferences = PetPreferences.Get(owner) ?? PetPreferences.Default;
+            PetPreferences preferences = PetPreferences.Get(owner) ?? new PetPreferences(owner.UserId);
             Pet pet = new Pet(owner, preferences);
             Instances.Add(pet);
             return pet;
