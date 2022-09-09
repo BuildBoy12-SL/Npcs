@@ -44,13 +44,13 @@ namespace Pets.Commands
             }
 
             Pet pet = player.GetPet();
-            if (pet is null || !pet.IsShown)
+            if (pet is null || !pet.IsSpawned)
             {
                 response = "You do not have a spawned pet!";
                 return false;
             }
 
-            pet.IsShown = false;
+            pet.IsSpawned = false;
             response = "Despawned your pet.";
             return false;
         }

@@ -61,34 +61,26 @@ namespace Pets
         /// Gets or sets a value indicating whether the pet is currently visible.
         /// </summary>
         /// <remarks>This also affects the player's pet preferences.</remarks>
-        public bool IsShown
+        public new bool IsSpawned
         {
-            get => PetPreferences.IsShown;
+            get => base.IsSpawned;
             set
             {
                 PetPreferences.IsShown = value;
-                if (value)
-                {
-                    Spawn();
-                    movementCore.IsPaused = false;
-                    return;
-                }
-
-                movementCore.IsPaused = true;
-                Despawn();
+                base.IsSpawned = value;
             }
         }
 
         /// <summary>
         /// Gets or sets the pet's held item.
         /// </summary>
-        public ItemType HeldItem
+        public new Item CurrentItem
         {
-            get => CurrentItem.Type;
+            get => base.CurrentItem;
             set
             {
-                CurrentItem = Item.Create(value);
-                PetPreferences.HeldItem = value;
+                base.CurrentItem = value;
+                PetPreferences.HeldItem = value.Type;
             }
         }
 

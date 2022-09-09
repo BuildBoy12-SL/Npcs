@@ -64,7 +64,7 @@ namespace Pets.Commands
 
             if (arguments.Count == 0)
             {
-                response = $"Your pet is currently holding a {pet.HeldItem}";
+                response = $"Your pet is currently holding a {pet.CurrentItem.Type}";
                 return true;
             }
 

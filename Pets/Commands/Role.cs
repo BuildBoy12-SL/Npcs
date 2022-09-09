@@ -36,7 +36,13 @@ namespace Pets.Commands
                 return false;
             }
 
-            Pet pet = Pet.GetOrCreate(player);
+            Pet pet = Pet.Get(player);
+            if (pet is null)
+            {
+                response = "You do not have a spawned pet.";
+                return false;
+            }
+
             if (arguments.Count == 0)
             {
                 response = $"Your pet is currently a {pet.Role}";

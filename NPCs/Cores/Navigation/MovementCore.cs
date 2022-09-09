@@ -67,24 +67,22 @@ namespace NPCs.Cores.Navigation
 
         private void Follow()
         {
-            if (!npc.IsSpawned)
-                return;
-
             Vector3 moveDirection = FollowTarget.transform.position - npc.Position;
 
             Quaternion rot = Quaternion.LookRotation(moveDirection.normalized);
             npc.Rotation = new Vector2(rot.eulerAngles.x, rot.eulerAngles.y);
 
-            if (moveDirection.magnitude < 3)
-                return;
-
-            if (moveDirection.magnitude > 10)
+            switch (moveDirection.magnitude)
             {
-                npc.Position = FollowTarget.transform.position;
-                return;
+                case < 3:
+                    return;
+                case > 10:
+                    npc.Position = FollowTarget.transform.position;
+                    return;
+                default:
+                    Move();
+                    break;
             }
-
-            Move();
         }
 
         private void Move()
@@ -123,7 +121,7 @@ namespace NPCs.Cores.Navigation
             while (true)
             {
                 yield return Timing.WaitForSeconds(0.1f);
-                if (IsPaused)
+                if (IsPaused || !npc.IsSpawned)
                     continue;
 
                 if (FollowTarget != null)

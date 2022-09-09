@@ -18,6 +18,8 @@ namespace NPCs
     /// </summary>
     public class Npc : Player
     {
+        private bool isSpawned;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Npc"/> class.
         /// </summary>
@@ -74,9 +76,23 @@ namespace NPCs
         public static new IEnumerable<Npc> List => Dictionary.Values;
 
         /// <summary>
-        /// Gets a value indicating whether the npc is spawned.
+        /// Gets or sets a value indicating whether the npc is spawned.
         /// </summary>
-        public bool IsSpawned { get; private set; }
+        public bool IsSpawned
+        {
+            get => isSpawned;
+            set
+            {
+                if (isSpawned == value)
+                    return;
+
+                isSpawned = value;
+                if (value)
+                    NetworkServer.Spawn(GameObject);
+                else
+                    NetworkServer.UnSpawn(GameObject);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the NPC's position.
@@ -114,30 +130,6 @@ namespace NPCs
         }
 
         /// <summary>
-        /// Spawns the NPC.
-        /// </summary>
-        public void Spawn()
-        {
-            if (IsSpawned)
-                return;
-
-            NetworkServer.Spawn(GameObject);
-            IsSpawned = true;
-        }
-
-        /// <summary>
-        /// Despawns the NPC.
-        /// </summary>
-        public void Despawn()
-        {
-            if (!IsSpawned)
-                return;
-
-            NetworkServer.UnSpawn(GameObject);
-            IsSpawned = false;
-        }
-
-        /// <summary>
         /// Destroys the npc.
         /// </summary>
         public virtual void Destroy()
@@ -154,8 +146,8 @@ namespace NPCs
 
         private void Respawn()
         {
-            Despawn();
-            Spawn();
+            IsSpawned = false;
+            IsSpawned = true;
         }
 
         private void StartReferenceHub()

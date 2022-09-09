@@ -48,7 +48,7 @@ namespace Pets.EventHandlers
             {
                 Pet pet = Pet.GetOrCreate(ev.Player);
                 if (pet.PetPreferences.IsShown)
-                    pet.Spawn();
+                    pet.IsSpawned = true;
             });
         }
 

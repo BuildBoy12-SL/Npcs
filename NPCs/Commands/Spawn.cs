@@ -49,8 +49,11 @@ namespace NPCs.Commands
             if (arguments.Count > 1)
                 name = string.Join(" ", arguments.Skip(1));
 
-            Npc npc = new(roleType, name, Vector3.one);
-            npc.Spawn();
+            Npc npc = new(roleType, name, Vector3.one)
+            {
+                IsSpawned = true,
+            };
+
             Timing.CallDelayed(0.1f, () =>
             {
                 npc.Position = player.Position;

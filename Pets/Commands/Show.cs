@@ -50,13 +50,14 @@ namespace Pets.Commands
             }
 
             Pet pet = player.GetPet();
-            if (pet is not null)
+            if (pet is not null && pet.IsSpawned)
             {
                 response = "Your pet has already been spawned!";
                 return false;
             }
 
-            pet = Pet.GetOrCreate(player);
+            pet ??= Pet.Create(player);
+            pet.IsSpawned = true;
             response = $"Spawned your pet named {pet.Name}.";
             return true;
         }
