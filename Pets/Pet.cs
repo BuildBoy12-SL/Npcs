@@ -158,9 +158,7 @@ namespace Pets
             return pet;
         }
 
-        /// <summary>
-        /// Destroys the pet and all of its logic.
-        /// </summary>
+        /// <inheritdoc />
         public override void Destroy()
         {
             movementCore.Kill();

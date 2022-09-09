@@ -138,7 +138,7 @@ namespace NPCs
         }
 
         /// <summary>
-        /// Destroys the fake player.
+        /// Destroys the npc.
         /// </summary>
         public virtual void Destroy()
         {
