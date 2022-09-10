@@ -5,7 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace Pets
+namespace Pets.API
 {
     using System.Collections.Generic;
     using System.IO;

@@ -55,5 +55,14 @@ namespace Pets
             RoleType.Scp079,
             RoleType.Scp096,
         };
+
+        /// <summary>
+        /// Gets or sets a collection of strings that pet names cannot contain.
+        /// </summary>
+        [Description("A collection of strings that pet names cannot contain.")]
+        public List<string> BlacklistedNames { get; set; } = new()
+        {
+            "InsertSlurHere",
+        };
     }
 }

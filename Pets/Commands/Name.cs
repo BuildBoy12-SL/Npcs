@@ -8,6 +8,7 @@
 namespace Pets.Commands
 {
     using System;
+    using System.Linq;
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
@@ -51,6 +52,12 @@ namespace Pets.Commands
             }
 
             string name = string.Join(" ", arguments);
+            if (Plugin.Instance.Config.BlacklistedNames.Any(blacklistedString => name.Contains(blacklistedString)))
+            {
+                response = "This name is blacklisted.";
+                return false;
+            }
+
             if (Pet.Get(player) is Pet pet)
                 pet.Name = string.Join(" ", arguments);
             else

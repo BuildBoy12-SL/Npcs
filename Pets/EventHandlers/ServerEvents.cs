@@ -8,6 +8,7 @@
 namespace Pets.EventHandlers
 {
     using Exiled.Events.EventArgs;
+    using Pets.API;
 
     /// <summary>
     /// Handles events derived from <see cref="Exiled.Events.Handlers.Server"/>.
