@@ -37,7 +37,7 @@ namespace Pets.API
             Role = RoleType.ClassD;
             IsShown = true;
             Name = "Pet";
-            Scale = new Vector3(0.6f, 0.6f, 0.6f);
+            Scale = new Vector3(0.4f, 0.4f, 0.4f);
             preferences?.Add(userId, this);
         }
 
