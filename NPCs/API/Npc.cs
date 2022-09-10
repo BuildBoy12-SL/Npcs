@@ -5,7 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace NPCs
+namespace NPCs.API
 {
     using System.Collections.Generic;
     using Exiled.API.Enums;

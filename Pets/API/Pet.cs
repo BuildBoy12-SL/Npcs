@@ -5,13 +5,13 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace Pets
+namespace Pets.API
 {
     using System.Collections.Generic;
     using System.Linq;
     using Exiled.API.Features;
     using Exiled.API.Features.Items;
-    using NPCs;
+    using NPCs.API;
     using NPCs.Cores.Navigation;
     using UnityEngine;
 
@@ -60,20 +60,21 @@ namespace Pets
         /// <summary>
         /// Gets or sets a value indicating whether the pet is currently visible.
         /// </summary>
-        /// <remarks>This also affects the player's pet preferences.</remarks>
+        /// <remarks>This also affects the owner's preferences.</remarks>
         public new bool IsSpawned
         {
             get => base.IsSpawned;
             set
             {
-                PetPreferences.IsShown = value;
                 base.IsSpawned = value;
+                PetPreferences.IsShown = value;
             }
         }
 
         /// <summary>
         /// Gets or sets the pet's held item.
         /// </summary>
+        /// <remarks>This also affects the owner's preferences.</remarks>
         public new Item CurrentItem
         {
             get => base.CurrentItem;
@@ -87,6 +88,7 @@ namespace Pets
         /// <summary>
         /// Gets or sets the display name of the pet.
         /// </summary>
+        /// <remarks>This also affects the owner's preferences.</remarks>
         public new string Name
         {
             get => base.Name;
@@ -100,6 +102,7 @@ namespace Pets
         /// <summary>
         /// Gets or sets the display role of the pet.
         /// </summary>
+        /// <remarks>This also affects the owner's preferences.</remarks>
         public new RoleType Role
         {
             get => base.Role;
@@ -113,6 +116,7 @@ namespace Pets
         /// <summary>
         /// Gets or sets the scale of the pet.
         /// </summary>
+        /// <remarks>This also affects the owner's preferences.</remarks>
         public new Vector3 Scale
         {
             get => base.Scale;
@@ -122,13 +126,6 @@ namespace Pets
                 PetPreferences.Scale = value;
             }
         }
-
-        /// <summary>
-        /// Gets the given owner's pet or creates one if it does not exist.
-        /// </summary>
-        /// <param name="owner">The owner of the pet.</param>
-        /// <returns>The gotten or created pet.</returns>
-        public static Pet GetOrCreate(Player owner) => Get(owner) ?? Create(owner);
 
         /// <summary>
         /// Returns a value indicating whether the player has an active pet.

@@ -9,6 +9,7 @@ namespace NPCs.Cores.Navigation
 {
     using System.Collections.Generic;
     using MEC;
+    using NPCs.API;
     using NPCs.Enums;
     using UnityEngine;
 

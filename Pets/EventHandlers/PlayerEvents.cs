@@ -21,7 +21,7 @@ namespace Pets.EventHandlers
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnDestroying(DestroyingEventArgs)"/>
         public void OnDestroying(DestroyingEventArgs ev)
         {
-            ev.Player.GetPet()?.Destroy();
+            Pet.Get(ev.Player)?.Destroy();
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnEnteringPocketDimension(EnteringPocketDimensionEventArgs)"/>
@@ -34,7 +34,7 @@ namespace Pets.EventHandlers
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnChangingRole(ChangingRoleEventArgs)"/>
         public void OnChangingRole(ChangingRoleEventArgs ev)
         {
-            if (ev.NewRole is RoleType.Spectator or RoleType.Scp079 && ev.Player.GetPet() is Pet pet)
+            if (ev.NewRole is RoleType.Spectator or RoleType.Scp079 && Pet.Get(ev.Player) is Pet pet)
                 pet.Destroy();
         }
 
@@ -46,8 +46,8 @@ namespace Pets.EventHandlers
 
             Timing.CallDelayed(1f, () =>
             {
-                Pet pet = Pet.GetOrCreate(ev.Player);
-                if (pet.PetPreferences.IsShown)
+                PetPreferences preferences = PetPreferences.Get(ev.Player) ?? new PetPreferences(ev.Player.UserId);
+                if (preferences.IsShown && Pet.Get(ev.Player) is { IsSpawned: false } pet)
                     pet.IsSpawned = true;
             });
         }

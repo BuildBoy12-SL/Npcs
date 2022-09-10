@@ -11,6 +11,7 @@ namespace Pets.Commands
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
+    using Pets.API;
 
     /// <summary>
     /// Sets the pet's name.
@@ -36,21 +37,26 @@ namespace Pets.Commands
             }
 
             Player player = Player.Get(sender);
-            if (player is null)
+            if (player is null || player == Server.Host)
             {
                 response = "Console has no need for menial things such as pets.";
                 return false;
             }
 
-            if (arguments.Count == 0 || string.IsNullOrWhiteSpace(arguments.At(0)))
+            PetPreferences preferences = PetPreferences.Get(player) ?? new PetPreferences(player.UserId);
+            if (arguments.Count == 0)
             {
-                response = "Please specify the pet's new name.";
-                return false;
+                response = $"Your pets name is currently '{preferences.Name}'";
+                return true;
             }
 
-            Pet pet = Pet.GetOrCreate(player);
-            pet.Name = string.Join(" ", arguments);
-            response = $"Set your pet's name to {pet.Name}.";
+            string name = string.Join(" ", arguments);
+            if (Pet.Get(player) is Pet pet)
+                pet.Name = string.Join(" ", arguments);
+            else
+                preferences.Name = name;
+
+            response = $"Set your pet's name to '{preferences.Name}'";
             return true;
         }
     }

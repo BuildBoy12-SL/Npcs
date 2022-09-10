@@ -11,6 +11,7 @@ namespace Pets.Commands
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
+    using Pets.API;
 
     /// <summary>
     /// Sets the pet's <see cref="RoleType"/>.
@@ -29,23 +30,23 @@ namespace Pets.Commands
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
+            if (!sender.CheckPermission("pets.role"))
+            {
+                response = "Insufficient permission. Required permission: pets.role";
+                return false;
+            }
+
             Player player = Player.Get(sender);
-            if (player is null)
+            if (player is null || player == Server.Host)
             {
                 response = "Console has no need for menial things such as pets.";
                 return false;
             }
 
-            Pet pet = Pet.Get(player);
-            if (pet is null)
-            {
-                response = "You do not have a spawned pet.";
-                return false;
-            }
-
+            PetPreferences preferences = PetPreferences.Get(player) ?? new PetPreferences(player.UserId);
             if (arguments.Count == 0)
             {
-                response = $"Your pet is currently a {pet.Role}";
+                response = $"Your pet is currently a {preferences.Role}";
                 return true;
             }
 
@@ -62,7 +63,11 @@ namespace Pets.Commands
                 return false;
             }
 
-            pet.Role = roleType;
+            if (Pet.Get(player) is Pet pet)
+                pet.Role = roleType;
+            else
+                preferences.Role = roleType;
+
             response = $"Set the pet's role to a(n) {roleType}";
             return true;
         }

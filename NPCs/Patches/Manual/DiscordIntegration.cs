@@ -14,7 +14,7 @@ namespace NPCs.Patches.Manual
     using Exiled.API.Features;
     using Exiled.Loader;
     using HarmonyLib;
-    using NorthwoodLib.Pools;
+    using NPCs.API;
     using UnityEngine;
     using static HarmonyLib.AccessTools;
 

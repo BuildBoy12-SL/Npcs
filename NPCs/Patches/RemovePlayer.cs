@@ -12,6 +12,7 @@ namespace NPCs.Patches
     using System.Reflection.Emit;
     using HarmonyLib;
     using NorthwoodLib.Pools;
+    using NPCs.API;
     using UnityEngine;
     using static HarmonyLib.AccessTools;
 

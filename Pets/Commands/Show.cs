@@ -37,7 +37,7 @@ namespace Pets.Commands
             }
 
             Player player = Player.Get(sender);
-            if (player is null)
+            if (player is null || player == Server.Host)
             {
                 response = "Console has no need for menial things such as pets.";
                 return false;
@@ -49,7 +49,7 @@ namespace Pets.Commands
                 return false;
             }
 
-            Pet pet = player.GetPet();
+            Pet pet = Pet.Get(player);
             if (pet is not null && pet.IsSpawned)
             {
                 response = "Your pet has already been spawned!";

@@ -13,6 +13,7 @@ namespace NPCs.Commands
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
     using MEC;
+    using NPCs.API;
     using UnityEngine;
 
     /// <inheritdoc />

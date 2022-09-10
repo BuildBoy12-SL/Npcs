@@ -49,22 +49,16 @@ namespace Pets.Commands
             }
 
             Player player = Player.Get(sender);
-            if (player is null)
+            if (player is null || player == Server.Host)
             {
                 response = "Console has no need for menial things such as pets.";
                 return false;
             }
 
-            Pet pet = player.GetPet();
-            if (pet is null)
-            {
-                response = "Your pet is not spawned in.";
-                return false;
-            }
-
+            PetPreferences preferences = PetPreferences.Get(player.UserId) ?? new PetPreferences(player.UserId);
             if (arguments.Count == 0)
             {
-                response = $"Your pet is currently holding a {pet.CurrentItem.Type}";
+                response = $"Your pet is currently holding {FormatItemName(preferences.HeldItem)}";
                 return true;
             }
 
@@ -74,9 +68,21 @@ namespace Pets.Commands
                 return false;
             }
 
-            pet.CurrentItem = itemType == ItemType.None ? null : Exiled.API.Features.Items.Item.Create(itemType);
-            response = $"Set the pet's held item to a(n) {itemType}";
+            if (Pet.Get(player) is Pet pet)
+                pet.CurrentItem = itemType == ItemType.None ? null : Exiled.API.Features.Items.Item.Create(itemType);
+            else
+                preferences.HeldItem = itemType;
+
+            response = $"Set the pet's held item to {FormatItemName(itemType)}";
             return true;
+        }
+
+        private static string FormatItemName(ItemType itemType)
+        {
+            if (itemType is ItemType.None)
+                return "nothing";
+
+            return "a(n) " + itemType;
         }
     }
 }

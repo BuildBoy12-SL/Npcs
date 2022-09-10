@@ -11,6 +11,7 @@ namespace Pets.Commands
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
+    using Pets.API;
     using UnityEngine;
 
     /// <inheritdoc />
@@ -35,16 +36,16 @@ namespace Pets.Commands
             }
 
             Player player = Player.Get(sender);
-            if (player is null)
+            if (player is null || player == Server.Host)
             {
                 response = "Console has no need for menial things such as pets.";
                 return false;
             }
 
-            Pet pet = Pet.GetOrCreate(player);
+            PetPreferences preferences = PetPreferences.Get(player.UserId) ?? new PetPreferences(player.UserId);
             if (arguments.Count == 0)
             {
-                response = $"Your pet's scale is currently {pet.Scale}";
+                response = $"Your pet's scale is currently {preferences.Scale}";
                 return true;
             }
 
@@ -73,7 +74,11 @@ namespace Pets.Commands
             }
 
             Vector3 clampedScale = ClampScale(x, y, z);
-            pet.Scale = clampedScale;
+            if (Pet.Get(player) is Pet pet)
+                pet.Scale = clampedScale;
+            else
+                preferences.Scale = clampedScale;
+
             response = $"Set the pet's scale to {clampedScale}";
             return true;
         }

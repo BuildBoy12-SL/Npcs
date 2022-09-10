@@ -10,6 +10,7 @@ namespace NPCs.Commands
     using System;
     using CommandSystem;
     using Exiled.Permissions.Extensions;
+    using NPCs.API;
 
     /// <inheritdoc />
     public class List : ICommand
