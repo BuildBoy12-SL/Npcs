@@ -146,6 +146,9 @@ namespace NPCs.API
 
         private void Respawn()
         {
+            if (!IsSpawned)
+                return;
+
             IsSpawned = false;
             IsSpawned = true;
         }
