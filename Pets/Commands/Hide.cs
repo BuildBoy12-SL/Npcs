@@ -8,6 +8,7 @@
 namespace Pets.Commands
 {
     using System;
+    using System.ComponentModel;
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
@@ -19,20 +20,44 @@ namespace Pets.Commands
     public class Hide : ICommand
     {
         /// <inheritdoc />
-        public string Command => "hide";
+        public string Command { get; set; } = "hide";
 
         /// <inheritdoc />
-        public string[] Aliases { get; } = { "h" };
+        public string[] Aliases { get; set; } = { "h" };
 
         /// <inheritdoc />
-        public string Description => "Hides the user's pet";
+        public string Description { get; set; } = "Hides the user's pet";
+
+        /// <summary>
+        /// Gets or sets the permission required to use this command.
+        /// </summary>
+        [Description("The permission required to use this command.")]
+        public string RequiredPermission { get; set; } = "pets.pet";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user that lacks the required permission.
+        /// </summary>
+        [Description("The response to provide to the user that lacks the required permission.")]
+        public string RequiredPermissionResponse { get; set; } = "Insufficient permission. Required permission: pets.pet";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user when the pet is already hidden.
+        /// </summary>
+        [Description("The response to provide to the user when the pet is already hidden.")]
+        public string PetNotSpawnedResponse { get; set; } = "You do not have a spawned pet!";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user when the pet is successfully hidden.
+        /// </summary>
+        [Description("The response to provide to the user when the pet is successfully hidden.")]
+        public string SuccessResponse { get; set; } = "Despawned your pet.";
 
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission("pets.pet"))
+            if (!sender.CheckPermission(RequiredPermission))
             {
-                response = "Insufficient permission. Required permission: pets.pet";
+                response = RequiredPermissionResponse;
                 return false;
             }
 
@@ -46,12 +71,12 @@ namespace Pets.Commands
             Pet pet = Pet.Get(player);
             if (pet is null || !pet.IsSpawned)
             {
-                response = "You do not have a spawned pet!";
+                response = PetNotSpawnedResponse;
                 return false;
             }
 
             pet.IsSpawned = false;
-            response = "Despawned your pet.";
+            response = SuccessResponse;
             return false;
         }
     }

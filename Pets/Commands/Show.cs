@@ -8,6 +8,7 @@
 namespace Pets.Commands
 {
     using System;
+    using System.ComponentModel;
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
@@ -19,20 +20,50 @@ namespace Pets.Commands
     public class Show : ICommand
     {
         /// <inheritdoc />
-        public string Command => "show";
+        public string Command { get; set; } = "show";
 
         /// <inheritdoc />
-        public string[] Aliases { get; } = { "s" };
+        public string[] Aliases { get; set; } = { "s" };
 
         /// <inheritdoc />
-        public string Description => "Shows the user's pet";
+        public string Description { get; set; } = "Shows the user's pet";
+
+        /// <summary>
+        /// Gets or sets the permission required to use this command.
+        /// </summary>
+        [Description("The permission required to use this command.")]
+        public string RequiredPermission { get; set; } = "pets.pet";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user that lacks the required permission.
+        /// </summary>
+        [Description("The response to provide to the user that lacks the required permission.")]
+        public string RequiredPermissionResponse { get; set; } = "Insufficient permission. Required permission: pets.pet";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user when they are dead or are Scp079.
+        /// </summary>
+        [Description("The response to provide to the user when they are dead or are Scp079.")]
+        public string CannotSpawnResponse { get; set; } = "You cannot summon your pet at this time.";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user when their pet is already shown.
+        /// </summary>
+        [Description("The response to provide to the user when their pet is already shown.")]
+        public string PetSpawnedResponse { get; set; } = "Your pet has already been spawned!";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user when their pet is successfully shown.
+        /// </summary>
+        [Description("The response to provide to the user when their pet is successfully shown.")]
+        public string SuccessResponse { get; set; } = "Spawned your pet.";
 
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission("pets.pet"))
+            if (!sender.CheckPermission(RequiredPermission))
             {
-                response = "Insufficient permission. Required permission: pets.pet";
+                response = RequiredPermissionResponse;
                 return false;
             }
 
@@ -45,20 +76,20 @@ namespace Pets.Commands
 
             if (player.IsDead || player.Role == RoleType.Scp079)
             {
-                response = "You cannot summon your pet at this time.";
+                response = CannotSpawnResponse;
                 return false;
             }
 
             Pet pet = Pet.Get(player);
             if (pet is not null && pet.IsSpawned)
             {
-                response = "Your pet has already been spawned!";
+                response = PetSpawnedResponse;
                 return false;
             }
 
             pet ??= Pet.Create(player);
             pet.IsSpawned = true;
-            response = $"Spawned your pet named {pet.Name}.";
+            response = SuccessResponse;
             return true;
         }
     }

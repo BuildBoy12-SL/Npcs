@@ -8,12 +8,12 @@
 namespace Pets.Commands
 {
     using System;
+    using System.Reflection;
     using System.Text;
     using CommandSystem;
     using NorthwoodLib.Pools;
 
     /// <inheritdoc />
-    [CommandHandler(typeof(ClientCommandHandler))]
     public class PetCommand : ParentCommand
     {
         /// <summary>
@@ -33,12 +33,11 @@ namespace Pets.Commands
         /// <inheritdoc/>
         public sealed override void LoadGeneratedCommands()
         {
-            RegisterCommand(new Hide());
-            RegisterCommand(new Item());
-            RegisterCommand(new Name());
-            RegisterCommand(new Role());
-            RegisterCommand(new Scale());
-            RegisterCommand(new Show());
+            foreach (PropertyInfo property in Plugin.Instance.Config.GetType().GetProperties())
+            {
+                if (property.GetValue(Plugin.Instance.Config) is ICommand command)
+                    RegisterCommand(command);
+            }
         }
 
         /// <inheritdoc/>

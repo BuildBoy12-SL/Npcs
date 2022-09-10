@@ -8,6 +8,7 @@
 namespace Pets.Commands
 {
     using System;
+    using System.ComponentModel;
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
@@ -18,20 +19,80 @@ namespace Pets.Commands
     public class Scale : ICommand
     {
         /// <inheritdoc />
-        public string Command => "scale";
+        public string Command { get; set; } = "scale";
 
         /// <inheritdoc />
-        public string[] Aliases { get; } = Array.Empty<string>();
+        public string[] Aliases { get; set; } = Array.Empty<string>();
 
         /// <inheritdoc />
-        public string Description => "Scales the pet.";
+        public string Description { get; set; } = "Scales the pet.";
+
+        /// <summary>
+        /// Gets or sets the permission required to use this command.
+        /// </summary>
+        [Description("The permission required to use this command.")]
+        public string RequiredPermission { get; set; } = "pets.scale";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user that lacks the required permission.
+        /// </summary>
+        [Description("The response to provide to the user that lacks the required permission.")]
+        public string RequiredPermissionResponse { get; set; } = "Insufficient permission. Required permission: pets.scale";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user when no arguments are provided.
+        /// </summary>
+        [Description("The response to provide to the user when no arguments are provided.")]
+        public string NoArgumentsResponse { get; set; } = "Your pet's scale is currently {0}";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user when an insufficient amount of arguments are provided.
+        /// </summary>
+        [Description("The response to provide to the user when an insufficient amount of arguments are provided.")]
+        public string UsageResponse { get; set; } = "Usage: pet scale <x> <y> <z>";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user when a non-numeric value is provided for the x value.
+        /// </summary>
+        [Description("The response to provide to the user when a non-numeric value is provided for the x value.")]
+        public string InvalidXResponse { get; set; } = "Invalid value for x size: {0}";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user when a non-numeric value is provided for the y value.
+        /// </summary>
+        [Description("The response to provide to the user when a non-numeric value is provided for the y value.")]
+        public string InvalidYResponse { get; set; } = "Invalid value for y size: {0}";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user when a non-numeric value is provided for the z value.
+        /// </summary>
+        [Description("The response to provide to the user when a non-numeric value is provided for the z value.")]
+        public string InvalidZResponse { get; set; } = "Invalid value for z size: {0}";
+
+        /// <summary>
+        /// Gets or sets the minimum scale a pet can be set to.
+        /// </summary>
+        [Description("The minimum scale a pet can be set to.")]
+        public float MinimumScale { get; set; } = 0.3f;
+
+        /// <summary>
+        /// Gets or sets the maximum scale a pet can be set to.
+        /// </summary>
+        [Description("The maximum scale a pet can be set to.")]
+        public float MaximumScale { get; set; } = 0.6f;
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user when their pet's scale is set successfully.
+        /// </summary>
+        [Description("The response to provide to the user when their pet's scale is set successfully.")]
+        public string SuccessResponse { get; set; } = "Your pet's scale has been set to {0}";
 
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission("pets.scale"))
+            if (!sender.CheckPermission(RequiredPermission))
             {
-                response = "Insufficient permission. Required: pets.scale";
+                response = RequiredPermissionResponse;
                 return false;
             }
 
@@ -45,31 +106,31 @@ namespace Pets.Commands
             PetPreferences preferences = PetPreferences.Get(player.UserId) ?? new PetPreferences(player.UserId);
             if (arguments.Count == 0)
             {
-                response = $"Your pet's scale is currently {preferences.Scale}";
+                response = string.Format(NoArgumentsResponse, preferences.Scale);
                 return true;
             }
 
             if (arguments.Count < 3)
             {
-                response = "Usage: pet scale <x> <y> <z>";
+                response = UsageResponse;
                 return false;
             }
 
             if (!float.TryParse(arguments.At(0), out float x))
             {
-                response = $"Invalid value for x size: {arguments.At(1)}";
+                response = string.Format(InvalidXResponse, arguments.At(1));
                 return false;
             }
 
             if (!float.TryParse(arguments.At(1), out float y))
             {
-                response = $"Invalid value for y size: {arguments.At(2)}";
+                response = string.Format(InvalidYResponse, arguments.At(2));
                 return false;
             }
 
             if (!float.TryParse(arguments.At(2), out float z))
             {
-                response = $"Invalid value for z size: {arguments.At(3)}";
+                response = string.Format(InvalidZResponse, arguments.At(3));
                 return false;
             }
 
@@ -79,15 +140,15 @@ namespace Pets.Commands
             else
                 preferences.Scale = clampedScale;
 
-            response = $"Set the pet's scale to {clampedScale}";
+            response = string.Format(SuccessResponse, clampedScale);
             return true;
         }
 
-        private static Vector3 ClampScale(float x, float y, float z)
+        private Vector3 ClampScale(float x, float y, float z)
         {
-            x = Mathf.Clamp(x, 0.3f, 0.6f);
-            y = Mathf.Clamp(y, 0.3f, 0.6f);
-            z = Mathf.Clamp(z, 0.3f, 0.6f);
+            x = Mathf.Clamp(x, MinimumScale, MaximumScale);
+            y = Mathf.Clamp(y, MinimumScale, MaximumScale);
+            z = Mathf.Clamp(z, MinimumScale, MaximumScale);
             return new Vector3(x, y, z);
         }
     }

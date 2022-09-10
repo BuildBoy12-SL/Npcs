@@ -37,13 +37,14 @@ namespace Pets
             harmony = new Harmony($"pets.{DateTime.UtcNow.Ticks}");
             harmony.PatchAll();
 
-            playerEvents = new PlayerEvents();
+            playerEvents = new PlayerEvents(this);
             Exiled.Events.Handlers.Player.Destroying += playerEvents.OnDestroying;
             Exiled.Events.Handlers.Player.EnteringPocketDimension += playerEvents.OnEnteringPocketDimension;
             Exiled.Events.Handlers.Player.ChangingRole += playerEvents.OnChangingRole;
             Exiled.Events.Handlers.Player.Spawned += playerEvents.OnSpawned;
             Exiled.Events.Handlers.Player.TriggeringTesla += playerEvents.OnTriggeringTesla;
             serverEvents = new ServerEvents();
+            Exiled.Events.Handlers.Server.ReloadedConfigs += ReloadCommands;
             Exiled.Events.Handlers.Server.RoundEnded += serverEvents.OnRoundEnded;
             Exiled.Events.Handlers.Server.WaitingForPlayers += serverEvents.OnWaitingForPlayers;
 
@@ -53,6 +54,7 @@ namespace Pets
         /// <inheritdoc/>
         public override void OnDisabled()
         {
+            Exiled.Events.Handlers.Server.ReloadedConfigs -= ReloadCommands;
             Exiled.Events.Handlers.Server.RoundEnded -= serverEvents.OnRoundEnded;
             Exiled.Events.Handlers.Server.WaitingForPlayers -= serverEvents.OnWaitingForPlayers;
             serverEvents = null;
@@ -68,6 +70,12 @@ namespace Pets
             harmony = null;
             Instance = null;
             base.OnDisabled();
+        }
+
+        private void ReloadCommands()
+        {
+            OnUnregisteringCommands();
+            OnRegisteringCommands();
         }
     }
 }

@@ -8,6 +8,7 @@
 namespace Pets.Commands
 {
     using System;
+    using System.ComponentModel;
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
@@ -19,20 +20,56 @@ namespace Pets.Commands
     public class Role : ICommand
     {
         /// <inheritdoc />
-        public string Command => "role";
+        public string Command { get; set; } = "role";
 
         /// <inheritdoc />
-        public string[] Aliases { get; } = { "r" };
+        public string[] Aliases { get; set; } = { "r" };
 
         /// <inheritdoc />
-        public string Description => "Sets the pet's role.";
+        public string Description { get; set; } = "Sets the pet's role.";
+
+        /// <summary>
+        /// Gets or sets the permission required to use this command.
+        /// </summary>
+        [Description("The permission required to use this command.")]
+        public string RequiredPermission { get; set; } = "pets.role";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user that lacks the required permission.
+        /// </summary>
+        [Description("The response to provide to the user that lacks the required permission.")]
+        public string RequiredPermissionResponse { get; set; } = "Insufficient permission. Required permission: pets.role";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user when no arguments are provided.
+        /// </summary>
+        [Description("The response to provide to the user when no arguments are provided.")]
+        public string NoArgumentsResponse { get; set; } = "Your pet is currently a '{0}'";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user when the specified role is invalid.
+        /// </summary>
+        [Description("The response to provide to the user when the specified role is invalid.")]
+        public string InvalidRoleResponse { get; set; } = "Please specify a valid role.";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user when they lack permission for a specific role.
+        /// </summary>
+        [Description("The response to provide to the user when they lack permission for a specific role.")]
+        public string RequiredRolePermissionResponse { get; set; } = "Insufficient permission. Required permission: {0}";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user when the pet's role is changed successfully.
+        /// </summary>
+        [Description("The response to provide to the user when the pet's role is changed successfully.")]
+        public string SuccessResponse { get; set; } = "Set the pet's role to a {0}";
 
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission("pets.role"))
+            if (!sender.CheckPermission(RequiredPermission))
             {
-                response = "Insufficient permission. Required permission: pets.role";
+                response = RequiredPermissionResponse;
                 return false;
             }
 
@@ -46,20 +83,20 @@ namespace Pets.Commands
             PetPreferences preferences = PetPreferences.Get(player) ?? new PetPreferences(player.UserId);
             if (arguments.Count == 0)
             {
-                response = $"Your pet is currently a {preferences.Role}";
+                response = string.Format(NoArgumentsResponse, preferences.Role);
                 return true;
             }
 
-            if (!Enum.TryParse(arguments.At(0), true, out RoleType roleType) || Plugin.Instance.Config.BlacklistedRoles.Contains(roleType))
+            if (!Enum.TryParse(arguments.At(0), true, out RoleType roleType))
             {
-                response = "Please specify a valid role.";
+                response = InvalidRoleResponse;
                 return false;
             }
 
-            string requiredPermission = "pets.role." + roleType.ToString().ToLower();
+            string requiredPermission = RequiredPermission + '.' + roleType.ToString().ToLower();
             if (!sender.CheckPermission(requiredPermission))
             {
-                response = $"Insufficient permission. Required permission: {requiredPermission}";
+                response = string.Format(RequiredRolePermissionResponse, requiredPermission);
                 return false;
             }
 
@@ -68,7 +105,7 @@ namespace Pets.Commands
             else
                 preferences.Role = roleType;
 
-            response = $"Set the pet's role to a(n) {roleType}";
+            response = string.Format(SuccessResponse, roleType);
             return true;
         }
     }

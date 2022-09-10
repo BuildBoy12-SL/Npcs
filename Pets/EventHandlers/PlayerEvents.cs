@@ -18,6 +18,14 @@ namespace Pets.EventHandlers
     /// </summary>
     public class PlayerEvents
     {
+        private readonly Plugin plugin;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlayerEvents"/> class.
+        /// </summary>
+        /// <param name="plugin">An instance of the <see cref="Plugin"/> class.</param>
+        public PlayerEvents(Plugin plugin) => this.plugin = plugin;
+
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnDestroying(DestroyingEventArgs)"/>
         public void OnDestroying(DestroyingEventArgs ev)
         {
@@ -41,7 +49,7 @@ namespace Pets.EventHandlers
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnSpawned(ReferenceHub)"/>
         public void OnSpawned(SpawnedEventArgs ev)
         {
-            if (!Round.IsStarted || !ev.Player.CheckPermission("pets.pet") || ev.Player.Role.Type == RoleType.Tutorial)
+            if (!Round.IsStarted || !ev.Player.CheckPermission(plugin.Config.BasePermission) || ev.Player.Role.Type == RoleType.Tutorial)
                 return;
 
             Timing.CallDelayed(1f, () =>

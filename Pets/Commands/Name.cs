@@ -8,6 +8,8 @@
 namespace Pets.Commands
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using CommandSystem;
     using Exiled.API.Features;
@@ -20,20 +22,59 @@ namespace Pets.Commands
     public class Name : ICommand
     {
         /// <inheritdoc />
-        public string Command => "name";
+        public string Command { get; set; } = "name";
 
         /// <inheritdoc />
-        public string[] Aliases { get; } = { "n" };
+        public string[] Aliases { get; set; } = { "n" };
 
         /// <inheritdoc />
-        public string Description => "Sets the pet's name";
+        public string Description { get; set; } = "Sets the pet's name";
+
+        /// <summary>
+        /// Gets or sets the permission required to use this command.
+        /// </summary>
+        [Description("The permission required to use this command.")]
+        public string RequiredPermission { get; set; } = "pets.name";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user that lacks the required permission.
+        /// </summary>
+        [Description("The response to provide to the user that lacks the required permission.")]
+        public string RequiredPermissionResponse { get; set; } = "Insufficient permission. Required permission: pets.name";
+
+        /// <summary>
+        /// Gets or sets the response to provide to the user when no arguments are provided.
+        /// </summary>
+        [Description("The response to provide to the user when no arguments are provided.")]
+        public string NoArgumentsResponse { get; set; } = "Your pet's name is currently '{0}'";
+
+        /// <summary>
+        /// Gets or sets a collection of strings that pet names cannot contain.
+        /// </summary>
+        [Description("A collection of strings that pet names cannot contain.")]
+        public List<string> BlacklistedNames { get; set; } = new()
+        {
+            "InsertSlurHere",
+        };
+
+        /// <summary>
+        /// Gets or sets the response to the user when the name they provided is blacklisted.
+        /// </summary>
+        [Description("The response to the user when the name they provided is blacklisted.")]
+        public string BlacklistedResponse { get; set; } = "This name is blacklisted.";
+
+        /// <summary>
+        /// Gets or sets the response to the user when the pet's name is set successfully.
+        /// </summary>
+        [Description("The response to the user when the pet's name is set successfully.")]
+        public string SuccessResponse { get; set; } = "Your pet's name has been set to '{0}'";
 
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission("pets.name"))
+            if (!sender.CheckPermission(RequiredPermission))
             {
-                response = "Insufficient permission. Required permission: pets.name";
+                response = RequiredPermissionResponse;
                 return false;
             }
 
@@ -47,14 +88,14 @@ namespace Pets.Commands
             PetPreferences preferences = PetPreferences.Get(player) ?? new PetPreferences(player.UserId);
             if (arguments.Count == 0)
             {
-                response = $"Your pets name is currently '{preferences.Name}'";
+                response = string.Format(NoArgumentsResponse, preferences.Name);
                 return true;
             }
 
             string name = string.Join(" ", arguments);
-            if (Plugin.Instance.Config.BlacklistedNames.Any(blacklistedString => name.Contains(blacklistedString)))
+            if (BlacklistedNames.Any(blacklistedString => name.Contains(blacklistedString)))
             {
-                response = "This name is blacklisted.";
+                response = BlacklistedResponse;
                 return false;
             }
 
@@ -63,7 +104,7 @@ namespace Pets.Commands
             else
                 preferences.Name = name;
 
-            response = $"Set your pet's name to '{preferences.Name}'";
+            response = string.Format(SuccessResponse, name);
             return true;
         }
     }

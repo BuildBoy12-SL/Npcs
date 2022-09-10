@@ -7,17 +7,23 @@
 
 namespace Pets
 {
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.IO;
     using Exiled.API.Features;
     using Exiled.API.Interfaces;
+    using Pets.Commands;
 
     /// <inheritdoc />
     public class Config : IConfig
     {
         /// <inheritdoc/>
         public bool IsEnabled { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets the base permission for users to have pets.
+        /// </summary>
+        [Description("The base permission for users to have pets.")]
+        public string BasePermission { get; set; } = "pets.pet";
 
         /// <summary>
         /// Gets or sets the path to the folder that will store the preferences.
@@ -32,24 +38,33 @@ namespace Pets
         public string File { get; set; } = "PetPreferences.yml";
 
         /// <summary>
-        /// Gets or sets the roles that players should not be able to set their pets to.
+        /// Gets or sets a configurable instance of the <see cref="Hide"/> command.
         /// </summary>
-        [Description("The roles that players should not be able to set their pets to.")]
-        public List<RoleType> BlacklistedRoles { get; set; } = new()
-        {
-            RoleType.None,
-            RoleType.Spectator,
-            RoleType.Scp079,
-            RoleType.Scp096,
-        };
+        public Hide HideCommand { get; set; } = new();
 
         /// <summary>
-        /// Gets or sets a collection of strings that pet names cannot contain.
+        /// Gets or sets a configurable instance of the <see cref="Item"/> command.
         /// </summary>
-        [Description("A collection of strings that pet names cannot contain.")]
-        public List<string> BlacklistedNames { get; set; } = new()
-        {
-            "InsertSlurHere",
-        };
+        public Item ItemCommand { get; set; } = new();
+
+        /// <summary>
+        /// Gets or sets a configurable instance of the <see cref="Name"/> command.
+        /// </summary>
+        public Name NameCommand { get; set; } = new();
+
+        /// <summary>
+        /// Gets or sets a configurable instance of the <see cref="Role"/> command.
+        /// </summary>
+        public Role RoleCommand { get; set; } = new();
+
+        /// <summary>
+        /// Gets or sets a configurable instance of the <see cref="Scale"/> command.
+        /// </summary>
+        public Scale ScaleCommand { get; set; } = new();
+
+        /// <summary>
+        /// Gets or sets a configurable instance of the <see cref="Item"/> command.
+        /// </summary>
+        public Show ShowCommand { get; set; } = new();
     }
 }
