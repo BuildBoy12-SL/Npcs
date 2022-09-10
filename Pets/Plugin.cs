@@ -43,6 +43,7 @@ namespace Pets
             Exiled.Events.Handlers.Player.ChangingRole += playerEvents.OnChangingRole;
             Exiled.Events.Handlers.Player.Spawned += playerEvents.OnSpawned;
             Exiled.Events.Handlers.Player.TriggeringTesla += playerEvents.OnTriggeringTesla;
+
             serverEvents = new ServerEvents();
             Exiled.Events.Handlers.Server.ReloadedConfigs += ReloadCommands;
             Exiled.Events.Handlers.Server.RoundEnded += serverEvents.OnRoundEnded;
