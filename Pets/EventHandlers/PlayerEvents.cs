@@ -55,8 +55,11 @@ namespace Pets.EventHandlers
             Timing.CallDelayed(1f, () =>
             {
                 PetPreferences preferences = PetPreferences.Get(ev.Player) ?? new PetPreferences(ev.Player.UserId);
-                if (preferences.IsShown && Pet.Get(ev.Player) is { IsSpawned: false } pet)
-                    pet.IsSpawned = true;
+                if (!preferences.IsShown)
+                    return;
+
+                Pet pet = Pet.Get(ev.Player) ?? Pet.Create(ev.Player);
+                pet.IsSpawned = true;
             });
         }
 
