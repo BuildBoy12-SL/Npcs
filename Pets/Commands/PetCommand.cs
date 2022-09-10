@@ -14,6 +14,7 @@ namespace Pets.Commands
     using NorthwoodLib.Pools;
 
     /// <inheritdoc />
+    [CommandHandler(typeof(ClientCommandHandler))]
     public class PetCommand : ParentCommand
     {
         /// <summary>
