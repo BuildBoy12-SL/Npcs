@@ -25,13 +25,8 @@ namespace NPCs.API
         public Npc()
             : base(CreateHub())
         {
-            SetupReferenceHub();
-
+            SetupNpc();
             GameObject.transform.localScale = Vector3.one;
-
-            SessionVariables.Add("IsNPC", true);
-            Dictionary.Add(GameObject, this);
-            Player.Dictionary.Add(GameObject, this);
         }
 
         /// <summary>
@@ -43,13 +38,8 @@ namespace NPCs.API
         public Npc(RoleType roleType, string name, Vector3 scale)
             : base(CreateHub())
         {
-            SetupReferenceHub(roleType, name);
-
+            SetupNpc(roleType, name);
             GameObject.transform.localScale = scale;
-
-            SessionVariables.Add("IsNPC", true);
-            Dictionary.Add(GameObject, this);
-            Player.Dictionary.Add(GameObject, this);
         }
 
         /// <summary>
@@ -132,7 +122,7 @@ namespace NPCs.API
             IsSpawned = true;
         }
 
-        private void SetupReferenceHub(RoleType roleType = RoleType.Tutorial, string name = "NPC")
+        private void SetupNpc(RoleType roleType = RoleType.Tutorial, string name = "NPC")
         {
             ReferenceHub.characterClassManager.CurClass = roleType;
             ReferenceHub.characterClassManager._privUserId = "npc";
@@ -140,6 +130,10 @@ namespace NPCs.API
             ReferenceHub.playerStats.StatModules[0].CurValue = 100;
             ReferenceHub.nicknameSync.Network_myNickSync = name;
             ReferenceHub.queryProcessor._ipAddress = "127.0.0.WAN";
+
+            SessionVariables.Add("IsNPC", true);
+            Dictionary.Add(GameObject, this);
+            Player.Dictionary.Add(GameObject, this);
         }
 
         private void StartReferenceHub()
