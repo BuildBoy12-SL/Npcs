@@ -9,13 +9,11 @@ namespace Pets
 {
     using System;
     using Exiled.API.Features;
-    using HarmonyLib;
     using Pets.EventHandlers;
 
     /// <inheritdoc />
     public class Plugin : Plugin<Config>
     {
-        private Harmony harmony;
         private PlayerEvents playerEvents;
         private ServerEvents serverEvents;
 
@@ -34,8 +32,6 @@ namespace Pets
         public override void OnEnabled()
         {
             Instance = this;
-            harmony = new Harmony($"pets.{DateTime.UtcNow.Ticks}");
-            harmony.PatchAll();
 
             playerEvents = new PlayerEvents(this);
             Exiled.Events.Handlers.Player.ChangingRole += playerEvents.OnChangingRole;
@@ -71,8 +67,6 @@ namespace Pets
             Exiled.Events.Handlers.Player.TriggeringTesla -= playerEvents.OnTriggeringTesla;
             playerEvents = null;
 
-            harmony.UnpatchAll(harmony.Id);
-            harmony = null;
             Instance = null;
             base.OnDisabled();
         }
