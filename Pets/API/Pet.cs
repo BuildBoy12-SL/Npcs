@@ -11,6 +11,7 @@ namespace Pets.API
     using System.Linq;
     using Exiled.API.Features;
     using Exiled.API.Features.Items;
+    using Exiled.API.Features.Roles;
     using NPCs.API;
     using NPCs.Cores.Navigation;
     using UnityEngine;
@@ -103,13 +104,14 @@ namespace Pets.API
         /// Gets or sets the display role of the pet.
         /// </summary>
         /// <remarks>This also affects the owner's preferences.</remarks>
-        public new RoleType Role
+        public new Role Role
         {
             get => base.Role;
             set
             {
                 base.Role = value;
-                PetPreferences.Role = value;
+                base.CurrentItem = Item.Create(PetPreferences.HeldItem);
+                PetPreferences.Role = value.Type;
             }
         }
 

@@ -8,7 +8,6 @@
 namespace NPCs.API
 {
     using System.Collections.Generic;
-    using Exiled.API.Enums;
     using Exiled.API.Features;
     using Mirror;
     using UnityEngine;
@@ -26,12 +25,7 @@ namespace NPCs.API
         public Npc()
             : base(CreateHub())
         {
-            ReferenceHub.characterClassManager.CurClass = RoleType.Tutorial;
-            ReferenceHub.playerStats.StatModules[0].CurValue = 100;
-            ReferenceHub.nicknameSync.Network_myNickSync = "NPC";
-            ReferenceHub.queryProcessor._ipAddress = "127.0.0.WAN";
-            ReferenceHub.characterClassManager.IsVerified = true;
-            ReferenceHub.playerMovementSync.NetworkGrounded = true;
+            SetupReferenceHub();
 
             GameObject.transform.localScale = Vector3.one;
 
@@ -49,12 +43,7 @@ namespace NPCs.API
         public Npc(RoleType roleType, string name, Vector3 scale)
             : base(CreateHub())
         {
-            ReferenceHub.characterClassManager.CurClass = roleType;
-            ReferenceHub.playerStats.StatModules[0].CurValue = 100;
-            ReferenceHub.nicknameSync.Network_myNickSync = name;
-            ReferenceHub.queryProcessor._ipAddress = "127.0.0.WAN";
-            ReferenceHub.characterClassManager.IsVerified = true;
-            ReferenceHub.playerMovementSync.NetworkGrounded = true;
+            SetupReferenceHub(roleType, name);
 
             GameObject.transform.localScale = scale;
 
@@ -120,19 +109,6 @@ namespace NPCs.API
         }
 
         /// <summary>
-        /// Gets or sets the NPC's role.
-        /// </summary>
-        public new RoleType Role
-        {
-            get => base.Role.Type;
-            set
-            {
-                SetRole(value, SpawnReason.ForceClass, true);
-                Respawn();
-            }
-        }
-
-        /// <summary>
         /// Destroys the npc.
         /// </summary>
         public virtual void Destroy()
@@ -156,12 +132,22 @@ namespace NPCs.API
             IsSpawned = true;
         }
 
+        private void SetupReferenceHub(RoleType roleType = RoleType.Tutorial, string name = "NPC")
+        {
+            ReferenceHub.characterClassManager.CurClass = roleType;
+            ReferenceHub.characterClassManager._privUserId = "npc";
+            ReferenceHub.playerMovementSync.NetworkGrounded = true;
+            ReferenceHub.playerStats.StatModules[0].CurValue = 100;
+            ReferenceHub.nicknameSync.Network_myNickSync = name;
+            ReferenceHub.queryProcessor._ipAddress = "127.0.0.WAN";
+        }
+
         private void StartReferenceHub()
         {
             ReferenceHub.characterClassManager.Start();
-            ReferenceHub.playerStats.Start();
             ReferenceHub.nicknameSync.Start();
             ReferenceHub.playerMovementSync.Start();
+            ReferenceHub.playerStats.Start();
             ReferenceHub.inventory.Start();
             ReferenceHub.serverRoles.Start();
         }

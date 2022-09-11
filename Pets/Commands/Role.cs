@@ -89,7 +89,7 @@ namespace Pets.Commands
             }
 
             if (Pet.Get(player) is Pet pet)
-                pet.Role = roleType;
+                pet.Role.Type = roleType;
             else
                 preferences.Role = roleType;
 

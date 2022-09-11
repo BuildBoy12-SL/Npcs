@@ -56,9 +56,9 @@ namespace NPCs.Cores.Navigation
         /// </summary>
         public bool IsPaused { get; set; }
 
-        private float WalkSpeed => CharacterClassManager._staticClasses[(int)Npc.Role].walkSpeed;
+        private float WalkSpeed => CharacterClassManager._staticClasses[(int)Npc.Role.Type].walkSpeed;
 
-        private float RunSpeed => CharacterClassManager._staticClasses[(int)Npc.Role].runSpeed;
+        private float RunSpeed => CharacterClassManager._staticClasses[(int)Npc.Role.Type].runSpeed;
 
         /// <summary>
         /// Kills movement control.
