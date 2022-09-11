@@ -35,10 +35,10 @@ namespace Pets.Commands
         public string RequiredPermission { get; set; } = "pets.role";
 
         /// <summary>
-        /// Gets or sets the response to provide to the user that lacks the required permission.
+        /// Gets or sets the response to provide to the user when they lack permission for a specific role.
         /// </summary>
-        [Description("The response to provide to the user that lacks the required permission.")]
-        public string RequiredPermissionResponse { get; set; } = "Insufficient permission. Required permission: pets.role";
+        [Description("The response to provide to the user when they lack permission for a specific role.")]
+        public string RequiredRolePermissionResponse { get; set; } = "Insufficient permission. Required permission: {0}";
 
         /// <summary>
         /// Gets or sets the response to provide to the user when no arguments are provided.
@@ -51,12 +51,6 @@ namespace Pets.Commands
         /// </summary>
         [Description("The response to provide to the user when the specified role is invalid.")]
         public string InvalidRoleResponse { get; set; } = "Please specify a valid role.";
-
-        /// <summary>
-        /// Gets or sets the response to provide to the user when they lack permission for a specific role.
-        /// </summary>
-        [Description("The response to provide to the user when they lack permission for a specific role.")]
-        public string RequiredRolePermissionResponse { get; set; } = "Insufficient permission. Required permission: {0}";
 
         /// <summary>
         /// Gets or sets the response to provide to the user when the pet's role is changed successfully.
