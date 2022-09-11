@@ -32,7 +32,6 @@ namespace NPCs.API
             ReferenceHub.queryProcessor._ipAddress = "127.0.0.WAN";
             ReferenceHub.characterClassManager.IsVerified = true;
             ReferenceHub.playerMovementSync.NetworkGrounded = true;
-            StartReferenceHub();
 
             GameObject.transform.localScale = Vector3.one;
 
@@ -56,7 +55,6 @@ namespace NPCs.API
             ReferenceHub.queryProcessor._ipAddress = "127.0.0.WAN";
             ReferenceHub.characterClassManager.IsVerified = true;
             ReferenceHub.playerMovementSync.NetworkGrounded = true;
-            StartReferenceHub();
 
             GameObject.transform.localScale = scale;
 
@@ -88,9 +86,14 @@ namespace NPCs.API
 
                 isSpawned = value;
                 if (value)
+                {
                     NetworkServer.Spawn(GameObject);
+                    StartReferenceHub();
+                }
                 else
+                {
                     NetworkServer.UnSpawn(GameObject);
+                }
             }
         }
 

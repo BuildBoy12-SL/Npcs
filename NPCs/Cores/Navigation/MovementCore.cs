@@ -16,19 +16,18 @@ namespace NPCs.Cores.Navigation
     /// <summary>
     /// Handles the movements of a fake player.
     /// </summary>
-    public class MovementCore
+    public class MovementCore : Core
     {
         private const float SneakSpeed = 1.8f;
-        private readonly Npc npc;
         private readonly CoroutineHandle coroutineHandle;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MovementCore"/> class.
         /// </summary>
-        /// <param name="npc">The npc to control.</param>
+        /// <param name="npc">The Npc to control.</param>
         public MovementCore(Npc npc)
+            : base(npc)
         {
-            this.npc = npc;
             Movement = PlayerMovementState.Sprinting;
             coroutineHandle = Timing.RunCoroutine(MovementCoroutine(), Segment.FixedUpdate);
         }
@@ -43,8 +42,8 @@ namespace NPCs.Cores.Navigation
         /// </summary>
         public PlayerMovementState Movement
         {
-            get => npc.ReferenceHub.animationController.MoveState;
-            set => npc.ReferenceHub.animationController.MoveState = value;
+            get => Npc.ReferenceHub.animationController.MoveState;
+            set => Npc.ReferenceHub.animationController.MoveState = value;
         }
 
         /// <summary>
@@ -57,9 +56,9 @@ namespace NPCs.Cores.Navigation
         /// </summary>
         public bool IsPaused { get; set; }
 
-        private float WalkSpeed => CharacterClassManager._staticClasses[(int)npc.Role].walkSpeed;
+        private float WalkSpeed => CharacterClassManager._staticClasses[(int)Npc.Role].walkSpeed;
 
-        private float RunSpeed => CharacterClassManager._staticClasses[(int)npc.Role].runSpeed;
+        private float RunSpeed => CharacterClassManager._staticClasses[(int)Npc.Role].runSpeed;
 
         /// <summary>
         /// Kills movement control.
@@ -68,17 +67,17 @@ namespace NPCs.Cores.Navigation
 
         private void Follow()
         {
-            Vector3 moveDirection = FollowTarget.transform.position - npc.Position;
+            Vector3 moveDirection = FollowTarget.transform.position - Npc.Position;
 
             Quaternion rot = Quaternion.LookRotation(moveDirection.normalized);
-            npc.Rotation = new Vector2(rot.eulerAngles.x, rot.eulerAngles.y);
+            Npc.Rotation = new Vector2(rot.eulerAngles.x, rot.eulerAngles.y);
 
             switch (moveDirection.magnitude)
             {
                 case < 3:
                     return;
                 case > 10:
-                    npc.Position = FollowTarget.transform.position;
+                    Npc.Position = FollowTarget.transform.position;
                     return;
                 default:
                     Move();
@@ -96,25 +95,25 @@ namespace NPCs.Cores.Navigation
                 _ => 0f
             };
 
-            Vector3 newPosition = npc.Position;
+            Vector3 newPosition = Npc.Position;
             switch (Direction)
             {
                 case MovementDirection.Forward:
-                    newPosition += npc.CameraTransform.forward / 10 * speed;
+                    newPosition += Npc.CameraTransform.forward / 10 * speed;
                     break;
                 case MovementDirection.Backwards:
-                    newPosition -= npc.CameraTransform.forward / 10 * speed;
+                    newPosition -= Npc.CameraTransform.forward / 10 * speed;
                     break;
                 case MovementDirection.Right:
-                    newPosition += Quaternion.AngleAxis(90, Vector3.up) * npc.CameraTransform.forward / 10 * speed;
+                    newPosition += Quaternion.AngleAxis(90, Vector3.up) * Npc.CameraTransform.forward / 10 * speed;
                     break;
                 case MovementDirection.Left:
-                    newPosition -= Quaternion.AngleAxis(90, Vector3.up) * npc.CameraTransform.forward / 10 * speed;
+                    newPosition -= Quaternion.AngleAxis(90, Vector3.up) * Npc.CameraTransform.forward / 10 * speed;
                     break;
             }
 
-            if (npc.Position != newPosition && !Physics.Linecast(npc.Position, newPosition, FallDamage.StaticGroundMask))
-                npc.Position = newPosition;
+            if (Npc.Position != newPosition && !Physics.Linecast(Npc.Position, newPosition, FallDamage.StaticGroundMask))
+                Npc.Position = newPosition;
         }
 
         private IEnumerator<float> MovementCoroutine()
@@ -122,7 +121,7 @@ namespace NPCs.Cores.Navigation
             while (true)
             {
                 yield return Timing.WaitForSeconds(0.1f);
-                if (IsPaused || !npc.IsSpawned)
+                if (IsPaused || !Npc.IsSpawned)
                     continue;
 
                 if (FollowTarget != null)
