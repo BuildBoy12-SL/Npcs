@@ -15,6 +15,9 @@ namespace Pets.EventHandlers
     /// </summary>
     public class ServerEvents
     {
+        /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnRestartingRound()"/>
+        public void OnRestartingRound() => PetPreferences.Save();
+
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnRoundEnded(RoundEndedEventArgs)"/>
         public void OnRoundEnded(RoundEndedEventArgs ev) => PetPreferences.Save();
 

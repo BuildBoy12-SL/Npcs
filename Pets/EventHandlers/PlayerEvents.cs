@@ -26,6 +26,13 @@ namespace Pets.EventHandlers
         /// <param name="plugin">An instance of the <see cref="Plugin"/> class.</param>
         public PlayerEvents(Plugin plugin) => this.plugin = plugin;
 
+        /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnChangingRole(ChangingRoleEventArgs)"/>
+        public void OnChangingRole(ChangingRoleEventArgs ev)
+        {
+            if (ev.NewRole is RoleType.Spectator or RoleType.Scp079 && Pet.Get(ev.Player) is Pet pet)
+                pet.Destroy();
+        }
+
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnDestroying(DestroyingEventArgs)"/>
         public void OnDestroying(DestroyingEventArgs ev)
         {
@@ -39,28 +46,25 @@ namespace Pets.EventHandlers
                 ev.IsAllowed = false;
         }
 
-        /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnChangingRole(ChangingRoleEventArgs)"/>
-        public void OnChangingRole(ChangingRoleEventArgs ev)
+        /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnHandcuffing(HandcuffingEventArgs)"/>
+        public void OnHandcuffing(HandcuffingEventArgs ev)
         {
-            if (ev.NewRole is RoleType.Spectator or RoleType.Scp079 && Pet.Get(ev.Player) is Pet pet)
-                pet.Destroy();
+            if (ev.Target is Pet)
+                ev.IsAllowed = false;
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnSpawned(ReferenceHub)"/>
         public void OnSpawned(SpawnedEventArgs ev)
         {
-            if (!Round.IsStarted || !ev.Player.CheckPermission(plugin.Config.BasePermission) || ev.Player.Role.Type == RoleType.Tutorial)
+            if (!Round.IsStarted || !ev.Player.CheckPermission(plugin.Config.BasePermission))
                 return;
 
-            Timing.CallDelayed(1f, () =>
-            {
-                PetPreferences preferences = PetPreferences.Get(ev.Player) ?? new PetPreferences(ev.Player.UserId);
-                if (!preferences.IsShown)
-                    return;
+            PetPreferences preferences = PetPreferences.Get(ev.Player) ?? new PetPreferences(ev.Player.UserId);
+            if (!preferences.IsShown)
+                return;
 
-                Pet pet = Pet.Get(ev.Player) ?? Pet.Create(ev.Player);
-                pet.IsSpawned = true;
-            });
+            Pet pet = Pet.Get(ev.Player) ?? Pet.Create(ev.Player);
+            pet.IsSpawned = true;
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnTriggeringTesla(TriggeringTeslaEventArgs)"/>

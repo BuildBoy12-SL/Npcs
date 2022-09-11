@@ -29,9 +29,9 @@ namespace Pets.Commands
         public string Description { get; set; } = "Sets the pet's role.";
 
         /// <summary>
-        /// Gets or sets the permission required to use this command.
+        /// Gets or sets the base permission required to use this command.
         /// </summary>
-        [Description("The permission required to use this command.")]
+        [Description("The base permission required to use this command.")]
         public string RequiredPermission { get; set; } = "pets.role";
 
         /// <summary>
@@ -67,12 +67,6 @@ namespace Pets.Commands
         /// <inheritdoc />
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission(RequiredPermission))
-            {
-                response = RequiredPermissionResponse;
-                return false;
-            }
-
             Player player = Player.Get(sender);
             if (player is null || player == Server.Host)
             {

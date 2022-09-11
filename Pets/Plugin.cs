@@ -38,14 +38,16 @@ namespace Pets
             harmony.PatchAll();
 
             playerEvents = new PlayerEvents(this);
+            Exiled.Events.Handlers.Player.ChangingRole += playerEvents.OnChangingRole;
             Exiled.Events.Handlers.Player.Destroying += playerEvents.OnDestroying;
             Exiled.Events.Handlers.Player.EnteringPocketDimension += playerEvents.OnEnteringPocketDimension;
-            Exiled.Events.Handlers.Player.ChangingRole += playerEvents.OnChangingRole;
+            Exiled.Events.Handlers.Player.Handcuffing += playerEvents.OnHandcuffing;
             Exiled.Events.Handlers.Player.Spawned += playerEvents.OnSpawned;
             Exiled.Events.Handlers.Player.TriggeringTesla += playerEvents.OnTriggeringTesla;
 
             serverEvents = new ServerEvents();
             Exiled.Events.Handlers.Server.ReloadedConfigs += ReloadCommands;
+            Exiled.Events.Handlers.Server.RestartingRound += serverEvents.OnRestartingRound;
             Exiled.Events.Handlers.Server.RoundEnded += serverEvents.OnRoundEnded;
             Exiled.Events.Handlers.Server.WaitingForPlayers += serverEvents.OnWaitingForPlayers;
 
@@ -56,13 +58,15 @@ namespace Pets
         public override void OnDisabled()
         {
             Exiled.Events.Handlers.Server.ReloadedConfigs -= ReloadCommands;
+            Exiled.Events.Handlers.Server.RestartingRound -= serverEvents.OnRestartingRound;
             Exiled.Events.Handlers.Server.RoundEnded -= serverEvents.OnRoundEnded;
             Exiled.Events.Handlers.Server.WaitingForPlayers -= serverEvents.OnWaitingForPlayers;
             serverEvents = null;
 
+            Exiled.Events.Handlers.Player.ChangingRole -= playerEvents.OnChangingRole;
             Exiled.Events.Handlers.Player.Destroying -= playerEvents.OnDestroying;
             Exiled.Events.Handlers.Player.EnteringPocketDimension -= playerEvents.OnEnteringPocketDimension;
-            Exiled.Events.Handlers.Player.ChangingRole -= playerEvents.OnChangingRole;
+            Exiled.Events.Handlers.Player.Handcuffing -= playerEvents.OnHandcuffing;
             Exiled.Events.Handlers.Player.Spawned -= playerEvents.OnSpawned;
             Exiled.Events.Handlers.Player.TriggeringTesla -= playerEvents.OnTriggeringTesla;
             playerEvents = null;
