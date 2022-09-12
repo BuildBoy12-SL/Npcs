@@ -104,13 +104,13 @@ namespace Pets.API
         /// Gets or sets the display role of the pet.
         /// </summary>
         /// <remarks>This also affects the owner's preferences.</remarks>
-        public new Role Role
+        public new RoleType Role
         {
-            get => base.Role;
+            get => base.Role.Type;
             set
             {
-                base.Role = value;
-                PetPreferences.Role = value.Type;
+                base.Role.Type = value;
+                PetPreferences.Role = value;
             }
         }
 
