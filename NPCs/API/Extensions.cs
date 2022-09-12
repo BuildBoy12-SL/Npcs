@@ -16,24 +16,24 @@ namespace NPCs.API
     public static class Extensions
     {
         /// <summary>
-        /// Checks if a <see cref="Player"/> is an npc.
+        /// Checks if a <see cref="Player"/> is an <see cref="Npc"/>.
         /// </summary>
-        /// <param name="player">The player to check.</param>
-        /// <returns>A value indicating the player is an NPC.</returns>
+        /// <param name="player">The <see cref="Player"/> to check.</param>
+        /// <returns>A value indicating the <see cref="Player"/> is an <see cref="Npc"/>.</returns>
         public static bool IsNpc(this Player player) => player is Npc;
 
         /// <summary>
-        /// Checks if a <see cref="ReferenceHub"/> is an npc.
+        /// Checks if a <see cref="ReferenceHub"/> is an <see cref="Npc"/>.
         /// </summary>
-        /// <param name="referenceHub">The player to check.</param>
-        /// <returns>A value indicating the player is an NPC.</returns>
+        /// <param name="referenceHub">The <see cref="Player"/> to check.</param>
+        /// <returns>A value indicating the <see cref="Player"/> is an <see cref="Npc"/>.</returns>
         public static bool IsNpc(this ReferenceHub referenceHub) => referenceHub.gameObject.IsNpc();
 
         /// <summary>
-        /// Checks a <see cref="GameObject"/> to see if it belongs to an npc.
+        /// Checks a <see cref="GameObject"/> to see if it belongs to an <see cref="Npc"/>.
         /// </summary>
-        /// <param name="gameObject">The object to check.</param>
-        /// <returns>A value indicating the gameobject is an NPC.</returns>
+        /// <param name="gameObject">The <see cref="GameObject"/> to check.</param>
+        /// <returns>A value indicating the <see cref="GameObject"/> is an <see cref="Npc"/>.</returns>
         public static bool IsNpc(this GameObject gameObject) => Npc.Dictionary.ContainsKey(gameObject);
     }
 }

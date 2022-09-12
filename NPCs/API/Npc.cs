@@ -81,7 +81,7 @@ namespace NPCs.API
         }
 
         /// <summary>
-        /// Gets or sets the NPC's position.
+        /// Gets or sets the position of the npc.
         /// </summary>
         public new Vector3 Position
         {
@@ -90,7 +90,7 @@ namespace NPCs.API
         }
 
         /// <summary>
-        /// Gets or sets the NPC's name.
+        /// Gets or sets the name of the npc.
         /// </summary>
         public string Name
         {
