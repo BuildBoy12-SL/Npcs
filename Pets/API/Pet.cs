@@ -34,7 +34,7 @@ namespace Pets.API
             PetPreferences = petPreferences;
             IsGodModeEnabled = true;
             if (PetPreferences.HeldItem != ItemType.None)
-                CurrentItem = Item.Create(PetPreferences.HeldItem);
+                base.CurrentItem = Item.Create(PetPreferences.HeldItem);
 
             movementCore = new MovementCore(this)
             {
@@ -110,6 +110,7 @@ namespace Pets.API
             {
                 base.Role.Type = value;
                 PetPreferences.Role = value;
+                base.CurrentItem = Item.Create(PetPreferences.HeldItem);
             }
         }
 
