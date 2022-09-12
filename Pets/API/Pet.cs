@@ -11,7 +11,6 @@ namespace Pets.API
     using System.Linq;
     using Exiled.API.Features;
     using Exiled.API.Features.Items;
-    using Exiled.API.Features.Roles;
     using NPCs.API;
     using NPCs.Cores.Navigation;
     using UnityEngine;
