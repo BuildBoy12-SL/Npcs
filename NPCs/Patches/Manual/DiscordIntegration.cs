@@ -47,13 +47,13 @@ namespace NPCs.Patches.Manual
         /// </summary>
         private static IEnumerable<CodeInstruction> ActivityCount(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (var codeInstruction in instructions)
+            foreach (CodeInstruction codeInstruction in instructions)
             {
                 yield return codeInstruction;
                 if (!codeInstruction.OperandIs(PropertyGetter(typeof(Dictionary<GameObject, Player>), nameof(Dictionary<GameObject, Player>.Count))))
                     continue;
 
-                foreach (var subtractInstruction in SubtractCountInstructions)
+                foreach (CodeInstruction subtractInstruction in SubtractCountInstructions)
                     yield return subtractInstruction;
             }
         }

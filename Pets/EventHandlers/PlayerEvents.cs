@@ -10,7 +10,6 @@ namespace Pets.EventHandlers
     using Exiled.API.Features;
     using Exiled.Events.EventArgs;
     using Exiled.Permissions.Extensions;
-    using MEC;
     using Pets.API;
 
     /// <summary>

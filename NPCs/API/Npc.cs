@@ -10,6 +10,7 @@ namespace NPCs.API
     using System.Collections.Generic;
     using Exiled.API.Features;
     using Mirror;
+    using PlayerStatsSystem;
     using UnityEngine;
 
     /// <summary>
@@ -17,6 +18,7 @@ namespace NPCs.API
     /// </summary>
     public class Npc : Player
     {
+        private bool hiddenOnce;
         private bool isSpawned;
 
         /// <summary>
@@ -67,12 +69,14 @@ namespace NPCs.API
                 if (value)
                 {
                     NetworkServer.Spawn(GameObject);
-                    StartReferenceHub();
+                    if (hiddenOnce)
+                        RestartModules();
+
+                    return;
                 }
-                else
-                {
-                    NetworkServer.UnSpawn(GameObject);
-                }
+
+                NetworkServer.UnSpawn(GameObject);
+                hiddenOnce = true;
             }
         }
 
@@ -125,9 +129,9 @@ namespace NPCs.API
         private void SetupNpc(RoleType roleType = RoleType.Tutorial, string name = "NPC")
         {
             ReferenceHub.characterClassManager.CurClass = roleType;
+
             ReferenceHub.characterClassManager._privUserId = "npc";
             ReferenceHub.playerMovementSync.NetworkGrounded = true;
-            ReferenceHub.playerStats.StatModules[0].CurValue = 100;
             ReferenceHub.nicknameSync.Network_myNickSync = name;
             ReferenceHub.queryProcessor._ipAddress = "127.0.0.WAN";
 
@@ -136,14 +140,10 @@ namespace NPCs.API
             Player.Dictionary.Add(GameObject, this);
         }
 
-        private void StartReferenceHub()
+        private void RestartModules()
         {
-            ReferenceHub.characterClassManager.Start();
-            ReferenceHub.nicknameSync.Start();
-            ReferenceHub.playerMovementSync.Start();
-            ReferenceHub.playerStats.Start();
-            ReferenceHub.inventory.Start();
-            ReferenceHub.serverRoles.Start();
+            foreach (StatBase statBase in ReferenceHub.playerStats.StatModules)
+                statBase.Init(ReferenceHub);
         }
     }
 }
