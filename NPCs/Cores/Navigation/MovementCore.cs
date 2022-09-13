@@ -8,6 +8,7 @@
 namespace NPCs.Cores.Navigation
 {
     using System.Collections.Generic;
+    using Exiled.API.Features;
     using MEC;
     using NPCs.API;
     using NPCs.Enums;
@@ -28,19 +29,19 @@ namespace NPCs.Cores.Navigation
         public MovementCore(Npc npc)
             : base(npc)
         {
-            Movement = PlayerMovementState.Sprinting;
+            MovementState = PlayerMovementState.Walking;
             coroutineHandle = Timing.RunCoroutine(MovementCoroutine(), Segment.FixedUpdate);
         }
 
         /// <summary>
         /// Gets or sets the object to follow.
         /// </summary>
-        public GameObject FollowTarget { get; set; }
+        public GameObject CurrentTarget { get; set; }
 
         /// <summary>
         /// Gets or sets the movement type of the pet.
         /// </summary>
-        public PlayerMovementState Movement
+        public PlayerMovementState MovementState
         {
             get => Npc.ReferenceHub.animationController.MoveState;
             set => Npc.ReferenceHub.animationController.MoveState = value;
@@ -67,17 +68,20 @@ namespace NPCs.Cores.Navigation
 
         private void Follow()
         {
-            Vector3 moveDirection = FollowTarget.transform.position - Npc.Position;
+            Vector3 moveDirection = CurrentTarget.transform.position - Npc.Position;
 
             Quaternion rot = Quaternion.LookRotation(moveDirection.normalized);
             Npc.Rotation = new Vector2(rot.eulerAngles.x, rot.eulerAngles.y);
+
+            if (Player.Get(CurrentTarget) is Player player)
+                MovementState = player.MoveState;
 
             switch (moveDirection.magnitude)
             {
                 case < 3:
                     return;
                 case > 10:
-                    Npc.Position = FollowTarget.transform.position;
+                    Npc.Position = CurrentTarget.transform.position;
                     return;
                 default:
                     Move();
@@ -87,7 +91,7 @@ namespace NPCs.Cores.Navigation
 
         private void Move()
         {
-            float speed = Movement switch
+            float speed = MovementState switch
             {
                 PlayerMovementState.Sneaking => SneakSpeed,
                 PlayerMovementState.Sprinting => RunSpeed,
@@ -124,7 +128,7 @@ namespace NPCs.Cores.Navigation
                 if (IsPaused || !Npc.IsSpawned)
                     continue;
 
-                if (FollowTarget != null)
+                if (CurrentTarget != null)
                     Follow();
                 else
                     Move();

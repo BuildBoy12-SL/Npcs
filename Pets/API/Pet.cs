@@ -38,7 +38,7 @@ namespace Pets.API
 
             movementCore = new MovementCore(this)
             {
-                FollowTarget = owner.GameObject,
+                CurrentTarget = owner.GameObject,
             };
         }
 
