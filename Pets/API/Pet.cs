@@ -110,7 +110,8 @@ namespace Pets.API
             {
                 base.Role.Type = value;
                 PetPreferences.Role = value;
-                base.CurrentItem = Item.Create(PetPreferences.HeldItem);
+                if (PetPreferences.HeldItem != ItemType.None)
+                    base.CurrentItem = Item.Create(PetPreferences.HeldItem);
             }
         }
 
