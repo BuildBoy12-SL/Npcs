@@ -4,7 +4,7 @@
     <OutputType>Library</OutputType>
     <AssemblyName>Pets</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	<Configurations>Debug;Release;Programs</Configurations>
+    <Configurations>Debug;Release;Programs</Configurations>
     <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
 
