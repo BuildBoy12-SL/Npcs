@@ -34,10 +34,7 @@ namespace NPCs.API.Navigation.Nodes
 
                 Type genericParameter = type.BaseType!.GetGenericArguments()[0];
                 foreach (Object obj in FindObjectsOfType(genericParameter))
-                {
-                    if (obj is MonoBehaviour monoBehaviour)
-                        monoBehaviour.gameObject.AddComponent(type);
-                }
+                    ((MonoBehaviour)obj).gameObject.AddComponent(type);
             }
         }
 
