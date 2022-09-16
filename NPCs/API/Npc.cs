@@ -7,17 +7,21 @@
 
 namespace NPCs.API
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Exiled.API.Features;
     using Mirror;
     using PlayerStatsSystem;
     using UnityEngine;
+    using Object = UnityEngine.Object;
 
     /// <summary>
     /// Represents the core of an npc.
     /// </summary>
     public class Npc : Player
     {
+        private readonly List<NpcCore> cores = new();
         private bool hiddenOnce;
         private bool isSpawned;
 
@@ -53,6 +57,11 @@ namespace NPCs.API
         /// Gets a list of all <see cref="Npc"/>s on the server.
         /// </summary>
         public static new IEnumerable<Npc> List => Dictionary.Values;
+
+        /// <summary>
+        /// Gets all attached <see cref="NpcCore"/> instances.
+        /// </summary>
+        public IReadOnlyCollection<NpcCore> Cores => cores.AsReadOnly();
 
         /// <summary>
         /// Gets or sets a value indicating whether the npc is spawned.
@@ -101,6 +110,44 @@ namespace NPCs.API
                 Respawn();
             }
         }
+
+        /// <summary>
+        /// Adds a <see cref="NpcCore"/> to the npc.
+        /// </summary>
+        /// <typeparam name="T">The <see cref="Type"/> of the <see cref="NpcCore"/>.</typeparam>
+        /// <returns>The instance of the specified <see cref="NpcCore"/>.</returns>
+        public T AddCore<T>()
+            where T : NpcCore
+        {
+            T instance = Activator.CreateInstance(typeof(T), args: this) as T;
+            cores.Add(instance);
+            return instance;
+        }
+
+        /// <summary>
+        /// Removes a <see cref="NpcCore"/> from the npc.
+        /// </summary>
+        /// <typeparam name="T">The <see cref="Type"/> of the <see cref="NpcCore"/>.</typeparam>
+        /// <returns>A value indicating whether a removal occured.</returns>
+        public bool RemoveCore<T>()
+            where T : NpcCore
+        {
+            if (cores.FirstOrDefault(core => core is T) is not T instance)
+                return false;
+
+            instance.Destroy();
+            cores.Remove(instance);
+            return true;
+        }
+
+        /// <summary>
+        /// Gets an attached <see cref="NpcCore"/>.
+        /// </summary>
+        /// <typeparam name="T">The <see cref="Type"/> of the <see cref="NpcCore"/>.</typeparam>
+        /// <returns>The attached <see cref="NpcCore"/> instance, or <see langword="null"/> if a match is not found.</returns>
+        public T GetCore<T>()
+            where T : NpcCore =>
+            cores.FirstOrDefault(core => core.GetType() == typeof(T)) as T;
 
         /// <summary>
         /// Destroys the npc.

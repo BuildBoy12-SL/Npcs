@@ -13,7 +13,7 @@ namespace NPCs.Patches
     using HarmonyLib;
     using LightContainmentZoneDecontamination;
     using NorthwoodLib.Pools;
-    using NPCs.API;
+    using NPCs.API.Extensions;
     using UnityEngine;
     using static HarmonyLib.AccessTools;
 
@@ -37,7 +37,7 @@ namespace NPCs.Patches
             {
                 new CodeInstruction(OpCodes.Ldloca_S, 3),
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(KeyValuePair<GameObject, ReferenceHub>), nameof(KeyValuePair<GameObject, ReferenceHub>.Key))),
-                new CodeInstruction(OpCodes.Call, Method(typeof(Extensions), nameof(Extensions.IsNpc), new[] { typeof(GameObject) })),
+                new CodeInstruction(OpCodes.Call, Method(typeof(NpcExtensions), nameof(NpcExtensions.IsNpc), new[] { typeof(GameObject) })),
                 new CodeInstruction(OpCodes.Brtrue_S, continueLabel),
             });
 

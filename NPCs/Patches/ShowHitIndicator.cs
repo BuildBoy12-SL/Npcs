@@ -13,7 +13,7 @@ namespace NPCs.Patches
     using HarmonyLib;
     using InventorySystem.Items.Firearms.Modules;
     using NorthwoodLib.Pools;
-    using NPCs.API;
+    using NPCs.API.Extensions;
     using static HarmonyLib.AccessTools;
 
     /// <summary>
@@ -32,7 +32,7 @@ namespace NPCs.Patches
             newInstructions.InsertRange(index, new[]
             {
                 new CodeInstruction(OpCodes.Ldloc_0).MoveLabelsFrom(newInstructions[index]),
-                new CodeInstruction(OpCodes.Call, Method(typeof(Extensions), nameof(Extensions.IsNpc), new[] { typeof(ReferenceHub) })),
+                new CodeInstruction(OpCodes.Call, Method(typeof(NpcExtensions), nameof(NpcExtensions.IsNpc), new[] { typeof(ReferenceHub) })),
                 new CodeInstruction(OpCodes.Brtrue_S, returnLabel),
             });
 

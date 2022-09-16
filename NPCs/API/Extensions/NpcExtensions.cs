@@ -1,19 +1,19 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="Extensions.cs" company="Build">
+// <copyright file="NpcExtensions.cs" company="Build">
 // Copyright (c) Build. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace NPCs.API
+namespace NPCs.API.Extensions
 {
     using Exiled.API.Features;
     using UnityEngine;
 
     /// <summary>
-    /// Various extension methods.
+    /// Miscellaneous extensions for the <see cref="Npc"/> class.
     /// </summary>
-    public static class Extensions
+    public static class NpcExtensions
     {
         /// <summary>
         /// Checks if a <see cref="Player"/> is an <see cref="Npc"/>.

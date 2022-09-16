@@ -11,7 +11,7 @@ namespace NPCs.Patches
     using System.Linq;
     using Exiled.API.Features;
     using HarmonyLib;
-    using NPCs.API;
+    using NPCs.API.Extensions;
 
     /// <summary>
     /// Patches <see cref="RoundSummary.CountTeam"/> to ignore npcs.

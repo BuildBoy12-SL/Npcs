@@ -12,7 +12,7 @@ namespace Pets.API
     using Exiled.API.Features;
     using Exiled.API.Features.Items;
     using NPCs.API;
-    using NPCs.Cores.Navigation;
+    using NPCs.API.Navigation;
     using UnityEngine;
 
     /// <summary>
@@ -20,8 +20,6 @@ namespace Pets.API
     /// </summary>
     public class Pet : Npc
     {
-        private readonly MovementCore movementCore;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Pet"/> class.
         /// </summary>
@@ -36,10 +34,8 @@ namespace Pets.API
             if (PetPreferences.HeldItem != ItemType.None)
                 base.CurrentItem = Item.Create(PetPreferences.HeldItem);
 
-            movementCore = new MovementCore(this)
-            {
-                CurrentTarget = owner.GameObject,
-            };
+            MovementBase movementBase = AddCore<MovementBase>();
+            movementBase.CurrentTarget = owner.GameObject;
         }
 
         /// <summary>
@@ -152,7 +148,7 @@ namespace Pets.API
         /// <inheritdoc />
         public override void Destroy()
         {
-            movementCore.Kill();
+            RemoveCore<MovementBase>();
             Instances.Remove(this);
             base.Destroy();
         }

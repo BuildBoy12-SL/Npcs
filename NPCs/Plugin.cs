@@ -10,6 +10,7 @@ namespace NPCs
     using System;
     using Exiled.API.Features;
     using HarmonyLib;
+    using NPCs.API.Navigation.Nodes;
     using NPCs.Patches.Manual;
 
     /// <summary>
@@ -41,12 +42,16 @@ namespace NPCs
             harmony.PatchAll();
             RunManualPatches();
 
+            Exiled.Events.Handlers.Map.Generated += NavigationNodeBase.GenerateMap;
+
             base.OnEnabled();
         }
 
         /// <inheritdoc />
         public override void OnDisabled()
         {
+            Exiled.Events.Handlers.Map.Generated -= NavigationNodeBase.GenerateMap;
+
             harmony?.UnpatchAll(harmony.Id);
             harmony = null;
 

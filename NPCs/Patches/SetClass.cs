@@ -12,7 +12,7 @@ namespace NPCs.Patches
     using System.Reflection.Emit;
     using HarmonyLib;
     using NorthwoodLib.Pools;
-    using NPCs.API;
+    using NPCs.API.Extensions;
     using UnityEngine;
     using static HarmonyLib.AccessTools;
 
@@ -33,7 +33,7 @@ namespace NPCs.Patches
             {
                 new CodeInstruction(OpCodes.Ldarg_0),
                 new CodeInstruction(OpCodes.Callvirt, PropertyGetter(typeof(PlayerMovementSync), nameof(PlayerMovementSync.gameObject))),
-                new CodeInstruction(OpCodes.Call, Method(typeof(Extensions), nameof(Extensions.IsNpc), new[] { typeof(GameObject) })),
+                new CodeInstruction(OpCodes.Call, Method(typeof(NpcExtensions), nameof(NpcExtensions.IsNpc), new[] { typeof(GameObject) })),
                 new CodeInstruction(OpCodes.Brfalse_S, continueLabel),
                 new CodeInstruction(OpCodes.Ldarg_0),
                 new CodeInstruction(OpCodes.Ldarg_1),

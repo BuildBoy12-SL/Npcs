@@ -12,7 +12,7 @@ namespace NPCs.Patches
     using System.Reflection.Emit;
     using HarmonyLib;
     using NorthwoodLib.Pools;
-    using NPCs.API;
+    using NPCs.API.Extensions;
     using PlayableScps;
     using static HarmonyLib.AccessTools;
 
@@ -32,7 +32,7 @@ namespace NPCs.Patches
             {
                 new CodeInstruction(OpCodes.Ldarg_0),
                 new CodeInstruction(OpCodes.Ldfld, Field(typeof(Scp173), nameof(Scp173.Hub))),
-                new CodeInstruction(OpCodes.Call, Method(typeof(Extensions), nameof(Extensions.IsNpc), new[] { typeof(ReferenceHub) })),
+                new CodeInstruction(OpCodes.Call, Method(typeof(NpcExtensions), nameof(NpcExtensions.IsNpc), new[] { typeof(ReferenceHub) })),
                 new CodeInstruction(OpCodes.Brtrue_S, returnLabel),
             });
 

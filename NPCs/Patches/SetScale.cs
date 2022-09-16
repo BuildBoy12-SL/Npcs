@@ -13,7 +13,7 @@ namespace NPCs.Patches
     using Exiled.API.Features;
     using HarmonyLib;
     using NorthwoodLib.Pools;
-    using NPCs.API;
+    using NPCs.API.Extensions;
     using static HarmonyLib.AccessTools;
 
     /// <summary>
@@ -34,7 +34,7 @@ namespace NPCs.Patches
             newInstructions.InsertRange(index, new[]
             {
                 new CodeInstruction(OpCodes.Ldloc_1),
-                new CodeInstruction(OpCodes.Call, Method(typeof(Extensions), nameof(Extensions.IsNpc), new[] { typeof(Player) })),
+                new CodeInstruction(OpCodes.Call, Method(typeof(NpcExtensions), nameof(NpcExtensions.IsNpc), new[] { typeof(Player) })),
                 new CodeInstruction(OpCodes.Brtrue_S, continueLabel),
             });
 

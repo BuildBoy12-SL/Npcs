@@ -1,15 +1,13 @@
 // -----------------------------------------------------------------------
-// <copyright file="MovementCore.cs" company="Build">
+// <copyright file="MovementBase.cs" company="Build">
 // Copyright (c) Build. All rights reserved.
 // Licensed under the CC BY-SA 3.0 license.
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace NPCs.Cores.Navigation
+namespace NPCs.API.Navigation
 {
-    using System.Collections.Generic;
     using Exiled.API.Features;
-    using MEC;
     using NPCs.API;
     using NPCs.Enums;
     using UnityEngine;
@@ -17,20 +15,19 @@ namespace NPCs.Cores.Navigation
     /// <summary>
     /// Handles the movements of a fake player.
     /// </summary>
-    public class MovementCore : Core
+    public class MovementBase : NpcCore
     {
         private const float SneakSpeed = 1.8f;
-        private readonly CoroutineHandle coroutineHandle;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MovementCore"/> class.
+        /// Initializes a new instance of the <see cref="MovementBase"/> class.
         /// </summary>
-        /// <param name="npc">The Npc to control.</param>
-        public MovementCore(Npc npc)
+        /// <param name="npc">The <see cref="Npc"/> to control.</param>
+        public MovementBase(Npc npc)
             : base(npc)
         {
             MovementState = PlayerMovementState.Walking;
-            coroutineHandle = Timing.RunCoroutine(MovementCoroutine(), Segment.FixedUpdate);
+            Instructions.Add(RunMovement);
         }
 
         /// <summary>
@@ -61,10 +58,12 @@ namespace NPCs.Cores.Navigation
 
         private float RunSpeed => CharacterClassManager._staticClasses[(int)Npc.Role.Type].runSpeed;
 
-        /// <summary>
-        /// Kills movement control.
-        /// </summary>
-        public void Kill() => Timing.KillCoroutines(coroutineHandle);
+        /// <inheritdoc />
+        protected override void Destroy()
+        {
+            Instructions.Remove(RunMovement);
+            base.Destroy();
+        }
 
         private void Follow()
         {
@@ -73,6 +72,7 @@ namespace NPCs.Cores.Navigation
             Quaternion rot = Quaternion.LookRotation(moveDirection.normalized);
             Npc.Rotation = new Vector2(rot.eulerAngles.x, rot.eulerAngles.y);
 
+            // TODO: Pet exclusive
             if (Player.Get(CurrentTarget) is Player player)
                 MovementState = player.MoveState;
 
@@ -120,19 +120,15 @@ namespace NPCs.Cores.Navigation
                 Npc.Position = newPosition;
         }
 
-        private IEnumerator<float> MovementCoroutine()
+        private void RunMovement()
         {
-            while (true)
-            {
-                yield return Timing.WaitForSeconds(0.1f);
-                if (IsPaused || !Npc.IsSpawned)
-                    continue;
+            if (IsPaused || !Npc.IsSpawned)
+                return;
 
-                if (CurrentTarget != null)
-                    Follow();
-                else
-                    Move();
-            }
+            if (CurrentTarget != null)
+                Follow();
+            else
+                Move();
         }
     }
 }
