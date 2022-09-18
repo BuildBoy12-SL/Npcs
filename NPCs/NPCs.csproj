@@ -12,7 +12,7 @@
   
   <ItemGroup>
     <PackageReference Include="EXILED" Version="$(ExiledVersion)" />
-    <PackageReference Include="Lib.Harmony" Version="2.1.1" />
+    <PackageReference Include="Lib.Harmony" Version="$(HarmonyVersion)" />
     <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopVersion)" />
   </ItemGroup>
 

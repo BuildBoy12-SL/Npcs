@@ -18,6 +18,7 @@
     <Version Condition="$(Version) == ''">1.0.0</Version>
 
     <ExiledVersion>5.3.0</ExiledVersion>
+    <HarmonyVersion>2.1.1</HarmonyVersion>
     <StyleCopVersion>1.1.118</StyleCopVersion>
 
     <Copyright>Copyright © $(Authors) 2022 - $([System.DateTime]::Now.ToString("yyyy"))</Copyright>

@@ -34,8 +34,7 @@ namespace Pets.API
             if (PetPreferences.HeldItem != ItemType.None)
                 base.CurrentItem = Item.Create(PetPreferences.HeldItem);
 
-            MovementBase movementBase = AddCore<MovementBase>();
-            movementBase.CurrentTarget = owner.GameObject;
+            AddCore<MovementBase>().CurrentTarget = owner.GameObject;
         }
 
         /// <summary>

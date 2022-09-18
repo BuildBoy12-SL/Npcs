@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="EXILED" Version="$(ExiledVersion)" />
+    <PackageReference Include="Lib.Harmony" Version="$(HarmonyVersion)" />
     <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopVersion)" />
     <PackageReference Include="YamlDotNet" Version="9.1.4" />
   </ItemGroup>
