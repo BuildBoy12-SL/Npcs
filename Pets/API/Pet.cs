@@ -35,6 +35,7 @@ namespace Pets.API
                 base.CurrentItem = Item.Create(PetPreferences.HeldItem);
 
             AddCore<MovementBase>().CurrentTarget = owner.GameObject;
+            Instances.Add(this);
         }
 
         /// <summary>
@@ -139,9 +140,7 @@ namespace Pets.API
         public static Pet Create(Player owner)
         {
             PetPreferences preferences = PetPreferences.Get(owner) ?? new PetPreferences(owner.UserId);
-            Pet pet = new Pet(owner, preferences);
-            Instances.Add(pet);
-            return pet;
+            return new Pet(owner, preferences);
         }
 
         /// <inheritdoc />
