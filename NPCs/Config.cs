@@ -14,5 +14,10 @@ namespace NPCs
     {
         /// <inheritdoc />
         public bool IsEnabled { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether debug logs are enabled.
+        /// </summary>
+        public bool Debug { get; set; } = false;
     }
 }

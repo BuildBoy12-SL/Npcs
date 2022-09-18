@@ -5,7 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace NPCs.API.Navigation.Nodes
+namespace NPCs.API.Navigation.Nodes.NodeTypes
 {
     using Exiled.API.Features.Items;
     using Interactables.Interobjects.DoorUtils;

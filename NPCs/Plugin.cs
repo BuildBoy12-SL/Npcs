@@ -20,6 +20,11 @@ namespace NPCs
     {
         private Harmony harmony;
 
+        /// <summary>
+        /// Gets an instance of the <see cref="Plugin"/> class.
+        /// </summary>
+        public static Plugin Instance { get; private set; }
+
         /// <inheritdoc />
         public override string Author => "Build";
 
@@ -38,6 +43,8 @@ namespace NPCs
         /// <inheritdoc />
         public override void OnEnabled()
         {
+            Instance = this;
+
             harmony = new Harmony($"npcs.{DateTime.UtcNow.Ticks}");
             harmony.PatchAll();
             RunManualPatches();
@@ -55,6 +62,7 @@ namespace NPCs
             harmony?.UnpatchAll(harmony.Id);
             harmony = null;
 
+            Instance = null;
             base.OnDisabled();
         }
 

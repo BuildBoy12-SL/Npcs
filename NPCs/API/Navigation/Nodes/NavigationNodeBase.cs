@@ -8,6 +8,7 @@
 namespace NPCs.API.Navigation.Nodes
 {
     using System;
+    using System.Diagnostics;
     using System.Reflection;
     using NPCs.API.Extensions;
     using UnityEngine;
@@ -27,6 +28,7 @@ namespace NPCs.API.Navigation.Nodes
         /// <param name="assembly">The assembly to find the node types from.</param>
         public static void GenerateFromAssembly(Assembly assembly)
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
             foreach (Type type in assembly.GetTypes())
             {
                 if (!type.InheritsOrImplements(typeof(NavigationNode<>)) || type.IsAbstract)
@@ -36,6 +38,9 @@ namespace NPCs.API.Navigation.Nodes
                 foreach (Object obj in FindObjectsOfType(genericParameter))
                     ((MonoBehaviour)obj).gameObject.AddComponent(type);
             }
+
+            stopwatch.Stop();
+            Exiled.API.Features.Log.Debug($"Generated navigation nodes from {assembly.GetName().Name} in {stopwatch.ElapsedMilliseconds}ms.", Plugin.Instance.Config.Debug);
         }
 
         /// <summary>

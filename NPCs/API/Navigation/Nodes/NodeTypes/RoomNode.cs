@@ -5,7 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace NPCs.API.Navigation.Nodes
+namespace NPCs.API.Navigation.Nodes.NodeTypes
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -14,12 +14,14 @@ namespace NPCs.API.Navigation.Nodes
     /// <inheritdoc />
     public class RoomNode : NavigationNode<Room>
     {
+        private IEnumerable<DoorNode> doorNodes;
+
         /// <inheritdoc />
         public override Room AttachedObject { get; protected set; }
 
         /// <summary>
         /// Gets all door nodes that are connected to this room node.
         /// </summary>
-        public IEnumerable<DoorNode> DoorNodes => AttachedObject == null ? null : AttachedObject.Doors.Select(door => door.GameObject.GetComponent<DoorNode>());
+        public IEnumerable<DoorNode> DoorNodes => doorNodes ??= AttachedObject.Doors.Select(door => door.GameObject.GetComponent<DoorNode>());
     }
 }
