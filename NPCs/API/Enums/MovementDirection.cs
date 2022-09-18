@@ -5,7 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace NPCs.Enums
+namespace NPCs.API.Enums
 {
     /// <summary>
     /// Indicates the direction a player is moving.

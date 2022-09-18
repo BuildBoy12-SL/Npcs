@@ -9,11 +9,11 @@ namespace NPCs.API.Navigation
 {
     using Exiled.API.Features;
     using NPCs.API;
-    using NPCs.Enums;
+    using NPCs.API.Enums;
     using UnityEngine;
 
     /// <summary>
-    /// Handles the movements of a fake player.
+    /// Handles the movements of an npc.
     /// </summary>
     public class MovementBase : NpcCore
     {
@@ -36,7 +36,7 @@ namespace NPCs.API.Navigation
         public GameObject CurrentTarget { get; set; }
 
         /// <summary>
-        /// Gets or sets the movement type of the pet.
+        /// Gets or sets the movement state of the npc.
         /// </summary>
         public PlayerMovementState MovementState
         {
@@ -45,7 +45,7 @@ namespace NPCs.API.Navigation
         }
 
         /// <summary>
-        /// Gets or sets the direction the pet is moving.
+        /// Gets or sets the direction the npc is moving.
         /// </summary>
         public MovementDirection Direction { get; set; } = MovementDirection.Forward;
 
